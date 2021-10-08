@@ -8,6 +8,8 @@ CUE utilities and helpers for various tasks.
 
 Add to your project with `hof mod` or another method.
 
+https://cuetorials.com/first-steps/modules-and-packages/#dependency-management
+
 ### As a tool
 
 Clone the repository and add `$REPO/tools` to your `PATH`.
@@ -81,6 +83,16 @@ import (
 	st "github.com/hofstadter-io/cuetils/structural"
 )
 ```
+
+They work by checking of the two operands unify.
+
+- for __diff__ and __patch__, `int & 1` like expressions will _not_ be detected
+- for __pick__ and __mask__, `int & 1` like expression are detected
+
+Lists are not currently supported for __diff__ and __patch__.
+It may be workable if the list sizes are known and order consistent.
+[Associative Lists](https://cuetorials.com/cueology/futurology/associative-lists/)
+may solve this issue. We don't currently have good syntax for specifying the key to match elements on.
 
 __#Depth__ calculates the depth of an object
 
@@ -220,23 +232,23 @@ import (
 // A function factory
 #depthF: {
 	// always required
-  #next: _
+	#next: _
 	
 	// the actual computation, must be named #func
 	#func: {
 		// you can have any args
-    #in: _
+		#in: _
 		// or internal helpers
 		#basic: int|number|string|bytes|null
 		
 		// the result, can be named anything
-    out: {
+		out: {
 			if (#in & #basic) != _|_ { 1 }
 			if (#in & #basic) == _|_ {
 				list.Max([for k,v in #in {(#next & {#in: v}).out}]) + 1
 			}
-    }
-  }
+		}
+	}
 }
 
 // The user facing, recursed version

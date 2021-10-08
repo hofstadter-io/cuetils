@@ -13,14 +13,19 @@ import (
 			{
 				for i,x in #X {
 					let y = #Y[i]
+					// not in Y, so add to "-" set
 					if y == _|_ {
 						"-": "\(i)": x			
 					}
+					// in both
 					if y != _|_ {
+						// if struct, then recurse
 						if (x & {...}) != _|_ {
 							"\(i)": (#next & { #X: x, #Y: y }).diff
 						}
+						// not struct, so replace if doesn't unify
 						if (x & {...}) == _|_ {
+							// this is where we could add more complexity for `int & 1`
 							if (x & y) == _|_ {
 								"-": "\(i)": x
 								"+": "\(i)": y
@@ -29,6 +34,7 @@ import (
 					}
 				}
 			} 
+			// now look for anything in Y that is not in X
 			"+": {
 				for i,y in #Y {
 					if #X[i] == _|_ {
