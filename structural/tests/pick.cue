@@ -25,15 +25,15 @@ pick_tests: [
 				d: =~"^d"
 			}
     }
-		pick: (st.#Pick & { #X: x, #P: p }).pick
-		real: {
+		#pick: (st.#Pick & { #X: x, #P: p }).pick
+		#real: {
 			b: "b"
 			e:  {
 				a: "a"
 				b: "b1"
 			}
 		}
-		same: real & pick
+		same: #real & #pick
 	}
 ]
 

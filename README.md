@@ -208,11 +208,65 @@ patch: {
 __#Pick__ extracts a subobject
 
 ```cue
+x: {
+	a: "a"
+	b: "b"
+	d: "d"
+	e: {
+		a: "a"
+		b: "b1"
+		d: "cd"
+	}
+}
+p: {
+	b: string
+	d: int
+	e: {
+		a: _
+		b: =~"^b"
+		d: =~"^d"
+	}
+}
+pick: (st.#Pick & { #X: x, #P: p }).pick
+pick: {
+	b: "b"
+	e:  {
+		a: "a"
+		b: "b1"
+	}
+}
 ```
 
 __#Mask__ removes a subobject
 
 ```cue
+x: {
+	a: "a"
+	b: "b"
+	d: "d"
+	e: {
+		a: "a"
+		b: "b1"
+		d: "cd"
+	}
+}
+m: {
+	b: string
+	d: int
+	e: {
+		a: _
+		b: =~"^b"
+		d: =~"^d"
+	}
+}
+mask: (st.#Mask & { #X: x, #M: m }).mask
+mask: {
+	a: "a"
+	d: "d"
+	e:  {
+		d: "cd"
+	}
+}
 ```
 
 ### Custom Recursion

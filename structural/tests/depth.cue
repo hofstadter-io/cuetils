@@ -14,8 +14,8 @@ depth_tests: [
 			cow: "moo"
 		}
 
-		depth: (st.#Depth & { #in: tree }).out
-		real: 5
-		same: real & depth
+		#depth: (st.#Depth & { #in: tree }).out
+		#real: 5
+		same: #real & #depth
 	},
 ]
