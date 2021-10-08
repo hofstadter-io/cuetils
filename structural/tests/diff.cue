@@ -27,7 +27,7 @@ diff_tests: [
 			}
 		}
 		diff: (st.#Diff & { #X: x, #Y: y }).diff
-		diff: {
+		real: {
 			"-": {
 				a: "a"
 				d: "d"
@@ -47,6 +47,7 @@ diff_tests: [
 				c: "c"
 			}
     }
+		same: real & diff
 	}
 ]
 

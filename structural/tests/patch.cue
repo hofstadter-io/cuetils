@@ -37,7 +37,7 @@ patch_tests: [
 			}
     }
 		patch: (st.#Patch & { #X: x, #P: p }).patch
-		patch: {
+		real: {
 			b: "b"
 			c: "c"
 			d: "D"
@@ -47,7 +47,6 @@ patch_tests: [
 				d: 1
 			}
 		}
+		same: real & patch
 	}
 ]
-
-

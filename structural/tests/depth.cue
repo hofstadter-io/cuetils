@@ -15,6 +15,7 @@ depth_tests: [
 		}
 
 		depth: (st.#Depth & { #in: tree }).out
-		depth: 5
+		real: 5
+		same: real & depth
 	},
 ]
