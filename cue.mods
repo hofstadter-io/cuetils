@@ -1,0 +1,3 @@
+module github.com/hofstadter-io/cuetils
+
+cue v0.4.0
