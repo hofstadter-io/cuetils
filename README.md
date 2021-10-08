@@ -32,7 +32,7 @@ Many of these make use of the
 ### RecurseN
 
 A function factory for bounded recursion, defaulting to 20.
-This is a pattern to get around CUE's cycle detenction
+This is a pattern to get around CUE's cycle detection
 by creating a struct with fields named for each iteration.
 See https://cuetorials.com/deep-dives/recursion/ for more details.
 
