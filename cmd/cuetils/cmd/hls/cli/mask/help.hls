@@ -1,0 +1,7 @@
+### Test "mask --help" prints help
+call __cuetils mask --help
+
+### Test "mask -h" prints help
+call __cuetils mask -h
+
+

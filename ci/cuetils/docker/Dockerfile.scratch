@@ -1,0 +1,8 @@
+FROM scratch
+MAINTAINER Hofstadter, Inc <open-source@hofstadter.io>
+
+COPY cuetils /
+ENTRYPOINT ["/cuetils"]
+
+VOLUME ["/work"]
+WORKDIR /work

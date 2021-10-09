@@ -1,0 +1,7 @@
+### Test "depth --help" prints help
+call __cuetils depth --help
+
+### Test "depth -h" prints help
+call __cuetils depth -h
+
+

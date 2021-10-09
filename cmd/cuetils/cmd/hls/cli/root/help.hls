@@ -1,0 +1,13 @@
+### Test "cuetils --help" prints help
+call __cuetils --help
+
+### Test "cuetils -h" prints help
+call __cuetils -h
+
+### Test "cuetils help" prints help
+call __cuetils help
+
+
+### Test "cuetils" (without any args) prints help
+call __cuetils
+

@@ -12,11 +12,11 @@ Cli: gen.#HofGenerator & {
 }
 
 #CLI: schema.#Cli & {
-	Name:    "cuest"
-	Package: "github.com/hofstadter-io/cuetils/cmd/cuest"
+	Name:    "cuetils"
+	Package: "github.com/hofstadter-io/cuetils/cmd/cuetils"
 
-	Usage:      "cuest"
-	Short:      "CUE Structural - compare and manipulate nested data, Yaml, and JSON"
+	Usage:      "cuetils"
+	Short:      "CUE Utilites for bulk ETL, diff, query, and other operations on data and config"
 	Long:       Short
 
 	OmitRun: true

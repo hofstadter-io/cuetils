@@ -1,0 +1,8 @@
+FROM debian:jessie
+MAINTAINER Hofstadter, Inc <open-source@hofstadter.io>
+
+COPY cuetils /usr/bin/local
+ENTRYPOINT ["cuetils"]
+
+VOLUME ["/work"]
+WORKDIR /work

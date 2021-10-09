@@ -1,7 +1,0 @@
-### Test "mask --help" prints help
-call __cuest mask --help
-
-### Test "mask -h" prints help
-call __cuest mask -h
-
-

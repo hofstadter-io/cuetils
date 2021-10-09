@@ -1,0 +1,7 @@
+### Test "pick --help" prints help
+call __cuetils pick --help
+
+### Test "pick -h" prints help
+call __cuetils pick -h
+
+
