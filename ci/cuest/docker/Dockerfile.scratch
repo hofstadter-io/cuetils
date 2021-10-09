@@ -1,0 +1,8 @@
+FROM scratch
+MAINTAINER Hofstadter, Inc <open-source@hofstadter.io>
+
+COPY cuest /
+ENTRYPOINT ["/cuest"]
+
+VOLUME ["/work"]
+WORKDIR /work

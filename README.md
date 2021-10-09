@@ -10,13 +10,9 @@ Add to your project with `hof mod` or another method.
 
 https://cuetorials.com/first-steps/modules-and-packages/#dependency-management
 
-### As a tool
+### As a binary
 
-Clone the repository and add `$REPO/tools` to your `PATH`.
-Make sure you have Python3 installed.
-
-The tools are wrappers around the libraries.
-Run their builtin help commands
+Download a [release from GitHub](https://github.com/hofstadter-io/cuetils/releases).
 
 __Structural:__
 

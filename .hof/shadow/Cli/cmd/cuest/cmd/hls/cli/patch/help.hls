@@ -1,0 +1,7 @@
+### Test "patch --help" prints help
+call __cuest patch --help
+
+### Test "patch -h" prints help
+call __cuest patch -h
+
+

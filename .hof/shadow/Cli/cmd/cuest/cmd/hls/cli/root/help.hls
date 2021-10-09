@@ -1,0 +1,13 @@
+### Test "cuest --help" prints help
+call __cuest --help
+
+### Test "cuest -h" prints help
+call __cuest -h
+
+### Test "cuest help" prints help
+call __cuest help
+
+
+### Test "cuest" (without any args) prints help
+call __cuest
+

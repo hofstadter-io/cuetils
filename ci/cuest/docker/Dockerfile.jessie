@@ -1,0 +1,8 @@
+FROM debian:jessie
+MAINTAINER Hofstadter, Inc <open-source@hofstadter.io>
+
+COPY cuest /usr/bin/local
+ENTRYPOINT ["cuest"]
+
+VOLUME ["/work"]
+WORKDIR /work
