@@ -5,21 +5,32 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/pkg/structural"
 )
 
 var depthLong = `calculate the depth of a file or glob`
 
-func DepthRun(glob string) (err error) {
+func DepthRun(globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	depths, err := structural.Depth(globs)
+	if err != nil {
+		return err
+	}
+
+	for _, d := range depths {
+		fmt.Println(d.Filename, d.Depth)
+	}
 
 	return err
 }
 
 var DepthCmd = &cobra.Command{
 
-	Use: "depth",
+	Use: "depth [globs...]",
 
 	Short: "calculate the depth of a file or glob",
 
@@ -34,15 +45,15 @@ var DepthCmd = &cobra.Command{
 
 		// Argument Parsing
 
-		var glob string
+		var globs []string
 
 		if 0 < len(args) {
 
-			glob = args[0]
+			globs = args[0:]
 
 		}
 
-		err = DepthRun(glob)
+		err = DepthRun(globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

@@ -9,7 +9,7 @@ import (
 
 var depthLong = `calculate the depth of a file or glob`
 
-func DepthRun(glob string) (err error) {
+func DepthRun(globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -19,7 +19,7 @@ func DepthRun(glob string) (err error) {
 
 var DepthCmd = &cobra.Command{
 
-	Use: "depth",
+	Use: "depth [globs...]",
 
 	Short: "calculate the depth of a file or glob",
 
@@ -34,15 +34,15 @@ var DepthCmd = &cobra.Command{
 
 		// Argument Parsing
 
-		var glob string
+		var globs []string
 
 		if 0 < len(args) {
 
-			glob = args[0]
+			globs = args[0:]
 
 		}
 
-		err = DepthRun(glob)
+		err = DepthRun(globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

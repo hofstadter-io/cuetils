@@ -54,14 +54,15 @@ Cli: gen.#HofGenerator & {
 
 #DepthCommand: schema.#Command & {
 	Name:  "depth"
-	Usage: "depth"
+	Usage: "depth [globs...]"
 	Short: "calculate the depth of a file or glob"
 	Long:  Short
 
 	Args: [{
-		Name:     "glob"
-		Type:     "string"
+		Name:     "globs"
+		Type:     "[]string"
 		Help:     "file glob to the operation"
+		Rest:			true
 	}]
 }
 
