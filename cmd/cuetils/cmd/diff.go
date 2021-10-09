@@ -22,7 +22,7 @@ func DiffRun(orig string, globs []string) (err error) {
 	}
 
 	for _, d := range diffs {
-		fmt.Printf("%s\n----------------------\n%s\n\n", d.Filename, d.Diff)
+		fmt.Printf("%s\n----------------------\n%s\n\n", d.Filename, d.Content)
 	}
 
 	return err

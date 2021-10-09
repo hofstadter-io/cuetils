@@ -10,7 +10,7 @@ import (
 
 type DiffResult struct {
 	Filename string
-	Diff     string
+	Content  string
 }
 
 const difffmt = `
@@ -76,7 +76,7 @@ func Diff(orig string, globs []string) ([]DiffResult, error) {
 
 		diffs = append(diffs, DiffResult{
 			Filename: input.Filename,
-			Diff:     out,
+			Content:  out,
 		})
 
 	}

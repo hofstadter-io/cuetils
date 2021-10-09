@@ -48,5 +48,29 @@ patch_tests: [
 			}
 		}
 		same: #real & #patch
+	},
+	{
+		x: {
+			a: b: "B"
+		}
+		p: {
+			"+": {
+				b: "B"
+			}
+			a: {
+				"-": {
+					b: "B"
+				}
+				"+": {
+					c: "C"
+				}
+			}
+		}
+		#patch: (st.#Patch & { #X: x, #P: p }).patch
+		#real: {
+			a: c: "C"
+			b: "B"
+		}
+		same: #real & #patch
 	}
 ]

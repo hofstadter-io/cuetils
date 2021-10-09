@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/pkg/structural"
 )
 
 var patchLong = `apply the pacth to the glob file(s)`
@@ -12,7 +14,16 @@ var patchLong = `apply the pacth to the glob file(s)`
 func PatchRun(patch string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	patchs, err := structural.Patch(patch, globs)
+	if err != nil {
+		return err
+	}
+
+	for _, p := range patchs {
+		fmt.Printf("%s\n----------------------\n%s\n\n", p.Filename, p.Content)
+	}
 
 	return err
 }
