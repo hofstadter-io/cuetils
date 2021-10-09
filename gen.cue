@@ -29,6 +29,15 @@ Cli: gen.#HofGenerator & {
 		#MaskCommand,
 	]
 
+	Pflags: [{
+		Name:    "maxdepth"
+		Long:    "maxdepth"
+		Short:   "m"
+		Type:    "int"
+		Default: ""
+		Help:    "maximum depth for recursion"
+	}]
+
 	//
 	// Addons
 	//

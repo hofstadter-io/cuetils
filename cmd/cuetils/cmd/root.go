@@ -9,9 +9,16 @@ import (
 
 	"github.com/hofstadter-io/hof/script/runtime"
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
 var cuetilsLong = `CUE Utilites for bulk ETL, diff, query, and other operations on data and config`
+
+func init() {
+
+	RootCmd.PersistentFlags().IntVarP(&(flags.RootPflags.Maxdepth), "maxdepth", "m", 0, "maximum depth for recursion")
+}
 
 func RootPersistentPostRun(args []string) (err error) {
 

@@ -44,3 +44,9 @@ func PrintSubject(title, prefix, subject string, subjects map[string]string) boo
 	fmt.Println(b.String())
 	return true
 }
+
+type RootPflagpole struct {
+	Maxdepth int
+}
+
+var RootPflags RootPflagpole
