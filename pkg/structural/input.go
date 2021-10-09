@@ -1,6 +1,7 @@
 package structural
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -49,6 +50,14 @@ func LoadInputs(globs []string) ([]Input, error) {
 				return nil, err
 			}
 
+			// handle input types
+			ext := filepath.Ext(m)
+			switch ext {
+			case ".yml", ".yaml":
+				s := fmt.Sprintf(yamlMod, string(d))
+				d = []byte(s)
+			}
+
 			inputs[m] = Input{ Filename: m, Content: d }
 		}
 	}
@@ -64,3 +73,11 @@ func LoadInputs(globs []string) ([]Input, error) {
 
 	return ret, nil
 }
+
+const yamlMod = `
+import "encoding/yaml"
+#content: #"""
+%s
+"""#
+yaml.Unmarshal(#content)
+`

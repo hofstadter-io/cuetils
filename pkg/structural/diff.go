@@ -61,8 +61,6 @@ func Diff(orig string, globs []string) ([]DiffResult, error) {
 	diffs := make([]DiffResult, 0)
 	for _, input := range inputs {
 
-		// need to handle encodings here
-
 		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
 		if iv.Err() != nil {
 			return nil, iv.Err()
