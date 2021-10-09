@@ -30,12 +30,12 @@ Cli: gen.#HofGenerator & {
 	]
 
 	Pflags: [{
-		Name:    "maxdepth"
-		Long:    "maxdepth"
+		Name:    "maxiter"
+		Long:    "maxiter"
 		Short:   "m"
 		Type:    "int"
 		Default: ""
-		Help:    "maximum depth for recursion"
+		Help:    "maximum iterations for recursion"
 	}]
 
 	//

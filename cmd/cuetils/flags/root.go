@@ -46,7 +46,7 @@ func PrintSubject(title, prefix, subject string, subjects map[string]string) boo
 }
 
 type RootPflagpole struct {
-	Maxdepth int
+	Maxiter int
 }
 
 var RootPflags RootPflagpole

@@ -4,13 +4,20 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
-)
 
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
+)
 
 type FileDepth struct {
 	Filename string
 	Depth int
 }
+
+const depthfmt = `
+val: #Depth%s
+val: #in: _
+depth: val.out
+`
 
 func Depth(globs []string) ([]FileDepth, error) {
 	// no globs, then stdin
@@ -28,10 +35,17 @@ func Depth(globs []string) ([]FileDepth, error) {
 		return nil, err
 	}
 
-	val := cuest.ctx.CompileString("val: #Depth\nval: #in: _\ndepth: val.out", cue.Scope(cuest.orig))
+	// construct reusable val with function
+	maxiter := ""
+	if mi := flags.RootPflags.Maxiter; mi > 0 {
+		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
+	}
+	content := fmt.Sprintf(depthfmt, maxiter)
+	fmt.Println(content)
+	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
+	fmt.Println(val)
 
 	depths := make([]FileDepth, 0)
-
 	for _, input := range inputs {
 
 		// need to handle encodings here
