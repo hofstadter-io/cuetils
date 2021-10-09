@@ -1,9 +1,5 @@
 project_name: "cuest"
 
-before:
-  hooks:
-    - go mod vendor
-
 builds:
 - binary: "cuest"
   main: main.go
