@@ -8,18 +8,18 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-type DepthResult struct {
+type CountResult struct {
 	Filename string
-	Depth int
+	Count int
 }
 
-const depthfmt = `
-val: #Depth%s
+const countfmt = `
+val: #Count%s
 val: #in: _
-depth: val.depth
+count: val.count
 `
 
-func Depth(globs []string) ([]DepthResult, error) {
+func Count(globs []string) ([]CountResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -30,7 +30,7 @@ func Depth(globs []string) ([]DepthResult, error) {
 		return nil, fmt.Errorf("no matches found")
 	}
 
-	cuest, err := NewCuest("depth")
+	cuest, err := NewCuest("count")
 	if err != nil {
 		return nil, err
 	}
@@ -40,10 +40,10 @@ func Depth(globs []string) ([]DepthResult, error) {
 	if mi := flags.RootPflags.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
-	content := fmt.Sprintf(depthfmt, maxiter)
+	content := fmt.Sprintf(countfmt, maxiter)
 	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
 
-	depths := make([]DepthResult, 0)
+	counts := make([]CountResult, 0)
 	for _, input := range inputs {
 
 		// need to handle encodings here
@@ -55,18 +55,18 @@ func Depth(globs []string) ([]DepthResult, error) {
 
 		result := val.FillPath(cue.ParsePath("val.#in"), iv)
 
-		dv := result.LookupPath(cue.ParsePath("depth"))
+		dv := result.LookupPath(cue.ParsePath("count"))
 		di, err := dv.Int64()
 		if err != nil {
 			return nil, err
 		}
 
-		depths = append(depths, DepthResult{
+		counts = append(counts, CountResult{
 			Filename: input.Filename,
-			Depth: int(di),
+			Count: int(di),
 		})
 
 	}
 
-	return depths, nil
+	return counts, nil
 }

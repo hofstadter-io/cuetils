@@ -1,0 +1,7 @@
+### Test "count --help" prints help
+call __cuetils count --help
+
+### Test "count -h" prints help
+call __cuetils count -h
+
+

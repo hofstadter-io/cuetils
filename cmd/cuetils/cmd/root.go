@@ -83,6 +83,7 @@ func RootInit() {
 
 	RootCmd.AddCommand(CompletionCmd)
 
+	RootCmd.AddCommand(CountCmd)
 	RootCmd.AddCommand(DepthCmd)
 	RootCmd.AddCommand(DiffCmd)
 	RootCmd.AddCommand(PatchCmd)

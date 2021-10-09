@@ -4,7 +4,7 @@ import (
 	st "github.com/hofstadter-io/cuetils/structural"
 )
 
-depth_tests: [
+count_tests: [
 	{
 		tree: {
 			a: {
@@ -14,19 +14,18 @@ depth_tests: [
 			cow: "moo"
 		}
 
-		#depth: (st.#Depth & { #in: tree }).depth
-		#real: 5
-		same: #real & #depth
+		#count: (st.#Count & { #in: tree }).count
+		#real: 9
+		same: #real & #count
 	},
 	{
 		tree: {
 			a: int
 			b: [1,2,4]
-			c: [{ a: b: "c" }]
 		}
 
-		#depth: (st.#Depth & { #in: tree }).depth
-		#real: 4
-		same: #real & #depth
+		#count: (st.#Count & { #in: tree }).count
+		#real: 6
+		same: #real & #count
 	},
 ]

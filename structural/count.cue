@@ -6,21 +6,21 @@ import (
 	"github.com/hofstadter-io/cuetils/recurse"
 )
 
-#depthF: {
+#countF: {
   #next: _
 	#func: {
     #in: _
 		#multi: {...} | [...]
-    depth: {
+    count: {
 			if (#in & #multi) == _|_ { 1 }
 			if (#in & {...}) != _|_ {
-				list.Max([for k,v in #in {(#next & {#in: v}).depth}]) + 1
+				list.Sum([for k,v in #in {(#next & {#in: v}).count}]) + len(#in)
 			}
 			if (#in & [...]) != _|_ {
-				list.Max([for k,v in #in {(#next & {#in: v}).depth}])
+				list.Sum([for k,v in #in {(#next & {#in: v}).count}])
 			}
     }
   }
 }
 
-#Depth: recurse.#RecurseN & {#funcFactory: #depthF}
+#Count: recurse.#RecurseN & {#funcFactory: #countF}

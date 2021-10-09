@@ -22,6 +22,7 @@ Cli: gen.#HofGenerator & {
 	OmitRun: true
 
 	Commands: [
+		#CountCommand,
 		#DepthCommand,
 		#DiffCommand,
 		#PatchCommand,
@@ -65,6 +66,20 @@ Cli: gen.#HofGenerator & {
 	}
 	Updates:  true
 	EnablePProf: true
+}
+
+#CountCommand: schema.#Command & {
+	Name:  "count"
+	Usage: "count [globs...]"
+	Short: "calculate the node count of a file or glob"
+	Long:  Short
+
+	Args: [{
+		Name:     "globs"
+		Type:     "[]string"
+		Help:     "file glob to the operation"
+		Rest:			true
+	}]
 }
 
 #DepthCommand: schema.#Command & {
