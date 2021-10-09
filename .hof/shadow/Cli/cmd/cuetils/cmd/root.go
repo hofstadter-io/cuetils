@@ -18,6 +18,7 @@ var cuetilsLong = `CUE Utilites for bulk ETL, diff, query, and other operations 
 func init() {
 
 	RootCmd.PersistentFlags().IntVarP(&(flags.RootPflags.Maxiter), "maxiter", "m", 0, "maximum iterations for recursion")
+	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Out), "out", "", "cue", "output encoding [cue,yaml,json]")
 }
 
 func RootPersistentPostRun(args []string) (err error) {

@@ -36,6 +36,12 @@ Cli: gen.#HofGenerator & {
 		Type:    "int"
 		Default: ""
 		Help:    "maximum iterations for recursion"
+	},{
+		Name:    "out"
+		Long:    "out"
+		Type:    "string"
+		Default: "\"cue\""
+		Help:    "output encoding [cue,yaml,json]"
 	}]
 
 	//

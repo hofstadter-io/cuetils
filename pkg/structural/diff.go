@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/cue/format"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
@@ -69,30 +68,15 @@ func Diff(orig string, globs []string) ([]DiffResult, error) {
 		result := val.FillPath(cue.ParsePath("val.#Y"), iv)
 
 		dv := result.LookupPath(cue.ParsePath("diff"))
-		syn := dv.Syntax(
-			cue.Final(),
-			cue.ResolveReferences(true),
-			cue.Concrete(true),
-			cue.Definitions(false),
-			cue.Hidden(false),
-			cue.Optional(false),
-			cue.Attributes(false),
-			cue.Docs(false),
-		)
 
-		bs, err := format.Node(
-			syn,
-			format.TabIndent(false),
-			format.UseSpaces(2),
-			// format.Simplify(),
-		)
+		out, err := FormatOutput(dv, flags.RootPflags.Out)
 		if err != nil {
 			return nil, err
 		}
 
 		diffs = append(diffs, DiffResult{
 			Filename: input.Filename,
-			Diff:     string(bs),
+			Diff:     out,
 		})
 
 	}
