@@ -6,5 +6,3 @@ require (
 	github.com/hofstadter-io/hof v0.5.17
 	github.com/hofstadter-io/hofmod-cli v0.7.3
 )
-
-replace github.com/hofstadter-io/hofmod-cli => ../../hof/mods/cli
