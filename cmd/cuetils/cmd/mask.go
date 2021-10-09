@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/pkg/structural"
 )
 
 var maskLong = `mask the original from the glob file(s)`
@@ -12,7 +14,16 @@ var maskLong = `mask the original from the glob file(s)`
 func MaskRun(mask string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	masks, err := structural.Mask(mask, globs)
+	if err != nil {
+		return err
+	}
+
+	for _, m := range masks {
+		fmt.Printf("%s\n----------------------\n%s\n\n", m.Filename, m.Content)
+	}
 
 	return err
 }

@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/pkg/structural"
 )
 
 var pickLong = `pick the original from the glob file(s)`
@@ -12,7 +14,16 @@ var pickLong = `pick the original from the glob file(s)`
 func PickRun(pick string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	picks, err := structural.Pick(pick, globs)
+	if err != nil {
+		return err
+	}
+
+	for _, p := range picks {
+		fmt.Printf("%s\n----------------------\n%s\n\n", p.Filename, p.Content)
+	}
 
 	return err
 }
