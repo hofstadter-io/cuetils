@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/pkg/structural"
 )
 
 var diffLong = `calculate the diff from the original to the glob file(s)`
@@ -12,7 +14,16 @@ var diffLong = `calculate the diff from the original to the glob file(s)`
 func DiffRun(orig string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	diffs, err := structural.Diff(orig, globs)
+	if err != nil {
+		return err
+	}
+
+	for _, d := range diffs {
+		fmt.Printf("%s\n----------------------\n%s\n\n", d.Filename, d.Diff)
+	}
 
 	return err
 }

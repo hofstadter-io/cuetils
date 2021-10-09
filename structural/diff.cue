@@ -33,12 +33,13 @@ import (
 						}
 					}
 				}
-			} 
+			}
+
 			// now look for anything in Y that is not in X
-			"+": {
+			{
 				for i,y in #Y {
 					if #X[i] == _|_ {
-						"\(i)": y
+						"+": "\(i)": y
 					}
 				}
 			}

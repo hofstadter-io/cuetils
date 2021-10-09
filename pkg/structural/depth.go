@@ -8,7 +8,7 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-type FileDepth struct {
+type DepthResult struct {
 	Filename string
 	Depth int
 }
@@ -19,7 +19,7 @@ val: #in: _
 depth: val.out
 `
 
-func Depth(globs []string) ([]FileDepth, error) {
+func Depth(globs []string) ([]DepthResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -41,11 +41,9 @@ func Depth(globs []string) ([]FileDepth, error) {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(depthfmt, maxiter)
-	fmt.Println(content)
 	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
-	fmt.Println(val)
 
-	depths := make([]FileDepth, 0)
+	depths := make([]DepthResult, 0)
 	for _, input := range inputs {
 
 		// need to handle encodings here
@@ -63,7 +61,7 @@ func Depth(globs []string) ([]FileDepth, error) {
 			return nil, err
 		}
 
-		depths = append(depths, FileDepth{
+		depths = append(depths, DepthResult{
 			Filename: input.Filename,
 			Depth: int(di),
 		})
