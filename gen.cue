@@ -87,9 +87,10 @@ Cli: gen.#HofGenerator & {
 		Required: true
 		Help:     "original file to the operation"
 	}, {
-		Name:     "glob"
-		Type:     "string"
+		Name:     "globs"
+		Type:     "[]string"
 		Help:     "file glob to the operation"
+		Rest:			true
 	}]
 }
 
@@ -105,9 +106,10 @@ Cli: gen.#HofGenerator & {
 		Required: true
 		Help:     "the patch to apply"
 	}, {
-		Name:     "glob"
-		Type:     "string"
-		Help:     "file glob to apply the patch to"
+		Name:     "globs"
+		Type:     "[]string"
+		Help:     "file glob to the operation"
+		Rest:			true
 	}]
 }
 
@@ -123,9 +125,10 @@ Cli: gen.#HofGenerator & {
 		Required: true
 		Help:     "the pick to use"
 	}, {
-		Name:     "glob"
-		Type:     "string"
-		Help:     "file glob to apply the pick to"
+		Name:     "globs"
+		Type:     "[]string"
+		Help:     "file glob to the operation"
+		Rest:			true
 	}]
 }
 
@@ -141,9 +144,9 @@ Cli: gen.#HofGenerator & {
 		Required: true
 		Help:     "the mask to apply"
 	}, {
-		Name:     "glob"
-		Type:     "string"
-		Help:     "file glob to apply the mask to"
+		Name:     "globs"
+		Type:     "[]string"
+		Help:     "file glob to the operation"
+		Rest:			true
 	}]
 }
-

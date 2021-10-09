@@ -9,7 +9,7 @@ import (
 
 var patchLong = `apply the pacth to the glob file(s)`
 
-func PatchRun(patch string, glob string) (err error) {
+func PatchRun(patch string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -48,15 +48,15 @@ var PatchCmd = &cobra.Command{
 
 		}
 
-		var glob string
+		var globs []string
 
 		if 1 < len(args) {
 
-			glob = args[1]
+			globs = args[1:]
 
 		}
 
-		err = PatchRun(patch, glob)
+		err = PatchRun(patch, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

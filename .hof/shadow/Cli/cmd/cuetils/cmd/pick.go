@@ -9,7 +9,7 @@ import (
 
 var pickLong = `pick the original from the glob file(s)`
 
-func PickRun(pick string, glob string) (err error) {
+func PickRun(pick string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -48,15 +48,15 @@ var PickCmd = &cobra.Command{
 
 		}
 
-		var glob string
+		var globs []string
 
 		if 1 < len(args) {
 
-			glob = args[1]
+			globs = args[1:]
 
 		}
 
-		err = PickRun(pick, glob)
+		err = PickRun(pick, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

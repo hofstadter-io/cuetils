@@ -9,7 +9,7 @@ import (
 
 var diffLong = `calculate the diff from the original to the glob file(s)`
 
-func DiffRun(orig string, glob string) (err error) {
+func DiffRun(orig string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -48,15 +48,15 @@ var DiffCmd = &cobra.Command{
 
 		}
 
-		var glob string
+		var globs []string
 
 		if 1 < len(args) {
 
-			glob = args[1]
+			globs = args[1:]
 
 		}
 
-		err = DiffRun(orig, glob)
+		err = DiffRun(orig, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

@@ -9,7 +9,7 @@ import (
 
 var maskLong = `mask the original from the glob file(s)`
 
-func MaskRun(mask string, glob string) (err error) {
+func MaskRun(mask string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -48,15 +48,15 @@ var MaskCmd = &cobra.Command{
 
 		}
 
-		var glob string
+		var globs []string
 
 		if 1 < len(args) {
 
-			glob = args[1]
+			globs = args[1:]
 
 		}
 
-		err = MaskRun(mask, glob)
+		err = MaskRun(mask, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
