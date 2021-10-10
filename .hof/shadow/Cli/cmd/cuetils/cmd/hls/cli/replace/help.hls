@@ -1,0 +1,7 @@
+### Test "replace --help" prints help
+call __cuetils replace --help
+
+### Test "replace -h" prints help
+call __cuetils replace -h
+
+

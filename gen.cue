@@ -28,6 +28,8 @@ Cli: gen.#HofGenerator & {
 		#PatchCommand,
 		#PickCommand,
 		#MaskCommand,
+		#ReplaceCommand,
+		#UpsertCommand,
 	]
 
 	Pflags: [{
@@ -171,3 +173,42 @@ Cli: gen.#HofGenerator & {
 		Rest:			true
 	}]
 }
+
+#ReplaceCommand: schema.#Command & {
+	Name:  "replace"
+	Usage: "replace <orig> <glob>"
+	Short: "apply the replace from the original to the glob file(s)"
+	Long:  Short
+
+	Args: [{
+		Name:     "orig"
+		Type:     "string"
+		Required: true
+		Help:     "original file to the operation"
+	}, {
+		Name:     "globs"
+		Type:     "[]string"
+		Help:     "file glob to the operation"
+		Rest:			true
+	}]
+}
+
+#UpsertCommand: schema.#Command & {
+	Name:  "upsert"
+	Usage: "upsert <orig> <glob>"
+	Short: "apply the upsert from the original to the glob file(s)"
+	Long:  Short
+
+	Args: [{
+		Name:     "orig"
+		Type:     "string"
+		Required: true
+		Help:     "original file to the operation"
+	}, {
+		Name:     "globs"
+		Type:     "[]string"
+		Help:     "file glob to the operation"
+		Rest:			true
+	}]
+}
+
