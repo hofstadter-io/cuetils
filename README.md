@@ -80,9 +80,10 @@ __#Count__ calculates how many nodes are in an object.
 
 ### Depth
 
-<details open>
-<summary>`cuetils` example</summary>
+<details>
+<summary>__cuetils__ example</summary>
 <br>
+
 ```cue
 tree: {
 	a: {
