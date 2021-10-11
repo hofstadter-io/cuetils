@@ -1,0 +1,7 @@
+### Test "validate --help" prints help
+call __cuetils validate --help
+
+### Test "validate -h" prints help
+call __cuetils validate -h
+
+

@@ -91,6 +91,8 @@ func RootInit() {
 	RootCmd.AddCommand(MaskCmd)
 	RootCmd.AddCommand(ReplaceCmd)
 	RootCmd.AddCommand(UpsertCmd)
+	RootCmd.AddCommand(TransformCmd)
+	RootCmd.AddCommand(ValidateCmd)
 
 }
 

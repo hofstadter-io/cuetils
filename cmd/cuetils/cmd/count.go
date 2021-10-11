@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/hofstadter-io/cuetils/pkg/structural"
+	"github.com/hofstadter-io/cuetils/structural"
 )
 
 var countLong = `calculate the node count of a file or glob`

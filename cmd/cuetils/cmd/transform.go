@@ -5,36 +5,25 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-
-	"github.com/hofstadter-io/cuetils/structural"
 )
 
-var upsertLong = `apply the upsert from the original to the glob file(s)`
+var transformLong = `apply the transform from the original to the glob file(s)`
 
-func UpsertRun(orig string, globs []string) (err error) {
+func TransformRun(orig string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	// fmt.Println("not implemented")
-
-	upserts, err := structural.Upsert(orig, globs)
-	if err != nil {
-		return err
-	}
-
-	for _, u := range upserts {
-		fmt.Printf("%s\n----------------------\n%s\n\n", u.Filename, u.Content)
-	}
+	fmt.Println("not implemented")
 
 	return err
 }
 
-var UpsertCmd = &cobra.Command{
+var TransformCmd = &cobra.Command{
 
-	Use: "upsert <orig> <glob>",
+	Use: "transform <orig> <glob>",
 
-	Short: "apply the upsert from the original to the glob file(s)",
+	Short: "apply the transform from the original to the glob file(s)",
 
-	Long: upsertLong,
+	Long: transformLong,
 
 	PreRun: func(cmd *cobra.Command, args []string) {
 
@@ -67,7 +56,7 @@ var UpsertCmd = &cobra.Command{
 
 		}
 
-		err = UpsertRun(orig, globs)
+		err = TransformRun(orig, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -81,8 +70,8 @@ func init() {
 		return false
 	}
 
-	ohelp := UpsertCmd.HelpFunc()
-	ousage := UpsertCmd.UsageFunc()
+	ohelp := TransformCmd.HelpFunc()
+	ousage := TransformCmd.UsageFunc()
 	help := func(cmd *cobra.Command, args []string) {
 		if extra(cmd) {
 			return
@@ -96,7 +85,7 @@ func init() {
 		return ousage(cmd)
 	}
 
-	UpsertCmd.SetHelpFunc(help)
-	UpsertCmd.SetUsageFunc(usage)
+	TransformCmd.SetHelpFunc(help)
+	TransformCmd.SetUsageFunc(usage)
 
 }

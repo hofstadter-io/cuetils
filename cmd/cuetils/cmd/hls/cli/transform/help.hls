@@ -1,0 +1,7 @@
+### Test "transform --help" prints help
+call __cuetils transform --help
+
+### Test "transform -h" prints help
+call __cuetils transform -h
+
+

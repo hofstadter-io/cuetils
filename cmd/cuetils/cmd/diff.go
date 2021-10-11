@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/hofstadter-io/cuetils/pkg/structural"
+	"github.com/hofstadter-io/cuetils/structural"
 )
 
 var diffLong = `calculate the diff from the original to the glob file(s)`

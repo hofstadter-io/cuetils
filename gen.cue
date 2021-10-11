@@ -30,6 +30,8 @@ Cli: gen.#HofGenerator & {
 		#MaskCommand,
 		#ReplaceCommand,
 		#UpsertCommand,
+		#TransformCommand,
+		#ValidateCommand,
 	]
 
 	Pflags: [{
@@ -197,6 +199,44 @@ Cli: gen.#HofGenerator & {
 	Name:  "upsert"
 	Usage: "upsert <orig> <glob>"
 	Short: "apply the upsert from the original to the glob file(s)"
+	Long:  Short
+
+	Args: [{
+		Name:     "orig"
+		Type:     "string"
+		Required: true
+		Help:     "original file to the operation"
+	}, {
+		Name:     "globs"
+		Type:     "[]string"
+		Help:     "file glob to the operation"
+		Rest:			true
+	}]
+}
+
+#TransformCommand: schema.#Command & {
+	Name:  "transform"
+	Usage: "transform <orig> <glob>"
+	Short: "apply the transform from the original to the glob file(s)"
+	Long:  Short
+
+	Args: [{
+		Name:     "orig"
+		Type:     "string"
+		Required: true
+		Help:     "original file to the operation"
+	}, {
+		Name:     "globs"
+		Type:     "[]string"
+		Help:     "file glob to the operation"
+		Rest:			true
+	}]
+}
+
+#ValidateCommand: schema.#Command & {
+	Name:  "validate"
+	Usage: "validate <orig> <glob>"
+	Short: "validate with the original against the glob file(s)"
 	Long:  Short
 
 	Args: [{

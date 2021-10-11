@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/hofstadter-io/cuetils/pkg/structural"
+	"github.com/hofstadter-io/cuetils/structural"
 )
 
 var replaceLong = `apply the replace from the original to the glob file(s)`
