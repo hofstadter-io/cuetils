@@ -124,6 +124,8 @@ depth: 9
 
 ### Depth
 
+__#Depth__ calculates the deepest branch of an object.
+
 <details>
 <summary>Cuetils example</summary>
 <br>
@@ -141,9 +143,6 @@ $ cuetils depth tree.cue
 5
 ```
 </details>
-
-__#Depth__ calculates the deepest branch of an object.
-
 
 <details>
 <summary>CUE example</summary>
@@ -253,6 +252,8 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 ### Patch
 
+__#Patch__ applies a diff object
+
 <details>
 <summary>Cuetils example</summary>
 <br>
@@ -261,8 +262,6 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 ```
 </details>
-
-__#Patch__ applies a diff object
 
 <details>
 <summary>CUE example</summary>
@@ -518,6 +517,10 @@ import "github.com/hofstadter-io/cuetils/structural"
 ```
 </details>
 
+<details>
+<summary>Go example</summary>
+<br>
+
 ```Go
 import "github.com/hofstadter-io/cuetils/structural"
 ```
@@ -534,6 +537,10 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 ```
 </details>
+
+<details>
+<summary>Go example</summary>
+<br>
 
 ```Go
 import "github.com/hofstadter-io/cuetils/structural"
@@ -611,15 +618,21 @@ import (
 		// you can have any args
 		#in: _
 		// or internal helpers
-		#basic: int|number|string|bytes|null
+		#multi: {...} | [...]
 		
 		// the result, can be named anything
-		out: {
-			if (#in & #basic) != _|_ { 1 }
-			if (#in & #basic) == _|_ {
-				list.Max([for k,v in #in {(#next & {#in: v}).out}]) + 1
+    depth: {
+			// detect leafs
+			if (#in & #multi) == _|_ { 1 }
+			// detect struct
+			if (#in & {...}) != _|_ {
+				list.Max([for k,v in #in {(#next & {#in: v}).depth}]) + 1
 			}
-		}
+			// detect list
+			if (#in & [...]) != _|_ {
+				list.Max([for k,v in #in {(#next & {#in: v}).depth}])
+			}
+    }
 	}
 }
 
@@ -630,6 +643,6 @@ import (
 The core of the recursive calling is:
 
 ```cue
-(#next & {#in: v}).out
+(#next & {#in: v}).depth
 ```
 
