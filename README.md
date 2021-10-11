@@ -78,13 +78,31 @@ may solve this issue. We don't currently have good syntax for specifying the key
 
 __#Count__ calculates how many nodes are in an object.
 
-### Depth
-
 <details>
-<summary>__cuetils__ example</summary>
+<summary>Cuetils example</summary>
 <br>
 
 ```cue
+a: {
+	foo: "bar"
+	a: b: c: "d"
+}
+cow: "moo"
+```
+
+```shell
+$ cuetils count tree.cue
+9
+```
+</details>
+
+<details>
+<summary>CUE example</summary>
+<br>
+
+```cue
+import "github.com/hofstadter-io/cuetils/structural"
+
 tree: {
 	a: {
 		foo: "bar"
@@ -92,6 +110,30 @@ tree: {
 	}
 	cow: "moo"
 }
+
+depth: (structural.#Count & { #in: tree }).out
+depth: 9
+```
+</details>
+
+<details>
+<summary>Go example</summary>
+<br>
+</details>
+
+
+### Depth
+
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```cue
+a: {
+	foo: "bar"
+	a: b: c: "d"
+}
+cow: "moo"
 ```
 
 ```shell
@@ -102,7 +144,14 @@ $ cuetils depth tree.cue
 
 __#Depth__ calculates the deepest branch of an object.
 
+
+<details>
+<summary>CUE example</summary>
+<br>
+
 ```cue
+import "github.com/hofstadter-io/cuetils/structural"
+
 tree: {
 	a: {
 		foo: "bar"
@@ -111,15 +160,41 @@ tree: {
 	cow: "moo"
 }
 
-depth: (st.#Depth & { #in: tree }).out
+depth: (structural.#Depth & { #in: tree }).out
 depth: 5
 ```
+</details>
+
+<details>
+<summary>Go example</summary>
+<br>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
+
 
 ### Diff
 
 __#Diff__ computes a semantic diff object
 
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```shell
+
+```
+</details>
+
+<details>
+<summary>CUE example</summary>
+<br>
+
 ```cue
+import "github.com/hofstadter-io/cuetils/structural"
+
 x: {
 	a: "a"
 	b: "b"
@@ -142,7 +217,7 @@ y: {
 	}
 }
 
-diff: (st.#Diff & { #X: x, #Y: y }).diff
+diff: (structural.#Diff & { #X: x, #Y: y }).diff
 diff: {
 	"-": {
 		a: "a"
@@ -164,13 +239,38 @@ diff: {
 	}
 }
 ```
+</details>
+
+<details>
+<summary>Go example</summary>
+<br>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
 
 
 ### Patch
 
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```shell
+
+```
+</details>
+
 __#Patch__ applies a diff object
 
+<details>
+<summary>CUE example</summary>
+<br>
+
 ```cue
+import "github.com/hofstadter-io/cuetils/structural"
+
 x: {
 	a: "a"
 	b: "b"
@@ -203,7 +303,7 @@ p: {
 	}
 }
 
-patch: (st.#Patch & { #X: x, #Y: y }).patch
+patch: (structural.#Patch & { #X: x, #Y: y }).patch
 patch: {
 	b: "b"
 	c: "c"
@@ -215,12 +315,37 @@ patch: {
 	}
 }
 ```
+</details>
+
+<details>
+<summary>Go example</summary>
+<br>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
 
 ### Pick
 
 __#Pick__ extracts a subobject
 
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```shell
+
+```
+</details>
+
+<details>
+<summary>CUE example</summary>
+<br>
+
 ```cue
+import "github.com/hofstadter-io/cuetils/structural"
+
 x: {
 	a: "a"
 	b: "b"
@@ -240,7 +365,7 @@ p: {
 		d: =~"^d"
 	}
 }
-pick: (st.#Pick & { #X: x, #P: p }).pick
+pick: (structural.#Pick & { #X: x, #P: p }).pick
 pick: {
 	b: "b"
 	e:  {
@@ -249,12 +374,38 @@ pick: {
 	}
 }
 ```
+</details>
+
+<details>
+<summary>Go example</summary>
+<br>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
+
 
 ### Mask
 
 __#Mask__ removes a subobject
 
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```shell
+
+```
+</details>
+
+<details>
+<summary>CUE example</summary>
+<br>
+
 ```cue
+import "github.com/hofstadter-io/cuetils/structural"
+
 x: {
 	a: "a"
 	b: "b"
@@ -274,7 +425,7 @@ m: {
 		d: =~"^d"
 	}
 }
-mask: (st.#Mask & { #X: x, #M: m }).mask
+mask: (structural.#Mask & { #X: x, #M: m }).mask
 mask: {
 	a: "a"
 	d: "d"
@@ -283,15 +434,111 @@ mask: {
 	}
 }
 ```
+</details>
+
+<details>
+<summary>Go example</summary>
+<br>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
 
 
 ### Replace
 
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```shell
+
+```
+</details>
+
+<details>
+<summary>CUE example</summary>
+<br>
+
+```cue
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
+
+<details>
+<summary>Go example</summary>
+<br>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
+
 ### Upsert
+
+
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```shell
+
+```
+</details>
+
+<details>
+<summary>CUE example</summary>
+<br>
+
+```cue
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
+
+<details>
+<summary>Go example</summary>
+<br>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
+
 
 ### Transform
 
+
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```shell
+
+```
+</details>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
+
+
 ### Validate
+
+<details>
+<summary>Cuetils example</summary>
+<br>
+
+```shell
+
+```
+</details>
+
+```Go
+import "github.com/hofstadter-io/cuetils/structural"
+```
+</details>
 
 
 
