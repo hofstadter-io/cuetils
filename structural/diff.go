@@ -26,19 +26,19 @@ func Diff(orig string, globs []string) ([]DiffResult, error) {
 		globs = []string{"-"}
 	}
 
-	origs, err := LoadInputs([]string{orig})
+	cuest, err := NewCuest("diff")
+	if err != nil {
+		return nil, err
+	}
+
+	origs, err := LoadInputs([]string{orig}, cuest)
 	if len(origs) == 0 {
 		return nil, fmt.Errorf("original found")
 	}
 
-	inputs, err := LoadInputs(globs)
+	inputs, err := ReadGlobs(globs)
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
-	}
-
-	cuest, err := NewCuest("diff")
-	if err != nil {
-		return nil, err
 	}
 
 	// construct reusable val with function

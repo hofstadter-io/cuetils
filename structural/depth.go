@@ -25,14 +25,14 @@ func Depth(globs []string) ([]DepthResult, error) {
 		globs = []string{"-"}
 	}
 
-	inputs, err := LoadInputs(globs)
-	if len(inputs) == 0 {
-		return nil, fmt.Errorf("no matches found")
-	}
-
 	cuest, err := NewCuest("depth")
 	if err != nil {
 		return nil, err
+	}
+
+	inputs, err := ReadGlobs(globs)
+	if len(inputs) == 0 {
+		return nil, fmt.Errorf("no matches found")
 	}
 
 	// construct reusable val with function

@@ -15,7 +15,11 @@ type Input struct {
 	Content    []byte
 }
 
-func LoadInputs(globs []string) ([]Input, error) {
+func LoadInputs(globs []string, cuest *Cuest) ([]Input, error) {
+	return ReadGlobs(globs)
+}
+
+func ReadGlobs(globs []string) ([]Input, error) {
 
 	// handle special stdin case
 	if len(globs) == 1 && globs[0] == "-" {

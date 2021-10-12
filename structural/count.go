@@ -25,14 +25,14 @@ func Count(globs []string) ([]CountResult, error) {
 		globs = []string{"-"}
 	}
 
-	inputs, err := LoadInputs(globs)
-	if len(inputs) == 0 {
-		return nil, fmt.Errorf("no matches found")
-	}
-
 	cuest, err := NewCuest("count")
 	if err != nil {
 		return nil, err
+	}
+
+	inputs, err := ReadGlobs(globs)
+	if len(inputs) == 0 {
+		return nil, fmt.Errorf("no matches found")
 	}
 
 	// construct reusable val with function

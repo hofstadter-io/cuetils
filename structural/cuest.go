@@ -20,20 +20,20 @@ const cuemod = `
 module: "github.com/hofstadter-io/cuetils"
 `
 
-func NewCuest(op string) (Cuest, error) {
-	cuest := Cuest{
+func NewCuest(op string) (*Cuest, error) {
+	cuest := &Cuest{
 		op: op,
 	}
 	cuest.ctx = cuecontext.New()
 
 	rd, err := cuetils.CueEmbeds.ReadFile("recurse/recurse.cue")
 	if err != nil {
-		return cuest, err
+		return nil, err
 	}
 	sf := fmt.Sprintf("structural/%s.cue", op)
 	sd, err := cuetils.CueEmbeds.ReadFile(sf)
 	if err != nil {
-		return cuest, err
+		return nil, err
 	}
 
 	cfg := load.Config {
@@ -51,19 +51,19 @@ func NewCuest(op string) (Cuest, error) {
 	// check for errors on the instance
 	// these are typically parsing errors
 	if bi.Err != nil {
-		return cuest, bi.Err
+		return nil, bi.Err
 	}
 
 	// Use cue.Context to turn build.Instance to cue.Instance
 	value := cuest.ctx.BuildInstance(bi)
 	if value.Err() != nil {
-		return cuest, value.Err()
+		return nil, value.Err()
 	}
 
 	// Validate the value
 	err = value.Validate()
 	if err != nil {
-		return cuest, err
+		return nil, err
 	}
 
 	cuest.orig = value
