@@ -1,0 +1,34 @@
+exec cuetils diff a.json b.json
+cmp stdout golden.stdout
+
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	}
+}
+-- b.json --
+{
+	"a": {
+		"c": "C"
+	},
+	"b": "B"
+}
+
+-- golden.stdout --
+b.json
+----------------------
+{
+	"+": {
+		b: "B"
+	}
+	a: {
+		"-": {
+			b: "B"
+		}
+		"+": {
+			c: "C"
+		}
+	}
+}
+

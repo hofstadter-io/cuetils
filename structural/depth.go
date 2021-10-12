@@ -25,7 +25,7 @@ func Depth(globs []string) ([]DepthResult, error) {
 		globs = []string{"-"}
 	}
 
-	cuest, err := NewCuest("depth")
+	cuest, err := NewCuest([]string{"depth"}, nil)
 	if err != nil {
 		return nil, err
 	}

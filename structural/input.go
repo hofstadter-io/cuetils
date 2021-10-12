@@ -6,6 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+
+	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/load"
 )
 
 type Input struct {
@@ -15,8 +18,40 @@ type Input struct {
 	Content    []byte
 }
 
-func LoadInputs(globs []string, cuest *Cuest) ([]Input, error) {
-	return ReadGlobs(globs)
+// Loads the entrypoints using the context provided
+// returns the value from the load after validating it
+func LoadInputs(entrypoints []string, ctx *cue.Context) (cue.Value, error) {
+
+	bis := load.Instances(entrypoints, nil)
+
+	bi := bis[0]
+	// check for errors on the instance
+	// these are typically parsing errors
+	if bi.Err != nil {
+		return cue.Value{}, bi.Err
+	}
+
+	// Use cue.Context to turn build.Instance to cue.Instance
+	value := ctx.BuildInstance(bi)
+	if value.Err() != nil {
+		return cue.Value{}, value.Err()
+	}
+
+	// Validate the value
+	err := value.Validate(
+		cue.ResolveReferences(true),
+		cue.Concrete(false),
+		cue.Definitions(true),
+		cue.Hidden(true),
+		cue.Optional(true),
+		cue.Attributes(false),
+		cue.Docs(false),
+	)
+	if err != nil {
+		return cue.Value{}, err
+	}
+
+	return value, nil
 }
 
 func ReadGlobs(globs []string) ([]Input, error) {

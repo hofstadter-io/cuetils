@@ -39,12 +39,7 @@ func formatCue(val cue.Value) (string, error) {
 		cue.Docs(false),
 	)
 
-	bs, err := format.Node(
-		syn,
-		format.TabIndent(false),
-		format.UseSpaces(2),
-		// format.Simplify(),
-	)
+	bs, err := format.Node(syn)
 	if err != nil {
 		return "", err
 	}

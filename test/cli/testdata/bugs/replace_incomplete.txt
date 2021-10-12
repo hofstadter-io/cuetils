@@ -1,0 +1,15 @@
+!exec cuetils replace replace.cue a.json
+!cmp stdout golden.stdout
+
+-- replace.cue --
+c: string
+-- a.json --
+{
+	"c": 2
+}
+
+-- golden.stdout --
+a.json
+----------------------
+c: string
+

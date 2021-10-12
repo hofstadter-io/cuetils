@@ -11,7 +11,6 @@ import (
 )
 
 type Cuest struct {
-	op string
 	ctx *cue.Context
 	orig cue.Value
 }
@@ -20,32 +19,48 @@ const cuemod = `
 module: "github.com/hofstadter-io/cuetils"
 `
 
-func NewCuest(op string) (*Cuest, error) {
-	cuest := &Cuest{
-		op: op,
+// Creates a new Cuest object and preloads the structural ops.
+// The ops should be their lowercase name and all are loaded.
+// If 'op' is nil or empty, preloading is skipped.
+//
+// You can provide your own cue.Context or a new one will be created
+// Keep in mind CUE still requires values to come from the same context.
+func NewCuest(ops []string, ctx *cue.Context) (*Cuest, error) {
+	cuest := new(Cuest)
+	if ctx == nil {
+		cuest.ctx = cuecontext.New()
+	} else {
+		cuest.ctx = ctx
 	}
-	cuest.ctx = cuecontext.New()
+
+	if ops == nil || len(ops) == 0 {
+		return cuest, nil
+	}
 
 	rd, err := cuetils.CueEmbeds.ReadFile("recurse/recurse.cue")
 	if err != nil {
 		return nil, err
 	}
-	sf := fmt.Sprintf("structural/%s.cue", op)
-	sd, err := cuetils.CueEmbeds.ReadFile(sf)
-	if err != nil {
-		return nil, err
-	}
-
 	cfg := load.Config {
 		ModuleRoot: "/cuetils",
 		Overlay: make(map[string]load.Source),
 		Dir: "/cuetils",
 	}
 	cfg.Overlay["/cuetils/cue.mod/module.cue"] = load.FromString(cuemod)
-	cfg.Overlay["/cuetils/recurse/recuse.cue"] = load.FromBytes(rd)
-	cfg.Overlay["/cuetils/" + sf] = load.FromBytes(sd)
+	cfg.Overlay["/cuetils/recurse/recurse.cue"] = load.FromBytes(rd)
 
-	bis := load.Instances([]string{sf}, &cfg)
+	entrypoints := []string{}
+	for _,op := range ops {
+		sf := fmt.Sprintf("structural/%s.cue", op)
+		sd, err := cuetils.CueEmbeds.ReadFile(sf)
+		if err != nil {
+			return nil, err
+		}
+		cfg.Overlay["/cuetils/" + sf] = load.FromBytes(sd)
+		entrypoints = append(entrypoints, sf)
+	}
+
+	bis := load.Instances(entrypoints, &cfg)
 
 	bi := bis[0]
 	// check for errors on the instance

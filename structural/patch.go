@@ -26,12 +26,12 @@ func Patch(orig string, globs []string) ([]PatchResult, error) {
 		globs = []string{"-"}
 	}
 
-	cuest, err := NewCuest("patch")
+	cuest, err := NewCuest([]string{"patch"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	origs, err := LoadInputs([]string{orig}, cuest)
+	origs, err := ReadGlobs([]string{orig})
 	if len(origs) == 0 {
 		return nil, fmt.Errorf("original found")
 	}

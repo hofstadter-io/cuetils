@@ -1,0 +1,35 @@
+exec cuetils upsert upsert.cue a.json
+cmp stdout golden.stdout
+
+-- upsert.cue --
+{
+	a: {
+		b: string
+	}
+	c: int
+	d: "d"
+	e: "E"
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	},
+	"b": 1,
+	"c": 2,
+	"d": "D"
+}
+
+-- golden.stdout --
+a.json
+----------------------
+{
+	b: 1
+	c: 2
+	e: "E"
+	a: {
+		b: "B"
+	}
+	d: "d"
+}
+

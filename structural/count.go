@@ -25,7 +25,7 @@ func Count(globs []string) ([]CountResult, error) {
 		globs = []string{"-"}
 	}
 
-	cuest, err := NewCuest("count")
+	cuest, err := NewCuest([]string{"count"}, nil)
 	if err != nil {
 		return nil, err
 	}

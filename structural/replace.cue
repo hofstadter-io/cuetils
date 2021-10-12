@@ -20,6 +20,7 @@ import (
 						"\(i)": r
 					}
 				}
+				// todo, replace with the must operator
 				if r == _|_ {
 					"\(i)": x
 				}

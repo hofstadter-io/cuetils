@@ -9,6 +9,7 @@ func ValidateFiles(schema string, globs []string) {
 
 }
 
-func ValidateValues(schema, val cue.Value) (error) {
-	return val.Unify(schema).Err()
+func ValidateValue(schema, val cue.Value) (bool, error) {
+	e := val.Unify(schema).Err()
+	return e == nil, e
 }

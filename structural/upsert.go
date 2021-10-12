@@ -26,14 +26,17 @@ func Upsert(orig string, globs []string) ([]UpsertResult, error) {
 		globs = []string{"-"}
 	}
 
-	cuest, err := NewCuest("upsert")
+	cuest, err := NewCuest([]string{"upsert"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	origs, err := LoadInputs([]string{orig}, cuest)
-	if len(origs) == 0 {
-		return nil, fmt.Errorf("original found")
+	ov, err := LoadInputs([]string{orig}, cuest.ctx)
+	if err != nil {
+		return nil, err
+	}
+	if ov.Err() != nil {
+		return nil, ov.Err()
 	}
 
 	inputs, err := ReadGlobs(globs)
@@ -49,12 +52,7 @@ func Upsert(orig string, globs []string) ([]UpsertResult, error) {
 	content := fmt.Sprintf(upsertfmt, maxiter)
 	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
 
-	// only handling one orig for now, fill into val beforehand
-	ov := cuest.ctx.CompileBytes(origs[0].Content, cue.Filename(origs[0].Filename))
-	if ov.Err() != nil {
-		return nil, ov.Err()
-	}
-	// update val with the orig value
+	// fill val with the orig value, so we only need to once before loop
 	val = val.FillPath(cue.ParsePath("val.#U"), ov)
 
 	upserts := make([]UpsertResult, 0)

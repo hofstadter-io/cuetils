@@ -26,12 +26,12 @@ func Diff(orig string, globs []string) ([]DiffResult, error) {
 		globs = []string{"-"}
 	}
 
-	cuest, err := NewCuest("diff")
+	cuest, err := NewCuest([]string{"diff"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	origs, err := LoadInputs([]string{orig}, cuest)
+	origs, err := ReadGlobs([]string{orig})
 	if len(origs) == 0 {
 		return nil, fmt.Errorf("original found")
 	}

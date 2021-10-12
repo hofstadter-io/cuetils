@@ -7,6 +7,18 @@ import (
 replace_tests: [
 	{
 		x: {
+			a: "A"
+		}
+		r: {
+			a: int
+		}
+		#replace: (st.#Replace & { #X: x, #R: r }).replace
+		#real: {
+			a: int
+		}
+		// same: #real & #replace
+	}, {
+		x: {
 			a: "a"
 			b: "b"
 			e: {

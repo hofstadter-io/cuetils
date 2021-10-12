@@ -1,0 +1,31 @@
+exec cuetils diff a.json b.yaml
+cmp stdout golden.stdout
+
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	}
+}
+-- b.yaml --
+a:
+  c: C
+b: B
+
+-- golden.stdout --
+b.yaml
+----------------------
+{
+	"+": {
+		b: "B"
+	}
+	a: {
+		"-": {
+			b: "B"
+		}
+		"+": {
+			c: "C"
+		}
+	}
+}
+

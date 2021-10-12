@@ -1,0 +1,14 @@
+exec cuetils count tree.cue
+cmp stdout golden.stdout
+
+-- tree.cue --
+tree: {
+	a: {
+		foo: "bar"
+		a: b: c: "d"
+	}
+	cow: "moo"
+}
+
+-- golden.stdout --
+tree.cue 10

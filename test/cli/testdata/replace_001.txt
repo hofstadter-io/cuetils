@@ -1,0 +1,34 @@
+exec cuetils replace replace.cue a.json
+cmp stdout golden.stdout
+
+-- replace.cue --
+{
+	a: {
+		b: string
+	}
+	c: int
+	d: "d"
+	e: "E"
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	},
+	"b": 1,
+	"c": 2,
+	"d": "D"
+}
+
+-- golden.stdout --
+a.json
+----------------------
+{
+	b: 1
+	c: 2
+	a: {
+		b: "B"
+	}
+	d: "d"
+}
+

@@ -1,0 +1,34 @@
+exec cuetils patch patch.json a.json
+cmp stdout golden.stdout
+
+-- patch.json --
+{
+  "+": {
+    b: "B"
+  }
+  a: {
+    "-": {
+      b: "B"
+    }
+    "+": {
+      c: "C"
+    }
+  }
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	}
+}
+
+-- golden.stdout --
+a.json
+----------------------
+{
+	b: "B"
+	a: {
+		c: "C"
+	}
+}
+

@@ -1,0 +1,166 @@
+{"Time":"2021-10-11T22:28:48.17967087-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests"}
+{"Time":"2021-10-11T22:28:48.179896874-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests","Output":"=== RUN   TestCliTests\n"}
+{"Time":"2021-10-11T22:28:48.179926221-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt"}
+{"Time":"2021-10-11T22:28:48.179936324-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"=== RUN   TestCliTests/count_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.179946885-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"=== PAUSE TestCliTests/count_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.179953825-04:00","Action":"pause","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt"}
+{"Time":"2021-10-11T22:28:48.179960854-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt"}
+{"Time":"2021-10-11T22:28:48.179967302-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"=== RUN   TestCliTests/depth_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.179974508-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"=== PAUSE TestCliTests/depth_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.17998098-04:00","Action":"pause","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt"}
+{"Time":"2021-10-11T22:28:48.179987796-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt"}
+{"Time":"2021-10-11T22:28:48.17999415-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"=== RUN   TestCliTests/diff_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180001904-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"=== PAUSE TestCliTests/diff_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180008228-04:00","Action":"pause","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt"}
+{"Time":"2021-10-11T22:28:48.180014824-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt"}
+{"Time":"2021-10-11T22:28:48.180022462-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"=== RUN   TestCliTests/patch_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180029374-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"=== PAUSE TestCliTests/patch_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180035564-04:00","Action":"pause","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt"}
+{"Time":"2021-10-11T22:28:48.180042011-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt"}
+{"Time":"2021-10-11T22:28:48.180048172-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"=== RUN   TestCliTests/pick_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180055006-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"=== PAUSE TestCliTests/pick_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180061163-04:00","Action":"pause","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt"}
+{"Time":"2021-10-11T22:28:48.180067506-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt"}
+{"Time":"2021-10-11T22:28:48.180073738-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"=== RUN   TestCliTests/replace_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180091761-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"=== PAUSE TestCliTests/replace_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180100291-04:00","Action":"pause","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt"}
+{"Time":"2021-10-11T22:28:48.180106995-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt"}
+{"Time":"2021-10-11T22:28:48.180114155-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"=== RUN   TestCliTests/upsert_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180121378-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"=== PAUSE TestCliTests/upsert_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180127798-04:00","Action":"pause","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt"}
+{"Time":"2021-10-11T22:28:48.18013556-04:00","Action":"cont","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt"}
+{"Time":"2021-10-11T22:28:48.180144341-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"=== CONT  TestCliTests/count_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180151298-04:00","Action":"cont","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt"}
+{"Time":"2021-10-11T22:28:48.180157624-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"=== CONT  TestCliTests/upsert_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180165723-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"    script_run.go:219: \n"}
+{"Time":"2021-10-11T22:28:48.180174964-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        WORK=.workdir/tests/script-upsert_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180183512-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tony/bin:/usr/local/go/bin:/home/tony/go/bin:/home/tony/.npm-global/bin:\n"}
+{"Time":"2021-10-11T22:28:48.180194686-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        USER=tony\n"}
+{"Time":"2021-10-11T22:28:48.18020187-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        HOME=$WORK/home\n"}
+{"Time":"2021-10-11T22:28:48.180208607-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        TMPDIR=$WORK/tmp\n"}
+{"Time":"2021-10-11T22:28:48.180215237-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        devnull=/dev/null\n"}
+{"Time":"2021-10-11T22:28:48.180222049-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        /=/\n"}
+{"Time":"2021-10-11T22:28:48.180228769-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        :=:\n"}
+{"Time":"2021-10-11T22:28:48.180235425-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        exe=\n"}
+{"Time":"2021-10-11T22:28:48.18024205-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180255932-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        PASS\n"}
+{"Time":"2021-10-11T22:28:48.180263782-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180270673-04:00","Action":"cont","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt"}
+{"Time":"2021-10-11T22:28:48.180277057-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"=== CONT  TestCliTests/replace_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180284013-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"    script_run.go:219: \n"}
+{"Time":"2021-10-11T22:28:48.180292243-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        WORK=.workdir/tests/script-replace_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180299324-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tony/bin:/usr/local/go/bin:/home/tony/go/bin:/home/tony/.npm-global/bin:\n"}
+{"Time":"2021-10-11T22:28:48.180306374-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        USER=tony\n"}
+{"Time":"2021-10-11T22:28:48.180312936-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        HOME=$WORK/home\n"}
+{"Time":"2021-10-11T22:28:48.180319542-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        TMPDIR=$WORK/tmp\n"}
+{"Time":"2021-10-11T22:28:48.180326171-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        devnull=/dev/null\n"}
+{"Time":"2021-10-11T22:28:48.180332808-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        /=/\n"}
+{"Time":"2021-10-11T22:28:48.180339527-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        :=:\n"}
+{"Time":"2021-10-11T22:28:48.180346162-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        exe=\n"}
+{"Time":"2021-10-11T22:28:48.180352683-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180359214-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        PASS\n"}
+{"Time":"2021-10-11T22:28:48.180365649-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180380725-04:00","Action":"cont","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt"}
+{"Time":"2021-10-11T22:28:48.180387568-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"=== CONT  TestCliTests/pick_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.18039415-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"    script_run.go:219: \n"}
+{"Time":"2021-10-11T22:28:48.180400746-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        WORK=.workdir/tests/script-pick_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180413999-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tony/bin:/usr/local/go/bin:/home/tony/go/bin:/home/tony/.npm-global/bin:\n"}
+{"Time":"2021-10-11T22:28:48.180421945-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        USER=tony\n"}
+{"Time":"2021-10-11T22:28:48.180428593-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        HOME=$WORK/home\n"}
+{"Time":"2021-10-11T22:28:48.180440039-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        TMPDIR=$WORK/tmp\n"}
+{"Time":"2021-10-11T22:28:48.180446846-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        devnull=/dev/null\n"}
+{"Time":"2021-10-11T22:28:48.180453588-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        /=/\n"}
+{"Time":"2021-10-11T22:28:48.180460084-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        :=:\n"}
+{"Time":"2021-10-11T22:28:48.180466542-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        exe=\n"}
+{"Time":"2021-10-11T22:28:48.180473123-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180479797-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        PASS\n"}
+{"Time":"2021-10-11T22:28:48.180486298-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180492869-04:00","Action":"cont","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt"}
+{"Time":"2021-10-11T22:28:48.180499038-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"=== CONT  TestCliTests/patch_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180505541-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"    script_run.go:219: \n"}
+{"Time":"2021-10-11T22:28:48.180512184-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        WORK=.workdir/tests/script-patch_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180518835-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tony/bin:/usr/local/go/bin:/home/tony/go/bin:/home/tony/.npm-global/bin:\n"}
+{"Time":"2021-10-11T22:28:48.180525876-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        USER=tony\n"}
+{"Time":"2021-10-11T22:28:48.180532427-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        HOME=$WORK/home\n"}
+{"Time":"2021-10-11T22:28:48.180538809-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        TMPDIR=$WORK/tmp\n"}
+{"Time":"2021-10-11T22:28:48.180545381-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        devnull=/dev/null\n"}
+{"Time":"2021-10-11T22:28:48.180551851-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        /=/\n"}
+{"Time":"2021-10-11T22:28:48.180564262-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        :=:\n"}
+{"Time":"2021-10-11T22:28:48.180571521-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        exe=\n"}
+{"Time":"2021-10-11T22:28:48.180577934-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180584629-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        PASS\n"}
+{"Time":"2021-10-11T22:28:48.180591094-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180597808-04:00","Action":"cont","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt"}
+{"Time":"2021-10-11T22:28:48.180603992-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"=== CONT  TestCliTests/diff_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180610621-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"    script_run.go:219: \n"}
+{"Time":"2021-10-11T22:28:48.180617183-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        WORK=.workdir/tests/script-diff_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180623776-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tony/bin:/usr/local/go/bin:/home/tony/go/bin:/home/tony/.npm-global/bin:\n"}
+{"Time":"2021-10-11T22:28:48.180630647-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        USER=tony\n"}
+{"Time":"2021-10-11T22:28:48.180637171-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        HOME=$WORK/home\n"}
+{"Time":"2021-10-11T22:28:48.180657789-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        TMPDIR=$WORK/tmp\n"}
+{"Time":"2021-10-11T22:28:48.180665637-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        devnull=/dev/null\n"}
+{"Time":"2021-10-11T22:28:48.180672438-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        /=/\n"}
+{"Time":"2021-10-11T22:28:48.180678977-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        :=:\n"}
+{"Time":"2021-10-11T22:28:48.180693435-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        exe=\n"}
+{"Time":"2021-10-11T22:28:48.18070047-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180706862-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        PASS\n"}
+{"Time":"2021-10-11T22:28:48.180713429-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.180720034-04:00","Action":"cont","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt"}
+{"Time":"2021-10-11T22:28:48.180727141-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"=== CONT  TestCliTests/depth_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180740253-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"    script_run.go:219: \n"}
+{"Time":"2021-10-11T22:28:48.18074766-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        WORK=.workdir/tests/script-depth_001.txt\n"}
+{"Time":"2021-10-11T22:28:48.180754516-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tony/bin:/usr/local/go/bin:/home/tony/go/bin:/home/tony/.npm-global/bin:\n"}
+{"Time":"2021-10-11T22:28:48.180761251-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        USER=tony\n"}
+{"Time":"2021-10-11T22:28:48.18076776-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        HOME=$WORK/home\n"}
+{"Time":"2021-10-11T22:28:48.180774392-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        TMPDIR=$WORK/tmp\n"}
+{"Time":"2021-10-11T22:28:48.180781005-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        devnull=/dev/null\n"}
+{"Time":"2021-10-11T22:28:48.180787611-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        /=/\n"}
+{"Time":"2021-10-11T22:28:48.180794006-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        :=:\n"}
+{"Time":"2021-10-11T22:28:48.180800452-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        exe=\n"}
+{"Time":"2021-10-11T22:28:48.180806963-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:48.18081358-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        PASS\n"}
+{"Time":"2021-10-11T22:28:48.180820107-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:49.238533883-04:00","Action":"cont","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt"}
+{"Time":"2021-10-11T22:28:49.238573579-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"=== CONT  TestCliTests/count_001.txt\n"}
+{"Time":"2021-10-11T22:28:49.238586473-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"    script_run.go:219: \n"}
+{"Time":"2021-10-11T22:28:49.238595657-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        WORK=.workdir/tests/script-count_001.txt\n"}
+{"Time":"2021-10-11T22:28:49.238604247-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tony/bin:/usr/local/go/bin:/home/tony/go/bin:/home/tony/.npm-global/bin:\n"}
+{"Time":"2021-10-11T22:28:49.238612893-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        USER=tony\n"}
+{"Time":"2021-10-11T22:28:49.238620466-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        HOME=$WORK/home\n"}
+{"Time":"2021-10-11T22:28:49.238658408-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        TMPDIR=$WORK/tmp\n"}
+{"Time":"2021-10-11T22:28:49.238670858-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        devnull=/dev/null\n"}
+{"Time":"2021-10-11T22:28:49.238678417-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        /=/\n"}
+{"Time":"2021-10-11T22:28:49.238689003-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        :=:\n"}
+{"Time":"2021-10-11T22:28:49.238696589-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        exe=\n"}
+{"Time":"2021-10-11T22:28:49.238703909-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:49.23871241-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:49.238719684-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        \u003e\u003e\u003e exec cuetils count tree.cue\n"}
+{"Time":"2021-10-11T22:28:49.238727668-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        [stdout]\n"}
+{"Time":"2021-10-11T22:28:49.238734908-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        tree.cue 10\n"}
+{"Time":"2021-10-11T22:28:49.238742376-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        PASS\n"}
+{"Time":"2021-10-11T22:28:49.23874959-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"        \n"}
+{"Time":"2021-10-11T22:28:49.238761517-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests","Output":"--- PASS: TestCliTests (0.00s)\n"}
+{"Time":"2021-10-11T22:28:49.23877156-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Output":"    --- PASS: TestCliTests/upsert_001.txt (0.00s)\n"}
+{"Time":"2021-10-11T22:28:49.23877976-04:00","Action":"pass","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/upsert_001.txt","Elapsed":0}
+{"Time":"2021-10-11T22:28:49.23878942-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Output":"    --- PASS: TestCliTests/replace_001.txt (0.00s)\n"}
+{"Time":"2021-10-11T22:28:49.238796965-04:00","Action":"pass","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/replace_001.txt","Elapsed":0}
+{"Time":"2021-10-11T22:28:49.238804222-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Output":"    --- PASS: TestCliTests/pick_001.txt (0.00s)\n"}
+{"Time":"2021-10-11T22:28:49.23881167-04:00","Action":"pass","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/pick_001.txt","Elapsed":0}
+{"Time":"2021-10-11T22:28:49.238818703-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Output":"    --- PASS: TestCliTests/patch_001.txt (0.00s)\n"}
+{"Time":"2021-10-11T22:28:49.238826383-04:00","Action":"pass","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/patch_001.txt","Elapsed":0}
+{"Time":"2021-10-11T22:28:49.238833448-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Output":"    --- PASS: TestCliTests/diff_001.txt (0.00s)\n"}
+{"Time":"2021-10-11T22:28:49.238850011-04:00","Action":"pass","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/diff_001.txt","Elapsed":0}
+{"Time":"2021-10-11T22:28:49.238858653-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Output":"    --- PASS: TestCliTests/depth_001.txt (0.00s)\n"}
+{"Time":"2021-10-11T22:28:49.238867066-04:00","Action":"pass","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/depth_001.txt","Elapsed":0}
+{"Time":"2021-10-11T22:28:49.238874038-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Output":"    --- PASS: TestCliTests/count_001.txt (1.06s)\n"}
+{"Time":"2021-10-11T22:28:49.23888775-04:00","Action":"pass","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests/count_001.txt","Elapsed":1.06}
+{"Time":"2021-10-11T22:28:49.238896576-04:00","Action":"pass","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliTests","Elapsed":0}
+{"Time":"2021-10-11T22:28:49.238903022-04:00","Action":"run","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliBugs"}
+{"Time":"2021-10-11T22:28:49.238910011-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliBugs","Output":"=== RUN   TestCliBugs\n"}
+{"Time":"2021-10-11T22:28:49.238917157-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliBugs","Output":"    script_testing.go:61: no scripts found matching glob: testdata/bugs/*.txt\n"}
+{"Time":"2021-10-11T22:28:49.238927147-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliBugs","Output":"--- FAIL: TestCliBugs (0.00s)\n"}
+{"Time":"2021-10-11T22:28:49.238933943-04:00","Action":"fail","Package":"github.com/hofstadter-io/cuetils/test/cli","Test":"TestCliBugs","Elapsed":0}
+{"Time":"2021-10-11T22:28:49.238941159-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Output":"FAIL\n"}
+{"Time":"2021-10-11T22:28:49.238948036-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Output":"coverage: [no statements]\n"}
+{"Time":"2021-10-11T22:28:49.244299767-04:00","Action":"output","Package":"github.com/hofstadter-io/cuetils/test/cli","Output":"FAIL\tgithub.com/hofstadter-io/cuetils/test/cli\t1.078s\n"}
+{"Time":"2021-10-11T22:28:49.244324781-04:00","Action":"fail","Package":"github.com/hofstadter-io/cuetils/test/cli","Elapsed":1.078}
