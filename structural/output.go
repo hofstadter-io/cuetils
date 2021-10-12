@@ -10,6 +10,12 @@ import (
 	"cuelang.org/go/encoding/yaml"
 )
 
+type GlobResult struct {
+	Filename string
+	Content  string
+	Value    cue.Value
+}
+
 func FormatOutput(val cue.Value, format string) (string, error) {
 	switch format {
 	case "cue", "CUE":

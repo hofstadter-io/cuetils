@@ -39,7 +39,7 @@ func LoadInputs(entrypoints []string, ctx *cue.Context) (cue.Value, error) {
 
 	// Validate the value
 	err := value.Validate(
-		cue.ResolveReferences(true),
+		cue.ResolveReferences(false),
 		cue.Concrete(false),
 		cue.Definitions(true),
 		cue.Hidden(true),
@@ -55,6 +55,10 @@ func LoadInputs(entrypoints []string, ctx *cue.Context) (cue.Value, error) {
 }
 
 func ReadGlobs(globs []string) ([]Input, error) {
+	// no globs, then stdin
+	if len(globs) == 0 {
+		globs = []string{"-"}
+	}
 
 	// handle special stdin case
 	if len(globs) == 1 && globs[0] == "-" {

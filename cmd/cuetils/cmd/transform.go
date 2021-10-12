@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/structural"
 )
 
 var transformLong = `apply the transform from the original to the glob file(s)`
@@ -12,7 +14,16 @@ var transformLong = `apply the transform from the original to the glob file(s)`
 func TransformRun(orig string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	results, err := structural.TransformGlobs(orig, globs)
+	if err != nil {
+		return err
+	}
+
+	for _, r := range results {
+		fmt.Printf("%s\n----------------------\n%s\n\n", r.Filename, r.Content)
+	}
 
 	return err
 }
