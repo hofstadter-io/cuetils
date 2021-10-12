@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/structural"
 )
 
 var validateLong = `validate with the original against the glob file(s)`
@@ -12,7 +14,20 @@ var validateLong = `validate with the original against the glob file(s)`
 func ValidateRun(orig string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	results, err := structural.ValidateGlobs(orig, globs)
+	if err != nil {
+		return err
+	}
+
+	for _, r := range results {
+		fmt.Printf("%s\n----------------------\n%s\n\n", r.Filename, r.Content)
+	}
+
+	if len(results) > 0 {
+		err = fmt.Errorf("Errors in %d file(s)", len(results))
+	}
 
 	return err
 }

@@ -21,11 +21,6 @@ replace: val.replace
 `
 
 func Replace(orig string, globs []string) ([]ReplaceResult, error) {
-	// no globs, then stdin
-	if len(globs) == 0 {
-		globs = []string{"-"}
-	}
-
 	cuest, err := NewCuest([]string{"replace"}, nil)
 	if err != nil {
 		return nil, err
