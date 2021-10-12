@@ -25,5 +25,5 @@ jobs:
     - name: Build CLI
       run: go install ./cmd/hof
     - name: Run tests
-      run: hof test -t test
+      run: go test -cover ./test/cli
     services: {}

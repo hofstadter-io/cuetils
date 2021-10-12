@@ -27,5 +27,5 @@ import "github.com/hofstadter-io/ghacue"
 	run: "go mod download"
 },{
 	name: "Build CLI"
-	run: "go install ./cmd/hof"
+	run: "go install ./cmd/cuetils"
 }]

@@ -9,7 +9,7 @@ common.#Workflow & {
 		steps: [ for step in common.#BuildSteps {step} ] + [{
 			name: "Run tests"
 			run: """
-			hof test -t test
+			go test -cover ./test/cli
 			"""
 		}]
 	}
