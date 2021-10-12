@@ -1,6 +1,6 @@
 package workflows
 
-import "github.com/hofstadter-io/hof/.github/workflows/common"
+import "github.com/hofstadter-io/cuetils/.github/workflows/common"
 
 common.#Workflow & {
 	name: "default"
