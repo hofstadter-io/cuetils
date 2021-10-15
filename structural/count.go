@@ -4,8 +4,9 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/cuecontext"
 
-	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
+	// "github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
 type CountResult struct {
@@ -13,57 +14,75 @@ type CountResult struct {
 	Count int
 }
 
-const countfmt = `
-val: #Count%s
-val: #in: _
-count: val.count
-`
-
 func Count(globs []string) ([]CountResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
 	}
 
-	cuest, err := NewCuest([]string{"count"}, nil)
+	//cuest, err := NewCuest([]string{"count"}, nil)
+	//if err != nil {
+		//return nil, err
+	//}
+
+	inputs, err := ReadGlobs(globs)
 	if err != nil {
 		return nil, err
 	}
-
-	inputs, err := ReadGlobs(globs)
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no matches found")
 	}
 
-	// construct reusable val with function
-	maxiter := ""
-	if mi := flags.RootPflags.Maxiter; mi > 0 {
-		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
+	counter := func (val cue.Value) int {
+		sum := 0
+		after := func (v cue.Value) {
+			switch v.IncompleteKind() {
+				case cue.StructKind:
+					sum += 1
+				case cue.ListKind:
+					// nothing
+				default:
+					sum += 1
+			}
+		}
+
+		Walk(val, nil, after)
+		return sum
 	}
-	content := fmt.Sprintf(countfmt, maxiter)
-	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
+
+	// construct reusable val with function
+	//maxiter := ""
+	//if mi := flags.RootPflags.Maxiter; mi > 0 {
+		//maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
+	//}
+	//content := fmt.Sprintf(countfmt, maxiter)
+	//val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
+
+	ctx := cuecontext.New()
 
 	counts := make([]CountResult, 0)
 	for _, input := range inputs {
 
 		// need to handle encodings here
 
-		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
+		iv := ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
 		if iv.Err() != nil {
 			return nil, iv.Err()
 		}
 
-		result := val.FillPath(cue.ParsePath("val.#in"), iv)
+		c := counter(iv)
 
-		dv := result.LookupPath(cue.ParsePath("count"))
-		di, err := dv.Int64()
-		if err != nil {
-			return nil, err
-		}
+		//result := val.FillPath(cue.ParsePath("val.#in"), iv)
+
+		//dv := result.LookupPath(cue.ParsePath("count"))
+		//di, err := dv.Int64()
+		//if err != nil {
+			//return nil, err
+		//}
 
 		counts = append(counts, CountResult{
 			Filename: input.Filename,
-			Count: int(di),
+			Count: c,
 		})
 
 	}
