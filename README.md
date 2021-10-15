@@ -6,9 +6,9 @@ in any combination of CUE, Yaml, and JSON.
 
 ## Using
 
-### As a binary
+### As a command line binary
 
-The `cuetils` program is useful for bulk operations
+The `cuetils` CLI is useful for bulk operations
 or when you don't want to write extra CUE or Go.
 
 Download a [release from GitHub](https://github.com/hofstadter-io/cuetils/releases).
@@ -78,8 +78,8 @@ may solve this issue. We don't currently have good syntax for specifying the key
 
 __#Count__ calculates how many nodes are in an object.
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
 ```cue
@@ -126,8 +126,8 @@ depth: 9
 
 __#Depth__ calculates the deepest branch of an object.
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
 ```cue
@@ -178,12 +178,38 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 __#Diff__ computes a semantic diff object
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
-```shell
+```
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	}
+}
+-- b.yaml --
+a:
+  c: C
+b: B
+```
 
+```shell
+$ cuetils diff a.json b.yaml
+{
+	"+": {
+		b: "B"
+	}
+	a: {
+		"-": {
+			b: "B"
+		}
+		"+": {
+			c: "C"
+		}
+	}
+}
 ```
 </details>
 
@@ -254,12 +280,41 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 __#Patch__ applies a diff object
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
-```shell
+```
+-- patch.json --
+{
+  "+": {
+    b: "B"
+  }
+  a: {
+    "-": {
+      b: "B"
+    }
+    "+": {
+      c: "C"
+    }
+  }
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	}
+}
+```
 
+```shell
+$ cuetils patch patch.json a.json
+{
+	b: "B"
+	a: {
+		c: "C"
+	}
+}
 ```
 </details>
 
@@ -329,12 +384,39 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 __#Pick__ extracts a subobject
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
-```shell
+```
+-- pick.cue --
+{
+	a: {
+		b: string
+	}
+	c: int
+	d: "D"
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	},
+	"b": 1,
+	"c": 2,
+	"d": "D"
+}
+```
 
+```shell
+$ cuetils pick pick.cue a.json
+{
+	a: {
+		b: "B"
+	}
+	c: 2
+	d: "D"
+}
 ```
 </details>
 
@@ -389,13 +471,41 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 __#Mask__ removes a subobject
 
-<details>
-<summary>Cuetils example</summary>
+<detailsi open>
+<summary>CLI example</summary>
 <br>
 
-```shell
-
 ```
+-- mask.cue --
+{
+	a: {
+		b: string
+	}
+	c: int
+	d: "D"
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+		"c": "C"
+	},
+	"b": 1,
+	"c": 2,
+	"d": "D"
+}
+```
+
+```shell
+$ cuetils mask mask.cue a.json
+{
+	a: {
+		c: "C"
+	}
+	b: 1
+}
+```
+
 </details>
 
 <details>
@@ -447,13 +557,42 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 ### Replace
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
-```shell
-
 ```
+-- replace.cue --
+{
+	a: {
+		b: "b"
+	}
+	d: "d"
+	e: "E"
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	},
+	"b": 1,
+	"c": 2,
+	"d": "D"
+}
+```
+
+```shell
+$ cuetils replace replace.cue a.json
+{
+	b: 1
+	c: 2
+	a: {
+		b: "b"
+	}
+	d: "d"
+}
+```
+
 </details>
 
 <details>
@@ -477,13 +616,41 @@ import "github.com/hofstadter-io/cuetils/structural"
 ### Upsert
 
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
-```shell
-
 ```
+-- upsert.cue --
+{
+	a: {
+		b: "b"
+	}
+	d: "d"
+	e: "E"
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	},
+	"b": 1,
+	"d": "D"
+}
+```
+
+```shell
+$ cuetils upsert upsert.cue a.json
+{
+	b: 1
+	a: {
+		b: "b"
+	}
+	d: "d"
+	e: "E"
+}
+```
+
 </details>
 
 <details>
@@ -508,12 +675,36 @@ import "github.com/hofstadter-io/cuetils/structural"
 ### Transform
 
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
-```shell
+```
+-- t.cue --
+#In: _        // required, filled in during processing
+{
+	B: #In.a.b
+	C: #In.a.c
+	D: #In.d
+}
 
+-- a.json --
+{
+	"a": {
+		"b": "b"
+		"c": "c"
+	}
+	"d": "d"
+}
+```
+
+```shell
+$ cuetils transform t.cue a.json
+{
+	B: "b"
+	C: "c"
+	D: "d"
+}
 ```
 </details>
 
@@ -529,8 +720,8 @@ import "github.com/hofstadter-io/cuetils/structural"
 
 ### Validate
 
-<details>
-<summary>Cuetils example</summary>
+<details open>
+<summary>CLI example</summary>
 <br>
 
 ```shell
