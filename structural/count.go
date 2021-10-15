@@ -33,7 +33,10 @@ func Count(globs []string) ([]CountResult, error) {
 		after := func (v cue.Value) {
 			switch v.IncompleteKind() {
 				case cue.StructKind:
-					sum += 1
+					s, _ := v.Fields(defaultWalkOptions...)
+					for s.Next() {
+						sum += 1
+					}
 				case cue.ListKind:
 					// nothing
 				default:

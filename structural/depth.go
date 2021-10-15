@@ -4,8 +4,9 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/cuecontext"
 
-	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
+	// "github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
 type DepthResult struct {
@@ -13,57 +14,72 @@ type DepthResult struct {
 	Depth int
 }
 
-const depthfmt = `
-val: #Depth%s
-val: #in: _
-depth: val.depth
-`
-
 func Depth(globs []string) ([]DepthResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
 	}
 
-	cuest, err := NewCuest([]string{"depth"}, nil)
+	inputs, err := ReadGlobs(globs)
 	if err != nil {
 		return nil, err
 	}
-
-	inputs, err := ReadGlobs(globs)
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no matches found")
 	}
 
-	// construct reusable val with function
-	maxiter := ""
-	if mi := flags.RootPflags.Maxiter; mi > 0 {
-		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
+	depther := func (val cue.Value) int {
+		var max, depth int
+
+		// increase depth, check against max
+		before := func (v cue.Value) bool {
+			switch v.IncompleteKind() {
+				case cue.StructKind:
+					depth += 1
+				case cue.ListKind:
+					// nothing
+				default:
+					depth += 1
+			}
+
+			if depth > max {
+				max = depth
+			}
+			return true
+		}
+		// decrease depth after
+		after := func (v cue.Value) {
+			switch v.IncompleteKind() {
+				case cue.StructKind:
+					depth -= 1
+				case cue.ListKind:
+					// nothing
+				default:
+					depth -= 1
+			}
+		}
+
+		Walk(val, before, after)
+		return max
 	}
-	content := fmt.Sprintf(depthfmt, maxiter)
-	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
+
+	ctx := cuecontext.New()
 
 	depths := make([]DepthResult, 0)
 	for _, input := range inputs {
 
-		// need to handle encodings here
+		// need to handle encodings here?
 
-		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
+		iv := ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
 		if iv.Err() != nil {
 			return nil, iv.Err()
 		}
 
-		result := val.FillPath(cue.ParsePath("val.#in"), iv)
-
-		dv := result.LookupPath(cue.ParsePath("depth"))
-		di, err := dv.Int64()
-		if err != nil {
-			return nil, err
-		}
+		d := depther(iv)
 
 		depths = append(depths, DepthResult{
 			Filename: input.Filename,
-			Depth: int(di),
+			Depth: int(d),
 		})
 
 	}
