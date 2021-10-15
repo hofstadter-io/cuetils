@@ -20,11 +20,6 @@ func Count(globs []string) ([]CountResult, error) {
 		globs = []string{"-"}
 	}
 
-	//cuest, err := NewCuest([]string{"count"}, nil)
-	//if err != nil {
-		//return nil, err
-	//}
-
 	inputs, err := ReadGlobs(globs)
 	if err != nil {
 		return nil, err
@@ -50,20 +45,12 @@ func Count(globs []string) ([]CountResult, error) {
 		return sum
 	}
 
-	// construct reusable val with function
-	//maxiter := ""
-	//if mi := flags.RootPflags.Maxiter; mi > 0 {
-		//maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
-	//}
-	//content := fmt.Sprintf(countfmt, maxiter)
-	//val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
-
 	ctx := cuecontext.New()
 
 	counts := make([]CountResult, 0)
 	for _, input := range inputs {
 
-		// need to handle encodings here
+		// need to handle encodings here?
 
 		iv := ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
 		if iv.Err() != nil {
@@ -71,14 +58,6 @@ func Count(globs []string) ([]CountResult, error) {
 		}
 
 		c := counter(iv)
-
-		//result := val.FillPath(cue.ParsePath("val.#in"), iv)
-
-		//dv := result.LookupPath(cue.ParsePath("count"))
-		//di, err := dv.Int64()
-		//if err != nil {
-			//return nil, err
-		//}
 
 		counts = append(counts, CountResult{
 			Filename: input.Filename,
