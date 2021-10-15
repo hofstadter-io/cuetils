@@ -1,0 +1,31 @@
+! exec cuetils validate schema.cue a.json
+cmp stdout golden.stdout
+
+-- schema.cue --
+{
+	a: {
+		b: int
+	}
+	c: int
+	d: "D"
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	},
+	"b": 1,
+	"c": 2,
+	"d": "D"
+}
+
+-- golden.stdout --
+a.json
+----------------------
+a.b: conflicting values "B" and int (mismatched types string and int):
+    ./schema.cue:1:1
+    ./schema.cue:3:6
+    a.json:3:8
+
+
+Errors in 1 file(s)

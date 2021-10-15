@@ -1,3 +1,5 @@
 cue.mod/pkg/
 cmd/cuetils/dist/
 .workdir/
+cover.out
+tests.json

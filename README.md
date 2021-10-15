@@ -19,7 +19,7 @@ cuetils -h
 
 ### As a Go library
 
-The Go libraries are optimized and have more capabilities.
+The Go libraries are optimized and have more capabilities.*
 
 ```shell
 go get github.com/hofstadter-io/cuetils@latest
@@ -28,6 +28,8 @@ go get github.com/hofstadter-io/cuetils@latest
 ```
 import "github.com/hofstadter-io/cuetils/structural"
 ```
+
+\* work in progress, unoptimized use the CUE helper and RecurseN
 
 ### As a CUE library
 
@@ -59,20 +61,9 @@ import "github.com/hofstadter-io/cuetils/structural"
 - [Validate](#validate) one or more objects with the power of CUE
 
 
-Some notes:
-
 The helpers work by checking if two operands unify.
-We try to make note of the edge cases, which also
-depends on if you are using CUE, Go, or `cuetils`.
-
-- for __diff__ and __patch__, `int & 1` like expressions will _not_ be detected
-- for __pick__ and __mask__, `int & 1` like expression are detected
-
-Lists are not currently supported for __diff__ and __patch__.
-It may be workable if the list sizes are known and order consistent.
-[Associative Lists](https://cuetorials.com/cueology/futurology/associative-lists/)
-may solve this issue. We don't currently have good syntax for specifying the key to match elements on.
-
+We try to make note of the edge cases where appropriate,
+as it depends on both the operation and the method you are using (CUE, Go, or `cuetils`).
 
 ### Count
 
@@ -274,6 +265,12 @@ diff: {
 import "github.com/hofstadter-io/cuetils/structural"
 ```
 </details>
+
+For __diff__ and __patch__, `int & 1` like expressions will _not_ be detected.
+Lists are not currently supported for __diff__ and __patch__.
+It may be workable if the list sizes are known and order consistent.
+[Associative Lists](https://cuetorials.com/cueology/futurology/associative-lists/) may solve this issue.
+We don't currently have good syntax for specifying the key to match elements on.
 
 
 ### Patch
@@ -724,8 +721,37 @@ import "github.com/hofstadter-io/cuetils/structural"
 <summary>CLI example</summary>
 <br>
 
-```shell
+```
+-- schema.cue --
+{
+	a: {
+		b: int
+	}
+	c: int
+	d: "D"
+}
+-- a.json --
+{
+	"a": {
+		"b": "B"
+	},
+	"b": 1,
+	"c": 2,
+	"d": "D"
+}
+```
 
+```shell
+$ cuetils validate schema.cue a.json
+a.json
+----------------------
+a.b: conflicting values "B" and int (mismatched types string and int):
+    ./schema.cue:1:1
+    ./schema.cue:3:6
+    a.json:3:8
+
+
+Errors in 1 file(s)
 ```
 </details>
 
