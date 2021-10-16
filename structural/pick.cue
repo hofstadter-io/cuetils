@@ -12,12 +12,18 @@ import (
 		pick: {
 			for i,p in #P {
 				let x = #X[i]
-				// in both
-				if x != _|_ {
+
 					// if they unify, then just add
 					if (x & p) != _|_ {
-						"\(i)": x
+						// not a struct
+						if (x & {...}) == _|_ {
+							"\(i)": x
+						}
+						if (x & {...}) != _|_ {
+							"\(i)": (#next & { #X: x, #P: p }).pick
+						}
 					}
+
 					// if they do not unify
 					if (x & p) == _|_ {
 						// and if struct, then recurse
@@ -25,7 +31,7 @@ import (
 							"\(i)": (#next & { #X: x, #P: p }).pick
 						}
 					}
-				}
+
 			}
 		}
 	}
