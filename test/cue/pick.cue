@@ -59,5 +59,14 @@ pick_tests: [
 		}
 		same: #real & #pick
 	},
+	{
+		x: { string }
+		p: { "foo" }
+		#pick: (st.#Pick & { #X: x, #P: p }).pick
+		#real: {
+			"foo"
+		}
+		same: #real & #pick
+	},
 ]
 
