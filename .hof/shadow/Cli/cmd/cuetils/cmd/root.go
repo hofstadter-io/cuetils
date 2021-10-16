@@ -25,9 +25,9 @@ func init() {
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.LoadOperator), "load-operator", "", true, "use cue/load to support entrypoint and imports in the operator")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.LoadOperands), "load-operands", "", false, "use cue/load to support entrypoint and imports in the operands")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.Headers), "headers", "", false, "print the filename as a header during output")
-	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Accum), "accum", "", "<filepath>.<ext>", "accumulate operand results into a single value using accum as the label")
+	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Accum), "accum", "", "", "accumulate operand results into a single value using accum as the label")
 	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Out), "out", "", "cue", "output encoding [cue,yaml,json]")
-	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Outname), "outname", "", "<filepath>.<ext>", "output filename when being used")
+	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Outname), "outname", "", "", "output filename when being used")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.Overwrite), "overwrite", "", false, "overwrite files being processed")
 }
 

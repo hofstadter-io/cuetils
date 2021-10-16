@@ -91,7 +91,7 @@ Cli: gen.#HofGenerator & {
 		Name:    "accum"
 		Long:    "accum"
 		Type:    "string"
-		Default: "\"<filepath>.<ext>\""
+		Default: ""
 		Help:    "accumulate operand results into a single value using accum as the label"
 	},{
 		Name:    "out"
@@ -103,7 +103,7 @@ Cli: gen.#HofGenerator & {
 		Name:    "outname"
 		Long:    "outname"
 		Type:    "string"
-		Default: "\"<filepath>.<ext>\""
+		Default: ""
 		Help:    "output filename when being used"
 	},{
 		Name:    "overwrite"
