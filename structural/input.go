@@ -26,6 +26,10 @@ func ParseOperator(op string) (Input, error) {
 	i := Input{ Original: op, Filename: op }
 
 	// does the op look like a file or a CUE value?
+	// this is an overly simple check, but should be sufficient for all formats (CUE, JSON, Yaml)
+	if strings.ContainsAny(op, "{}:") {
+		i.Filename = "expression"
+	}
 
 	// look for expression
 	if strings.Contains(i.Filename, "@") {
@@ -45,6 +49,12 @@ func ParseOperator(op string) (Input, error) {
 }
 
 func LoadOperator(i Input, doLoad bool, ctx *cue.Context) (Input, error) {
+	if i.Filename == "expression" {
+		i.Content = []byte(i.Original)
+		i.Value = ctx.CompileString(i.Original)
+		return i, i.Value.Err()
+	}
+
 	if doLoad || i.Entrypoints != nil {
 		// handle entrypoints
 		if i.Entrypoints == nil {
