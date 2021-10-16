@@ -42,11 +42,75 @@ Cli: gen.#HofGenerator & {
 		Default: ""
 		Help:    "maximum iterations for recursion"
 	},{
+		Name:    "concrete"
+		Long:    "concrete"
+		Short:   "c"
+		Type:    "bool"
+		Default: "false"
+		Help:    "enforce concrete outputs"
+	},{
+		Name:    "definitions"
+		Long:    "definitions"
+		Short:   "D"
+		Type:    "bool"
+		Default: "true"
+		Help:    "process definitions in inputs and objects"
+	},{
+		Name:    "hidden"
+		Long:    "hidden"
+		Short:   "H"
+		Type:    "bool"
+		Default: "true"
+		Help:    "process hidden fields in inputs and objects"
+	},{
+		Name:    "optional"
+		Long:    "optional"
+		Short:   "O"
+		Type:    "bool"
+		Default: "true"
+		Help:    "process optional fields in inputs and objects"
+	},{
+		Name:    "loadOperator"
+		Long:    "load-operator"
+		Type:    "bool"
+		Default: "true"
+		Help:    "use cue/load to support entrypoint and imports in the operator"
+	},{
+		Name:    "loadOperands"
+		Long:    "load-operands"
+		Type:    "bool"
+		Default: "false"
+		Help:    "use cue/load to support entrypoint and imports in the operands"
+	},{
+		Name:    "headers"
+		Long:    "headers"
+		Type:    "bool"
+		Default: "false"
+		Help:    "print the filename as a header during output"
+	},{
+		Name:    "accum"
+		Long:    "accum"
+		Type:    "string"
+		Default: "\"<filepath>.<ext>\""
+		Help:    "accumulate operand results into a single value using accum as the label"
+	},{
 		Name:    "out"
 		Long:    "out"
 		Type:    "string"
 		Default: "\"cue\""
 		Help:    "output encoding [cue,yaml,json]"
+	},{
+		Name:    "outname"
+		Long:    "outname"
+		Type:    "string"
+		Default: "\"<filepath>.<ext>\""
+		Help:    "output filename when being used"
+	},{
+		Name:    "overwrite"
+		Long:    "overwrite"
+		Type:    "bool"
+		Default: "false"
+		Help:    "overwrite files being processed"
 	}]
 
 	//
