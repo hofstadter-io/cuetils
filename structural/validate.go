@@ -14,12 +14,13 @@ func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([
 		return nil, err
 	}
 
-	ov, err := LoadInputs([]string{schema}, cuest.ctx)
+	operator, err := ParseOperator(schema)
 	if err != nil {
 		return nil, err
 	}
-	if ov.Err() != nil {
-		return nil, ov.Err()
+	operator, err = LoadOperator(operator, rflags.LoadOperands, cuest.ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	inputs, err := ReadGlobs(globs)
@@ -35,7 +36,7 @@ func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([
 			return nil, iv.Err()
 		}
 
-		result := iv.Unify(ov)
+		result := iv.Unify(operator.Value)
 		err := result.Validate()
 		if err != nil {
 			out := FormatCueError(err)
