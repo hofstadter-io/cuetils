@@ -8,11 +8,6 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-type MaskResult struct {
-	Filename string
-	Content  string
-}
-
 const maskfmt = `
 val: #Mask%s
 val: #X: _
@@ -20,23 +15,19 @@ val: #M: _
 mask: val.mask
 `
 
-func Mask(orig string, globs []string, rflags flags.RootPflagpole) ([]MaskResult, error) {
-	// no globs, then stdin
-	if len(globs) == 0 {
-		globs = []string{"-"}
-	}
-
+func Mask(mask string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"mask"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	ov, err := LoadInputs([]string{orig}, cuest.ctx)
+	operator, err := ParseOperator(mask)
 	if err != nil {
 		return nil, err
 	}
-	if ov.Err() != nil {
-		return nil, ov.Err()
+	operator, err = LoadOperator(operator, rflags.LoadOperands, cuest.ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	inputs, err := ReadGlobs(globs)
@@ -53,9 +44,9 @@ func Mask(orig string, globs []string, rflags flags.RootPflagpole) ([]MaskResult
 	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
 
 	// fill val with the orig value, so we only need to once before loop
-	val = val.FillPath(cue.ParsePath("val.#M"), ov)
+	val = val.FillPath(cue.ParsePath("val.#M"), operator.Value)
 
-	masks := make([]MaskResult, 0)
+	results := make([]GlobResult, 0)
 	for _, input := range inputs {
 
 		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
@@ -65,19 +56,14 @@ func Mask(orig string, globs []string, rflags flags.RootPflagpole) ([]MaskResult
 
 		result := val.FillPath(cue.ParsePath("val.#X"), iv)
 
-		dv := result.LookupPath(cue.ParsePath("mask"))
+		v := result.LookupPath(cue.ParsePath("mask"))
 
-		out, err := FormatOutput(dv, rflags.Out)
-		if err != nil {
-			return nil, err
-		}
-
-		masks = append(masks, MaskResult{
+		results = append(results, GlobResult{
 			Filename: input.Filename,
-			Content:  out,
+			Value:    v,
 		})
 
 	}
 
-	return masks, nil
+	return results, nil
 }

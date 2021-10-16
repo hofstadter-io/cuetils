@@ -1,4 +1,4 @@
-exec cuetils patch patch.json a.json
+exec cuetils patch --headers patch.json a.json
 cmp stdout golden.stdout
 
 -- patch.json --

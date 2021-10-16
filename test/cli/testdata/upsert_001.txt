@@ -1,4 +1,4 @@
-exec cuetils upsert upsert.cue a.json
+exec cuetils upsert --headers upsert.cue a.json
 cmp stdout golden.stdout
 
 -- upsert.cue --

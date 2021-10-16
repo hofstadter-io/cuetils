@@ -1,4 +1,4 @@
-exec cuetils mask mask.cue a.json
+exec cuetils mask --headers mask.cue a.json
 cmp stdout golden.stdout
 
 -- mask.cue --

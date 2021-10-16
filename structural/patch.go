@@ -8,11 +8,6 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-type PatchResult struct {
-	Filename string
-	Content  string
-}
-
 const patchfmt = `
 val: #Patch%s
 val: #X: _
@@ -20,20 +15,19 @@ val: #P: _
 patch: val.patch
 `
 
-func Patch(orig string, globs []string, rflags flags.RootPflagpole) ([]PatchResult, error) {
-	// no globs, then stdin
-	if len(globs) == 0 {
-		globs = []string{"-"}
-	}
-
+func Patch(orig string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"patch"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	origs, err := ReadGlobs([]string{orig})
-	if len(origs) == 0 {
-		return nil, fmt.Errorf("original found")
+	operator, err := ParseOperator(orig)
+	if err != nil {
+		return nil, err
+	}
+	operator, err = LoadOperator(operator, rflags.LoadOperands, cuest.ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	inputs, err := ReadGlobs(globs)
@@ -49,15 +43,10 @@ func Patch(orig string, globs []string, rflags flags.RootPflagpole) ([]PatchResu
 	content := fmt.Sprintf(patchfmt, maxiter)
 	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
 
-	// only handling one orig for now, fill into val beforehand
-	ov := cuest.ctx.CompileBytes(origs[0].Content, cue.Filename(origs[0].Filename))
-	if ov.Err() != nil {
-		return nil, ov.Err()
-	}
 	// update val with the orig value
-	val = val.FillPath(cue.ParsePath("val.#P"), ov)
+	val = val.FillPath(cue.ParsePath("val.#P"), operator.Value)
 
-	patchs := make([]PatchResult, 0)
+	results := make([]GlobResult, 0)
 	for _, input := range inputs {
 
 		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
@@ -67,19 +56,14 @@ func Patch(orig string, globs []string, rflags flags.RootPflagpole) ([]PatchResu
 
 		result := val.FillPath(cue.ParsePath("val.#X"), iv)
 
-		dv := result.LookupPath(cue.ParsePath("patch"))
+		v := result.LookupPath(cue.ParsePath("patch"))
 
-		out, err := FormatOutput(dv, rflags.Out)
-		if err != nil {
-			return nil, err
-		}
-
-		patchs = append(patchs, PatchResult{
+		results = append(results, GlobResult{
 			Filename: input.Filename,
-			Content:  out,
+			Value:    v,
 		})
 
 	}
 
-	return patchs, nil
+	return results, nil
 }

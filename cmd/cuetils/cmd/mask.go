@@ -17,14 +17,12 @@ func MaskRun(mask string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	masks, err := structural.Mask(mask, globs, flags.RootPflags)
+	results, err := structural.Mask(mask, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}
 
-	for _, m := range masks {
-		fmt.Printf("%s\n----------------------\n%s\n\n", m.Filename, m.Content)
-	}
+	err = structural.ProcessOutputs(results, flags.RootPflags)
 
 	return err
 }

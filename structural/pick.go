@@ -20,13 +20,13 @@ val: #P: _
 pick: val.pick
 `
 
-func Pick(orig string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func Pick(pick string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"pick"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	operator, err := ParseOperator(orig)
+	operator, err := ParseOperator(pick)
 	if err != nil {
 		return nil, err
 	}

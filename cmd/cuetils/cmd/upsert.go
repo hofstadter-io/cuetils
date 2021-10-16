@@ -17,14 +17,12 @@ func UpsertRun(orig string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	upserts, err := structural.Upsert(orig, globs, flags.RootPflags)
+	results, err := structural.Upsert(orig, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}
 
-	for _, u := range upserts {
-		fmt.Printf("%s\n----------------------\n%s\n\n", u.Filename, u.Content)
-	}
+	err = structural.ProcessOutputs(results, flags.RootPflags)
 
 	return err
 }

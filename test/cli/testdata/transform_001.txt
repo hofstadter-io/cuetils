@@ -1,4 +1,4 @@
-exec cuetils transform t.cue a.json b.yaml
+exec cuetils transform --headers t.cue a.json b.yaml
 cmp stdout golden.stdout
 
 -- t.cue --

@@ -21,12 +21,13 @@ func TransformGlobs(transformer string, globs []string, rflags flags.RootPflagpo
 		return nil, err
 	}
 
-	ov, err := LoadInputs([]string{transformer}, cuest.ctx)
+	operator, err := ParseOperator(transformer)
 	if err != nil {
 		return nil, err
 	}
-	if ov.Err() != nil {
-		return nil, ov.Err()
+	operator, err = LoadOperator(operator, rflags.LoadOperands, cuest.ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	inputs, err := ReadGlobs(globs)
@@ -37,7 +38,7 @@ func TransformGlobs(transformer string, globs []string, rflags flags.RootPflagpo
 	val := cuest.ctx.CompileString(transformfmt)
 
 	// fill val with the orig value, so we only need to once before loop
-	val = val.FillPath(cue.ParsePath("#Transformer"), ov)
+	val = val.FillPath(cue.ParsePath("#Transformer"), operator.Value)
 
 	results := make([]GlobResult, 0)
 	for _, input := range inputs {
@@ -49,16 +50,11 @@ func TransformGlobs(transformer string, globs []string, rflags flags.RootPflagpo
 
 		result := val.FillPath(cue.ParsePath("#Transformer.#In"), iv)
 
-		dv := result.LookupPath(cue.ParsePath("Out"))
-
-		out, err := FormatOutput(dv, rflags.Out)
-		if err != nil {
-			return nil, err
-		}
+		v := result.LookupPath(cue.ParsePath("Out"))
 
 		results = append(results, GlobResult{
 			Filename: input.Filename,
-			Content:  out,
+			Value:    v,
 		})
 
 	}

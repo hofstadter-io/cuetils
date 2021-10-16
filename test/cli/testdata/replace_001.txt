@@ -1,4 +1,4 @@
-exec cuetils replace replace.cue a.json
+exec cuetils replace --headers replace.cue a.json
 cmp stdout golden.stdout
 
 -- replace.cue --

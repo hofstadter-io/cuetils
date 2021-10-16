@@ -17,14 +17,12 @@ func PatchRun(patch string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	patchs, err := structural.Patch(patch, globs, flags.RootPflags)
+	results, err := structural.Patch(patch, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}
 
-	for _, p := range patchs {
-		fmt.Printf("%s\n----------------------\n%s\n\n", p.Filename, p.Content)
-	}
+	err = structural.ProcessOutputs(results, flags.RootPflags)
 
 	return err
 }

@@ -22,9 +22,7 @@ func TransformRun(orig string, globs []string) (err error) {
 		return err
 	}
 
-	for _, r := range results {
-		fmt.Printf("%s\n----------------------\n%s\n\n", r.Filename, r.Content)
-	}
+	err = structural.ProcessOutputs(results, flags.RootPflags)
 
 	return err
 }

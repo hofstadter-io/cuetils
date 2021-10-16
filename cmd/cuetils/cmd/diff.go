@@ -17,14 +17,12 @@ func DiffRun(orig string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	diffs, err := structural.Diff(orig, globs, flags.RootPflags)
+	results, err := structural.Diff(orig, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}
 
-	for _, d := range diffs {
-		fmt.Printf("%s\n----------------------\n%s\n\n", d.Filename, d.Content)
-	}
+	err = structural.ProcessOutputs(results, flags.RootPflags)
 
 	return err
 }

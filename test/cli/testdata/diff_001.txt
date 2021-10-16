@@ -16,8 +16,6 @@ cmp stdout golden.stdout
 }
 
 -- golden.stdout --
-b.json
-----------------------
 {
 	"+": {
 		b: "B"
@@ -31,4 +29,3 @@ b.json
 		}
 	}
 }
-

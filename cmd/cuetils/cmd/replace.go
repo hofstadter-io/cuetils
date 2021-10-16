@@ -17,14 +17,12 @@ func ReplaceRun(orig string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	replaces, err := structural.Replace(orig, globs, flags.RootPflags)
+	results, err := structural.Replace(orig, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}
 
-	for _, r := range replaces {
-		fmt.Printf("%s\n----------------------\n%s\n\n", r.Filename, r.Content)
-	}
+	err = structural.ProcessOutputs(results, flags.RootPflags)
 
 	return err
 }
