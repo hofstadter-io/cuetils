@@ -27,7 +27,7 @@ func ParseOperator(op string) (Input, error) {
 
 	// does the op look like a file or a CUE value?
 	// this is an overly simple check, but should be sufficient for all formats (CUE, JSON, Yaml)
-	if strings.ContainsAny(op, "{}:") {
+	if strings.ContainsAny(op, "{}:") || op == "_" {
 		i.Filename = "expression"
 	}
 

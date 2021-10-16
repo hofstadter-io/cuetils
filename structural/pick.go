@@ -59,6 +59,15 @@ func Pick(pick string, globs []string, rflags flags.RootPflagpole) ([]GlobResult
 			return nil, iv.Err()
 		}
 
+		// special case for pick
+		if pick == "_" {
+			results = append(results, GlobResult{
+				Filename: input.Filename,
+				Value:    iv,
+			})
+			continue
+		}
+
 		result := val.FillPath(cue.ParsePath("val.#X"), iv)
 
 		v := result.LookupPath(cue.ParsePath("pick"))
