@@ -25,6 +25,7 @@ func init() {
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.Load), "load", "", false, "use cue/load to support entrypoint and imports for args")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.Headers), "headers", "", false, "print the filename as a header during output")
 	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Accum), "accum", "", "", "accumulate operand results into a single value using accum as the label")
+	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.Clean), "clean", "", false, "trim and unquote output, useful for basic lit output")
 	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Out), "out", "", "cue", "output encoding [cue,yaml,json]")
 	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Outname), "outname", "", "", "output filename when being used")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.Overwrite), "overwrite", "", false, "overwrite files being processed")

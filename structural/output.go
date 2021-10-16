@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"cuelang.org/go/cue"
@@ -34,6 +35,17 @@ func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error
 		r.Content, err = FormatOutput(r.Value, rflags.Out)
 		if err != nil {
 			return err
+		}
+
+		// clean
+		if rflags.Clean {
+			// need to trim before because Unquote doesn't work if there is a newline, etc
+			r.Content = strings.TrimSpace(r.Content)
+			c, err := strconv.Unquote(r.Content)
+			if err == nil {
+				r.Content = c
+				r.Content = strings.TrimSpace(r.Content)
+			}
 		}
 
 		// make outname

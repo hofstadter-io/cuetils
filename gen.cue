@@ -88,6 +88,12 @@ Cli: gen.#HofGenerator & {
 		Default: ""
 		Help:    "accumulate operand results into a single value using accum as the label"
 	},{
+		Name:    "clean"
+		Long:    "clean"
+		Type:    "bool"
+		Default: "false"
+		Help:    "trim and unquote output, useful for basic lit output"
+	},{
 		Name:    "out"
 		Long:    "out"
 		Type:    "string"

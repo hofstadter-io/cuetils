@@ -54,6 +54,7 @@ type RootPflagpole struct {
 	Load        bool
 	Headers     bool
 	Accum       string
+	Clean       bool
 	Out         string
 	Outname     string
 	Overwrite   bool
