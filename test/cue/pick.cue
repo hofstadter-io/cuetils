@@ -34,6 +34,30 @@ pick_tests: [
 			}
 		}
 		same: #real & #pick
-	}
+	},
+	{
+		x: {
+			c: {
+				a: "a"
+				b: "b"
+				c: {
+					a: "a"
+					b: "b"
+				}
+			}
+		}
+		p: {
+			c: {
+				a: _
+			}
+    }
+		#pick: (st.#Pick & { #X: x, #P: p }).pick
+		#real: {
+			c:  {
+				a: "a"
+			}
+		}
+		same: #real & #pick
+	},
 ]
 

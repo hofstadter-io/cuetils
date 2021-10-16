@@ -1,0 +1,29 @@
+exec cuetils pick pick.cue tree.json
+cmp stdout golden.stdout
+
+-- pick.cue --
+{
+	tree: {
+		cow: string
+	}
+}
+-- tree.json --
+{
+  "tree": {
+    "a": {
+      "foo": "bar",
+      "a": {
+        "b": {
+          "c": "d"
+        }
+      }
+    },
+    "cow": "moo"
+  }
+}
+-- golden.stdout --
+{
+	tree: {
+		cow: "moo"
+	}
+}
