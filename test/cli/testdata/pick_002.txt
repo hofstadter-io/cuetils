@@ -1,4 +1,4 @@
-exec cuetils pick pick.cue a.json
+exec cuetils pick --headers pick.cue a.json
 cmp stdout golden.stdout
 
 -- pick.cue --
@@ -20,6 +20,8 @@ cmp stdout golden.stdout
 }
 
 -- golden.stdout --
+a.json
+----------------------
 {
 	a: {
 		b: "B"
@@ -27,3 +29,4 @@ cmp stdout golden.stdout
 	c: 2
 	d: "D"
 }
+

@@ -1,4 +1,5 @@
-exec cuetils pick pick.cue a.json
+exec cuetils pick --outname "\(a.b)<ext>" pick.cue a.json
+cat B.json
 cmp stdout golden.stdout
 
 -- pick.cue --

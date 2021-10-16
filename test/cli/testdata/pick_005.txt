@@ -1,11 +1,14 @@
-exec cuetils pick pick.cue a.json
+exec cuetils pick a.cue,b.cue a.json
 cmp stdout golden.stdout
 
--- pick.cue --
+-- a.cue --
 {
 	a: {
 		b: string
 	}
+}
+-- b.cue --
+{
 	c: int
 	d: "D"
 }

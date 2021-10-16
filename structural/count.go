@@ -9,6 +9,12 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
+type StatsResult struct {
+	Filename string
+	Count int
+	Depth int
+}
+
 type CountResult struct {
 	Filename string
 	Count int

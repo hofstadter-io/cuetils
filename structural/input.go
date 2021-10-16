@@ -6,16 +6,85 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/load"
 )
 
 type Input struct {
-	Filename   string
-	Filetype   string  // yaml, json, cue... toml?
-	Expression string  // cue expression to select within document
-	Content    []byte
+	Original    string
+	Entrypoints []string
+	Filename    string
+	Filetype    string  // yaml, json, cue... toml?
+	Expression  string  // cue expression to select within document
+	Content     []byte
+	Value       cue.Value
+}
+
+func ParseOperator(op string) (Input, error) {
+	i := Input{ Original: op, Filename: op }
+
+	// does the op look like a file or a CUE value?
+
+	// look for expression
+	if strings.Contains(i.Filename, "@") {
+		parts := strings.Split(op, "@")
+		if len(parts) != 2 {
+			return i, fmt.Errorf("more than on '@' found for input %q", i.Original)
+		}
+		i.Filename, i.Expression = parts[0], parts[1]
+	}
+	// look for entrypoints
+	if strings.Contains(i.Filename, ",") {
+		i.Entrypoints = strings.Split(i.Filename, ",")
+		i.Filename = ""
+	}
+
+	return i, nil
+}
+
+func LoadOperator(i Input, doLoad bool, ctx *cue.Context) (Input, error) {
+	if doLoad || i.Entrypoints != nil {
+		// handle entrypoints
+		if i.Entrypoints == nil {
+			i.Entrypoints = []string{i.Filename}
+		}
+		v, err := LoadInputs(i.Entrypoints, ctx)
+		if err != nil {
+			return i, err
+		}
+		i.Value = v
+	} else {
+		// handle stdin?
+
+		// handle single file
+		d, err := os.ReadFile(i.Filename)
+		if err != nil {
+			return i, err
+		}
+		// handle input types
+		ext := filepath.Ext(i.Filename)
+		switch ext {
+		case ".yml", ".yaml":
+			s := fmt.Sprintf(yamlMod, string(d))
+			d = []byte(s)
+		}
+
+		i.Content = d
+
+		i.Value = ctx.CompileBytes(i.Content, cue.Filename(i.Filename))
+	}
+
+	if i.Value.Err() != nil {
+		return i, i.Value.Err()
+	}
+
+	if i.Expression != "" {
+		i.Value = i.Value.LookupPath(cue.ParsePath(i.Expression))
+	}
+
+	return i, nil
 }
 
 // Loads the entrypoints using the context provided

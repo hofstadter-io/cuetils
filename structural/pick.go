@@ -20,23 +20,19 @@ val: #P: _
 pick: val.pick
 `
 
-func Pick(orig string, globs []string, rflags flags.RootPflagpole) ([]PickResult, error) {
-	// no globs, then stdin
-	if len(globs) == 0 {
-		globs = []string{"-"}
-	}
-
+func Pick(orig string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"pick"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	ov, err := LoadInputs([]string{orig}, cuest.ctx)
+	operator, err := ParseOperator(orig)
 	if err != nil {
 		return nil, err
 	}
-	if ov.Err() != nil {
-		return nil, ov.Err()
+	operator, err = LoadOperator(operator, rflags.LoadOperands, cuest.ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	inputs, err := ReadGlobs(globs)
@@ -53,9 +49,9 @@ func Pick(orig string, globs []string, rflags flags.RootPflagpole) ([]PickResult
 	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
 
 	// fill val with the orig value, so we only need to once before loop
-	val = val.FillPath(cue.ParsePath("val.#P"), ov)
+	val = val.FillPath(cue.ParsePath("val.#P"), operator.Value)
 
-	picks := make([]PickResult, 0)
+	results := make([]GlobResult, 0)
 	for _, input := range inputs {
 
 		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
@@ -65,19 +61,14 @@ func Pick(orig string, globs []string, rflags flags.RootPflagpole) ([]PickResult
 
 		result := val.FillPath(cue.ParsePath("val.#X"), iv)
 
-		dv := result.LookupPath(cue.ParsePath("pick"))
+		v := result.LookupPath(cue.ParsePath("pick"))
 
-		out, err := FormatOutput(dv, rflags.Out)
-		if err != nil {
-			return nil, err
-		}
-
-		picks = append(picks, PickResult{
+		results = append(results, GlobResult{
 			Filename: input.Filename,
-			Content:  out,
+			Value:    v,
 		})
 
 	}
 
-	return picks, nil
+	return results, nil
 }
