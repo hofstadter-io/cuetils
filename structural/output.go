@@ -76,7 +76,7 @@ func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error
 			_, err = os.Stat(outname)
 			// if no overwrite and exists, return err
 			if !rflags.Overwrite && err == nil {
-				return err
+				return fmt.Errorf("output file %q exists, use --overwrite to replace", outname)
 			}
 			w, err = os.Create(outname)
 			if err != nil {
