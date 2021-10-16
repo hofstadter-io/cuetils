@@ -25,7 +25,7 @@ func Diff(diff string, globs []string, rflags flags.RootPflagpole) ([]GlobResult
 	if err != nil {
 		return nil, err
 	}
-	operator, err = LoadOperator(operator, rflags.LoadOperands, cuest.ctx)
+	operator, err = LoadOperator(operator, rflags.Load, cuest.ctx)
 	if err != nil {
 		return nil, err
 	}

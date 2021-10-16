@@ -25,7 +25,7 @@ func Replace(orig string, globs []string, rflags flags.RootPflagpole) ([]GlobRes
 	if err != nil {
 		return nil, err
 	}
-	operator, err = LoadOperator(operator, rflags.LoadOperands, cuest.ctx)
+	operator, err = LoadOperator(operator, rflags.Load, cuest.ctx)
 	if err != nil {
 		return nil, err
 	}

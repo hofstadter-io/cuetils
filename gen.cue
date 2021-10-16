@@ -70,17 +70,11 @@ Cli: gen.#HofGenerator & {
 		Default: "true"
 		Help:    "process optional fields in inputs and objects"
 	},{
-		Name:    "loadOperator"
-		Long:    "load-operator"
-		Type:    "bool"
-		Default: "true"
-		Help:    "use cue/load to support entrypoint and imports in the operator"
-	},{
-		Name:    "loadOperands"
-		Long:    "load-operands"
+		Name:    "load"
+		Long:    "load"
 		Type:    "bool"
 		Default: "false"
-		Help:    "use cue/load to support entrypoint and imports in the operands"
+		Help:    "use cue/load to support entrypoint and imports for args"
 	},{
 		Name:    "headers"
 		Long:    "headers"
