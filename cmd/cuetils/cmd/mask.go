@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
@@ -16,7 +17,7 @@ func MaskRun(mask string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	masks, err := structural.Mask(mask, globs)
+	masks, err := structural.Mask(mask, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}

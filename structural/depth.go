@@ -6,7 +6,7 @@ import (
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/cuecontext"
 
-	// "github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
 type DepthResult struct {
@@ -14,7 +14,7 @@ type DepthResult struct {
 	Depth int
 }
 
-func Depth(globs []string) ([]DepthResult, error) {
+func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}

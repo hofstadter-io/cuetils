@@ -20,7 +20,7 @@ val: #U: _
 upsert: val.upsert
 `
 
-func Upsert(orig string, globs []string) ([]UpsertResult, error) {
+func Upsert(orig string, globs []string, rflags flags.RootPflagpole) ([]UpsertResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -46,7 +46,7 @@ func Upsert(orig string, globs []string) ([]UpsertResult, error) {
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := flags.RootPflags.Maxiter; mi > 0 {
+	if mi := rflags.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(upsertfmt, maxiter)
@@ -67,7 +67,7 @@ func Upsert(orig string, globs []string) ([]UpsertResult, error) {
 
 		dv := result.LookupPath(cue.ParsePath("upsert"))
 
-		out, err := FormatOutput(dv, flags.RootPflags.Out)
+		out, err := FormatOutput(dv, rflags.Out)
 		if err != nil {
 			return nil, err
 		}

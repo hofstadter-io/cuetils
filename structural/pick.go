@@ -20,7 +20,7 @@ val: #P: _
 pick: val.pick
 `
 
-func Pick(orig string, globs []string) ([]PickResult, error) {
+func Pick(orig string, globs []string, rflags flags.RootPflagpole) ([]PickResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -46,7 +46,7 @@ func Pick(orig string, globs []string) ([]PickResult, error) {
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := flags.RootPflags.Maxiter; mi > 0 {
+	if mi := rflags.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(pickfmt, maxiter)
@@ -67,7 +67,7 @@ func Pick(orig string, globs []string) ([]PickResult, error) {
 
 		dv := result.LookupPath(cue.ParsePath("pick"))
 
-		out, err := FormatOutput(dv, flags.RootPflags.Out)
+		out, err := FormatOutput(dv, rflags.Out)
 		if err != nil {
 			return nil, err
 		}

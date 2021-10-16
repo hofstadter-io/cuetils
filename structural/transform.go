@@ -15,7 +15,7 @@ const transformfmt = `
 Out: #Transformer
 `
 
-func TransformGlobs(transformer string, globs []string) ([]GlobResult, error) {
+func TransformGlobs(transformer string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest(nil, nil)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func TransformGlobs(transformer string, globs []string) ([]GlobResult, error) {
 
 		dv := result.LookupPath(cue.ParsePath("Out"))
 
-		out, err := FormatOutput(dv, flags.RootPflags.Out)
+		out, err := FormatOutput(dv, rflags.Out)
 		if err != nil {
 			return nil, err
 		}

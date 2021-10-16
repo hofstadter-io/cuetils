@@ -20,7 +20,7 @@ val: #Y: _
 diff: val.diff
 `
 
-func Diff(orig string, globs []string) ([]DiffResult, error) {
+func Diff(orig string, globs []string, rflags flags.RootPflagpole) ([]DiffResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -43,7 +43,7 @@ func Diff(orig string, globs []string) ([]DiffResult, error) {
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := flags.RootPflags.Maxiter; mi > 0 {
+	if mi := rflags.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(difffmt, maxiter)
@@ -69,7 +69,7 @@ func Diff(orig string, globs []string) ([]DiffResult, error) {
 
 		dv := result.LookupPath(cue.ParsePath("diff"))
 
-		out, err := FormatOutput(dv, flags.RootPflags.Out)
+		out, err := FormatOutput(dv, rflags.Out)
 		if err != nil {
 			return nil, err
 		}

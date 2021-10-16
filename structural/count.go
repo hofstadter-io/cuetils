@@ -6,7 +6,7 @@ import (
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/cuecontext"
 
-	// "github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
 type CountResult struct {
@@ -14,7 +14,7 @@ type CountResult struct {
 	Count int
 }
 
-func Count(globs []string) ([]CountResult, error) {
+func Count(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}

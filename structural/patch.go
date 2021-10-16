@@ -20,7 +20,7 @@ val: #P: _
 patch: val.patch
 `
 
-func Patch(orig string, globs []string) ([]PatchResult, error) {
+func Patch(orig string, globs []string, rflags flags.RootPflagpole) ([]PatchResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -43,7 +43,7 @@ func Patch(orig string, globs []string) ([]PatchResult, error) {
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := flags.RootPflags.Maxiter; mi > 0 {
+	if mi := rflags.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(patchfmt, maxiter)
@@ -69,7 +69,7 @@ func Patch(orig string, globs []string) ([]PatchResult, error) {
 
 		dv := result.LookupPath(cue.ParsePath("patch"))
 
-		out, err := FormatOutput(dv, flags.RootPflags.Out)
+		out, err := FormatOutput(dv, rflags.Out)
 		if err != nil {
 			return nil, err
 		}

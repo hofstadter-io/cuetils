@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
@@ -16,7 +17,7 @@ func UpsertRun(orig string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	upserts, err := structural.Upsert(orig, globs)
+	upserts, err := structural.Upsert(orig, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}

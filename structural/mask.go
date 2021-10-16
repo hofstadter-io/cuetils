@@ -20,7 +20,7 @@ val: #M: _
 mask: val.mask
 `
 
-func Mask(orig string, globs []string) ([]MaskResult, error) {
+func Mask(orig string, globs []string, rflags flags.RootPflagpole) ([]MaskResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -46,7 +46,7 @@ func Mask(orig string, globs []string) ([]MaskResult, error) {
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := flags.RootPflags.Maxiter; mi > 0 {
+	if mi := rflags.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(maskfmt, maxiter)
@@ -67,7 +67,7 @@ func Mask(orig string, globs []string) ([]MaskResult, error) {
 
 		dv := result.LookupPath(cue.ParsePath("mask"))
 
-		out, err := FormatOutput(dv, flags.RootPflags.Out)
+		out, err := FormatOutput(dv, rflags.Out)
 		if err != nil {
 			return nil, err
 		}
