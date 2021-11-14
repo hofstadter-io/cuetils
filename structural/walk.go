@@ -30,13 +30,13 @@ func Walk(v cue.Value, before func(cue.Value) bool, after func(cue.Value), optio
 		s, _ := v.Fields( options...)
 
 		for s.Next() {
-			Walk(s.Value(), before, after)
+			Walk(s.Value(), before, after, options...)
 		}
 
 	case cue.ListKind:
 		l, _ := v.List()
 		for l.Next() {
-			Walk(l.Value(), before, after)
+			Walk(l.Value(), before, after, options...)
 		}
 
 	// no default (basic lit types)
