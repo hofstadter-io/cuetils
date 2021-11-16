@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var patchLong = `apply pacth to orig file(s)`
+var extendLong = `extend file(s) with code (only if not present)`
 
-func PatchRun(patch string, orig string) (err error) {
+func ExtendRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -17,13 +17,13 @@ func PatchRun(patch string, orig string) (err error) {
 	return err
 }
 
-var PatchCmd = &cobra.Command{
+var ExtendCmd = &cobra.Command{
 
-	Use: "patch <patch> <orig>",
+	Use: "upsert <code> [files...]",
 
-	Short: "apply pacth to orig file(s)",
+	Short: "extend file(s) with code (only if not present)",
 
-	Long: patchLong,
+	Long: extendLong,
 
 	PreRun: func(cmd *cobra.Command, args []string) {
 
@@ -35,34 +35,28 @@ var PatchCmd = &cobra.Command{
 		// Argument Parsing
 
 		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'patch'")
+			fmt.Println("missing required argument: 'code'")
 			cmd.Usage()
 			os.Exit(1)
 		}
 
-		var patch string
+		var code string
 
 		if 0 < len(args) {
 
-			patch = args[0]
+			code = args[0]
 
 		}
 
-		if 1 >= len(args) {
-			fmt.Println("missing required argument: 'orig'")
-			cmd.Usage()
-			os.Exit(1)
-		}
-
-		var orig string
+		var globs []string
 
 		if 1 < len(args) {
 
-			orig = args[1]
+			globs = args[1:]
 
 		}
 
-		err = PatchRun(patch, orig)
+		err = ExtendRun(code, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -76,8 +70,8 @@ func init() {
 		return false
 	}
 
-	ohelp := PatchCmd.HelpFunc()
-	ousage := PatchCmd.UsageFunc()
+	ohelp := ExtendCmd.HelpFunc()
+	ousage := ExtendCmd.UsageFunc()
 	help := func(cmd *cobra.Command, args []string) {
 		if extra(cmd) {
 			return
@@ -91,7 +85,7 @@ func init() {
 		return ousage(cmd)
 	}
 
-	PatchCmd.SetHelpFunc(help)
-	PatchCmd.SetUsageFunc(usage)
+	ExtendCmd.SetHelpFunc(help)
+	ExtendCmd.SetUsageFunc(usage)
 
 }

@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var pickLong = `pick the original from the glob file(s)`
+var pickLong = `pick from file(s) with code`
 
-func PickRun(pick string, globs []string) (err error) {
+func PickRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -19,9 +19,9 @@ func PickRun(pick string, globs []string) (err error) {
 
 var PickCmd = &cobra.Command{
 
-	Use: "pick <pick> <glob>",
+	Use: "pick <code> [files...]",
 
-	Short: "pick the original from the glob file(s)",
+	Short: "pick from file(s) with code",
 
 	Long: pickLong,
 
@@ -35,16 +35,16 @@ var PickCmd = &cobra.Command{
 		// Argument Parsing
 
 		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'pick'")
+			fmt.Println("missing required argument: 'code'")
 			cmd.Usage()
 			os.Exit(1)
 		}
 
-		var pick string
+		var code string
 
 		if 0 < len(args) {
 
-			pick = args[0]
+			code = args[0]
 
 		}
 
@@ -56,7 +56,7 @@ var PickCmd = &cobra.Command{
 
 		}
 
-		err = PickRun(pick, globs)
+		err = PickRun(code, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

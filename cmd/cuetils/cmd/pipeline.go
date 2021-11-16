@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var patchLong = `apply pacth to orig file(s)`
+var pipelineLong = `run file(s) through a pipeline of operations`
 
-func PatchRun(patch string, orig string) (err error) {
+func PipelineRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -17,13 +17,13 @@ func PatchRun(patch string, orig string) (err error) {
 	return err
 }
 
-var PatchCmd = &cobra.Command{
+var PipelineCmd = &cobra.Command{
 
-	Use: "patch <patch> <orig>",
+	Use: "pipeline <code> [files...]",
 
-	Short: "apply pacth to orig file(s)",
+	Short: "run file(s) through a pipeline of operations",
 
-	Long: patchLong,
+	Long: pipelineLong,
 
 	PreRun: func(cmd *cobra.Command, args []string) {
 
@@ -35,34 +35,28 @@ var PatchCmd = &cobra.Command{
 		// Argument Parsing
 
 		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'patch'")
+			fmt.Println("missing required argument: 'code'")
 			cmd.Usage()
 			os.Exit(1)
 		}
 
-		var patch string
+		var code string
 
 		if 0 < len(args) {
 
-			patch = args[0]
+			code = args[0]
 
 		}
 
-		if 1 >= len(args) {
-			fmt.Println("missing required argument: 'orig'")
-			cmd.Usage()
-			os.Exit(1)
-		}
-
-		var orig string
+		var globs []string
 
 		if 1 < len(args) {
 
-			orig = args[1]
+			globs = args[1:]
 
 		}
 
-		err = PatchRun(patch, orig)
+		err = PipelineRun(code, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -76,8 +70,8 @@ func init() {
 		return false
 	}
 
-	ohelp := PatchCmd.HelpFunc()
-	ousage := PatchCmd.UsageFunc()
+	ohelp := PipelineCmd.HelpFunc()
+	ousage := PipelineCmd.UsageFunc()
 	help := func(cmd *cobra.Command, args []string) {
 		if extra(cmd) {
 			return
@@ -91,7 +85,7 @@ func init() {
 		return ousage(cmd)
 	}
 
-	PatchCmd.SetHelpFunc(help)
-	PatchCmd.SetUsageFunc(usage)
+	PipelineCmd.SetHelpFunc(help)
+	PipelineCmd.SetUsageFunc(usage)
 
 }

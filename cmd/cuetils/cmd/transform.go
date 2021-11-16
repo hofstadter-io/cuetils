@@ -10,14 +10,14 @@ import (
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
-var transformLong = `apply the transform from the original to the glob file(s)`
+var transformLong = `transform file(s) with code`
 
-func TransformRun(orig string, globs []string) (err error) {
+func TransformRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.TransformGlobs(orig, globs, flags.RootPflags)
+	results, err := structural.TransformGlobs(code, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}
@@ -29,9 +29,9 @@ func TransformRun(orig string, globs []string) (err error) {
 
 var TransformCmd = &cobra.Command{
 
-	Use: "transform <orig> <glob>",
+	Use: "transform <code> [files...]",
 
-	Short: "apply the transform from the original to the glob file(s)",
+	Short: "transform file(s) with code",
 
 	Long: transformLong,
 
@@ -45,16 +45,16 @@ var TransformCmd = &cobra.Command{
 		// Argument Parsing
 
 		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'orig'")
+			fmt.Println("missing required argument: 'code'")
 			cmd.Usage()
 			os.Exit(1)
 		}
 
-		var orig string
+		var code string
 
 		if 0 < len(args) {
 
-			orig = args[0]
+			code = args[0]
 
 		}
 
@@ -66,7 +66,7 @@ var TransformCmd = &cobra.Command{
 
 		}
 
-		err = TransformRun(orig, globs)
+		err = TransformRun(code, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

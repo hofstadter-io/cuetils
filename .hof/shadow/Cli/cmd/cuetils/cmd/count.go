@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var countLong = `calculate the node count of a file or glob`
+var countLong = `count nodes in file(s)`
 
 func CountRun(globs []string) (err error) {
 
@@ -19,9 +19,9 @@ func CountRun(globs []string) (err error) {
 
 var CountCmd = &cobra.Command{
 
-	Use: "count [globs...]",
+	Use: "count [files...]",
 
-	Short: "calculate the node count of a file or glob",
+	Short: "count nodes in file(s)",
 
 	Long: countLong,
 

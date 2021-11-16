@@ -10,14 +10,14 @@ import (
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
-var patchLong = `apply the pacth to the glob file(s)`
+var patchLong = `apply pacth to orig file(s)`
 
-func PatchRun(patch string, globs []string) (err error) {
+func PatchRun(patch string, orig string) (err error) {
 
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.Patch(patch, globs, flags.RootPflags)
+	results, err := structural.Patch(patch, orig, flags.RootPflags)
 	if err != nil {
 		return err
 	}
@@ -29,9 +29,9 @@ func PatchRun(patch string, globs []string) (err error) {
 
 var PatchCmd = &cobra.Command{
 
-	Use: "patch <patch> <glob>",
+	Use: "patch <patch> <orig>",
 
-	Short: "apply the pacth to the glob file(s)",
+	Short: "apply pacth to orig file(s)",
 
 	Long: patchLong,
 
@@ -58,15 +58,21 @@ var PatchCmd = &cobra.Command{
 
 		}
 
-		var globs []string
+		if 1 >= len(args) {
+			fmt.Println("missing required argument: 'orig'")
+			cmd.Usage()
+			os.Exit(1)
+		}
+
+		var orig string
 
 		if 1 < len(args) {
 
-			globs = args[1:]
+			orig = args[1]
 
 		}
 
-		err = PatchRun(patch, globs)
+		err = PatchRun(patch, orig)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

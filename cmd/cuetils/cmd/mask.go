@@ -10,14 +10,14 @@ import (
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
-var maskLong = `mask the original from the glob file(s)`
+var maskLong = `mask from file(s) with code`
 
-func MaskRun(mask string, globs []string) (err error) {
+func MaskRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.Mask(mask, globs, flags.RootPflags)
+	results, err := structural.Mask(code, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}
@@ -29,9 +29,9 @@ func MaskRun(mask string, globs []string) (err error) {
 
 var MaskCmd = &cobra.Command{
 
-	Use: "mask <mask> <glob>",
+	Use: "mask <code> [files...]",
 
-	Short: "mask the original from the glob file(s)",
+	Short: "mask from file(s) with code",
 
 	Long: maskLong,
 
@@ -45,16 +45,16 @@ var MaskCmd = &cobra.Command{
 		// Argument Parsing
 
 		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'mask'")
+			fmt.Println("missing required argument: 'code'")
 			cmd.Usage()
 			os.Exit(1)
 		}
 
-		var mask string
+		var code string
 
 		if 0 < len(args) {
 
-			mask = args[0]
+			code = args[0]
 
 		}
 
@@ -66,7 +66,7 @@ var MaskCmd = &cobra.Command{
 
 		}
 
-		err = MaskRun(mask, globs)
+		err = MaskRun(code, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

@@ -29,7 +29,9 @@ func TestPick(t *testing.T) {
 	work := []test{
 		{pick: "a: _", from: "a: b: int", want: `
 {
-	b: int
+	a: {
+		b: int
+	}
 }
 		`},
 	}

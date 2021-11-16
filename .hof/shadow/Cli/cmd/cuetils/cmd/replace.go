@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var replaceLong = `apply the replace from the original to the glob file(s)`
+var replaceLong = `replace in file(s) with code (only if present)`
 
-func ReplaceRun(orig string, globs []string) (err error) {
+func ReplaceRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -19,9 +19,9 @@ func ReplaceRun(orig string, globs []string) (err error) {
 
 var ReplaceCmd = &cobra.Command{
 
-	Use: "replace <orig> <glob>",
+	Use: "replace <code> [files...]",
 
-	Short: "apply the replace from the original to the glob file(s)",
+	Short: "replace in file(s) with code (only if present)",
 
 	Long: replaceLong,
 
@@ -35,16 +35,16 @@ var ReplaceCmd = &cobra.Command{
 		// Argument Parsing
 
 		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'orig'")
+			fmt.Println("missing required argument: 'code'")
 			cmd.Usage()
 			os.Exit(1)
 		}
 
-		var orig string
+		var code string
 
 		if 0 < len(args) {
 
-			orig = args[0]
+			code = args[0]
 
 		}
 
@@ -56,7 +56,7 @@ var ReplaceCmd = &cobra.Command{
 
 		}
 
-		err = ReplaceRun(orig, globs)
+		err = ReplaceRun(code, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

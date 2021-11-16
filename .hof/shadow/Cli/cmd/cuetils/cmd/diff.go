@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var diffLong = `calculate the diff from the original to the glob file(s)`
+var diffLong = `calculate the diff from orig to next file(s)`
 
-func DiffRun(orig string, globs []string) (err error) {
+func DiffRun(orig string, next string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -19,9 +19,9 @@ func DiffRun(orig string, globs []string) (err error) {
 
 var DiffCmd = &cobra.Command{
 
-	Use: "diff <orig> <glob>",
+	Use: "diff <orig> <next>",
 
-	Short: "calculate the diff from the original to the glob file(s)",
+	Short: "calculate the diff from orig to next file(s)",
 
 	Long: diffLong,
 
@@ -48,15 +48,21 @@ var DiffCmd = &cobra.Command{
 
 		}
 
-		var globs []string
+		if 1 >= len(args) {
+			fmt.Println("missing required argument: 'next'")
+			cmd.Usage()
+			os.Exit(1)
+		}
+
+		var next string
 
 		if 1 < len(args) {
 
-			globs = args[1:]
+			next = args[1]
 
 		}
 
-		err = DiffRun(orig, globs)
+		err = DiffRun(orig, next)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

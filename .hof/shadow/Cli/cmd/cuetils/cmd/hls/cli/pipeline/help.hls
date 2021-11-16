@@ -1,0 +1,7 @@
+### Test "pipeline --help" prints help
+call __cuetils pipeline --help
+
+### Test "pipeline -h" prints help
+call __cuetils pipeline -h
+
+

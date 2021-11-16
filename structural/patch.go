@@ -15,13 +15,13 @@ val: #P: _
 patch: val.patch
 `
 
-func Patch(orig string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func Patch(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"patch"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	operator, err := ParseOperator(orig)
+	operator, err := ParseOperator(patch)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func Patch(orig string, globs []string, rflags flags.RootPflagpole) ([]GlobResul
 		return nil, err
 	}
 
-	inputs, err := ReadGlobs(globs)
+	inputs, err := ReadGlobs([]string{orig})
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}

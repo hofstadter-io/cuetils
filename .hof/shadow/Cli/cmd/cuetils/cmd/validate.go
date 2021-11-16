@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var validateLong = `validate with the original against the glob file(s)`
+var validateLong = `validate file(s) with schema`
 
-func ValidateRun(orig string, globs []string) (err error) {
+func ValidateRun(schema string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -19,9 +19,9 @@ func ValidateRun(orig string, globs []string) (err error) {
 
 var ValidateCmd = &cobra.Command{
 
-	Use: "validate <orig> <glob>",
+	Use: "validate <schema> [files...]",
 
-	Short: "validate with the original against the glob file(s)",
+	Short: "validate file(s) with schema",
 
 	Long: validateLong,
 
@@ -35,16 +35,16 @@ var ValidateCmd = &cobra.Command{
 		// Argument Parsing
 
 		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'orig'")
+			fmt.Println("missing required argument: 'schema'")
 			cmd.Usage()
 			os.Exit(1)
 		}
 
-		var orig string
+		var schema string
 
 		if 0 < len(args) {
 
-			orig = args[0]
+			schema = args[0]
 
 		}
 
@@ -56,7 +56,7 @@ var ValidateCmd = &cobra.Command{
 
 		}
 
-		err = ValidateRun(orig, globs)
+		err = ValidateRun(schema, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

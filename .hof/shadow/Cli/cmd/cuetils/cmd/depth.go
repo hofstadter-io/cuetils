@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var depthLong = `calculate the depth of a file or glob`
+var depthLong = `calculate the depth of file(s)`
 
 func DepthRun(globs []string) (err error) {
 
@@ -19,9 +19,9 @@ func DepthRun(globs []string) (err error) {
 
 var DepthCmd = &cobra.Command{
 
-	Use: "depth [globs...]",
+	Use: "depth [files...]",
 
-	Short: "calculate the depth of a file or glob",
+	Short: "calculate the depth of file(s)",
 
 	Long: depthLong,
 

@@ -15,13 +15,13 @@ val: #Y: _
 diff: val.diff
 `
 
-func Diff(diff string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func Diff(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"diff"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	operator, err := ParseOperator(diff)
+	operator, err := ParseOperator(orig)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func Diff(diff string, globs []string, rflags flags.RootPflagpole) ([]GlobResult
 		return nil, err
 	}
 
-	inputs, err := ReadGlobs(globs)
+	inputs, err := ReadGlobs([]string{next})
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}
@@ -60,7 +60,7 @@ func Diff(diff string, globs []string, rflags flags.RootPflagpole) ([]GlobResult
 
 		results = append(results, GlobResult{
 			Filename: input.Filename,
-			Value:  v,
+			Value:    v,
 		})
 	}
 

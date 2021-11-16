@@ -1,0 +1,7 @@
+### Test "extend --help" prints help
+call __cuetils extend --help
+
+### Test "extend -h" prints help
+call __cuetils extend -h
+
+

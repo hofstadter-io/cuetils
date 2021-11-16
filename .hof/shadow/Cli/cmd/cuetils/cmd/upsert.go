@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var upsertLong = `apply the upsert from the original to the glob file(s)`
+var upsertLong = `upsert file(s) with code (extend and replace)`
 
-func UpsertRun(orig string, globs []string) (err error) {
+func UpsertRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -19,9 +19,9 @@ func UpsertRun(orig string, globs []string) (err error) {
 
 var UpsertCmd = &cobra.Command{
 
-	Use: "upsert <orig> <glob>",
+	Use: "upsert <code> [files...]",
 
-	Short: "apply the upsert from the original to the glob file(s)",
+	Short: "upsert file(s) with code (extend and replace)",
 
 	Long: upsertLong,
 
@@ -35,16 +35,16 @@ var UpsertCmd = &cobra.Command{
 		// Argument Parsing
 
 		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'orig'")
+			fmt.Println("missing required argument: 'code'")
 			cmd.Usage()
 			os.Exit(1)
 		}
 
-		var orig string
+		var code string
 
 		if 0 < len(args) {
 
-			orig = args[0]
+			code = args[0]
 
 		}
 
@@ -56,7 +56,7 @@ var UpsertCmd = &cobra.Command{
 
 		}
 
-		err = UpsertRun(orig, globs)
+		err = UpsertRun(code, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
