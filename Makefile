@@ -7,8 +7,19 @@ help:
 gen:
 	hof gen
 
-test:
-	hof test -t test
+build:
+	go build -o cuetils ./cmd/cuetils
+
+install:
+	go install ./cmd/cuetils
+
+test: test.cli test.lib
+
+test.cli:
+	hof test -s cli -t test
+
+test.lib:
+	hof test -s lib -t test
 
 WORKFLOWS = default
 

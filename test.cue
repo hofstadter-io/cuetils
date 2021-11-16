@@ -55,3 +55,17 @@ cli: {
 	}
 
 }
+
+lib: _ @test(suite,lib)
+lib: {
+
+	test_all: #GoBashTest @test(bash,test)
+	test_all: {
+		dir: "structural"
+	}
+	cover_all: #GoBashCover @test(bash,cover)
+	cover_all: {
+		dir: "structural"
+	}
+
+}
