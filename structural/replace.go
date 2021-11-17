@@ -71,3 +71,12 @@ func ReplaceGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([
 
 	return results, nil
 }
+
+func ReplaceValue(rep, val cue.Value) cue.Value {
+	r, _ := replaceValue(rep, val)
+	return r
+}
+
+func replaceValue(rep, val cue.Value) (cue.Value, bool) {
+	return val, false
+}

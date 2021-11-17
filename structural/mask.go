@@ -80,3 +80,12 @@ func MaskGlobsCue(mask string, globs []string, rflags flags.RootPflagpole) ([]Gl
 
 	return results, nil
 }
+
+func MaskValue(mask, val cue.Value) cue.Value {
+	r, _ := maskValue(mask, val)
+	return r
+}
+
+func maskValue(mask, val cue.Value) (cue.Value, bool) {
+	return mask, false
+}

@@ -71,3 +71,12 @@ func ExtendGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]
 
 	return results, nil
 }
+
+func ExtendValue(ext, val cue.Value) cue.Value {
+	r, _ := extendValue(ext, val)
+	return r
+}
+
+func extendValue(ext, val cue.Value) (cue.Value, bool) {
+	return ext, false
+}

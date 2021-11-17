@@ -71,3 +71,12 @@ func UpsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]
 
 	return results, nil
 }
+
+func UpsertValue(up, val cue.Value) cue.Value {
+	r, _ := upsertValue(up, val)
+	return r
+}
+
+func upsertValue(up, val cue.Value) (cue.Value, bool) {
+	return val, false
+}
