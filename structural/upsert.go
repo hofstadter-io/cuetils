@@ -15,7 +15,15 @@ val: #U: _
 upsert: val.upsert
 `
 
-func Upsert(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func UpsertGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return UpsertGlobsCue(code, globs, rflags)
+}
+
+func UpsertGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return nil, nil
+}
+
+func UpsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"upsert"}, nil)
 	if err != nil {
 		return nil, err

@@ -17,7 +17,7 @@ func CountRun(globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	counts, err := structural.Count(globs, flags.RootPflags)
+	counts, err := structural.CountGlobs(globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}

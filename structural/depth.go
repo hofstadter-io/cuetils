@@ -14,7 +14,7 @@ type DepthResult struct {
 	Depth    int
 }
 
-func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
+func DepthGlobs(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -26,41 +26,6 @@ func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 	}
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no matches found")
-	}
-
-	depther := func(val cue.Value) int {
-		var max, depth int
-
-		// increase depth, check against max
-		before := func(v cue.Value) bool {
-			switch v.IncompleteKind() {
-			case cue.StructKind:
-				depth += 1
-			case cue.ListKind:
-				// nothing
-			default:
-				depth += 1
-			}
-
-			if depth > max {
-				max = depth
-			}
-			return true
-		}
-		// decrease depth after
-		after := func(v cue.Value) {
-			switch v.IncompleteKind() {
-			case cue.StructKind:
-				depth -= 1
-			case cue.ListKind:
-				// nothing
-			default:
-				depth -= 1
-			}
-		}
-
-		Walk(val, before, after)
-		return max
 	}
 
 	ctx := cuecontext.New()
@@ -75,7 +40,7 @@ func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 			return nil, iv.Err()
 		}
 
-		d := depther(iv)
+		d := depth(iv)
 
 		depths = append(depths, DepthResult{
 			Filename: input.Filename,
@@ -85,4 +50,43 @@ func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 	}
 
 	return depths, nil
+}
+
+func DepthValue(val cue.Value) int {
+	return depth(val)
+}
+
+func depth(val cue.Value) int {
+	var max, curr int
+
+	// increase curr, check against max
+	before := func(v cue.Value) bool {
+		switch v.IncompleteKind() {
+		case cue.StructKind:
+			curr += 1
+		case cue.ListKind:
+			// nothing
+		default:
+			curr += 1
+		}
+
+		if curr > max {
+			max = curr
+		}
+		return true
+	}
+	// decrease curr after
+	after := func(v cue.Value) {
+		switch v.IncompleteKind() {
+		case cue.StructKind:
+			curr -= 1
+		case cue.ListKind:
+			// nothing
+		default:
+			curr -= 1
+		}
+	}
+
+	Walk(val, before, after)
+	return max
 }

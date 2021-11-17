@@ -20,14 +20,15 @@ type GlobResult struct {
 	Filename string
 	Content  string
 	Value    cue.Value
+	Error    error
 }
 
 func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error) {
 	//if rflags.Accum != "" {
-		//results, err = AccumOutputs(results, rflags.Accum)
-		//if err != nil {
-			//return err
-		//}
+	//results, err = AccumOutputs(results, rflags.Accum)
+	//if err != nil {
+	//return err
+	//}
 	//}
 	w := os.Stdout
 	for _, r := range results {

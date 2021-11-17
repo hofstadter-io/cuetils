@@ -17,7 +17,7 @@ func DiffRun(orig string, next string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.Diff(orig, next, flags.RootPflags)
+	results, err := structural.DiffGlobs(orig, next, flags.RootPflags)
 	if err != nil {
 		return err
 	}

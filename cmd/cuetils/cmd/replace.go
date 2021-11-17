@@ -17,7 +17,7 @@ func ReplaceRun(code string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.Replace(code, globs, flags.RootPflags)
+	results, err := structural.ReplaceGlobs(code, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}

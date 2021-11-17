@@ -11,11 +11,8 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-func Pick(pick string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return PickGlobsGo(pick, globs, rflags)
-}
-
-func PickGlobsGo(pick string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+// PickGlobs will pick a subobject from globs on disk
+func PickGlobs(pick string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	ctx := cuecontext.New()
 
 	operator, err := ReadArg(pick, rflags.Load, ctx, nil)

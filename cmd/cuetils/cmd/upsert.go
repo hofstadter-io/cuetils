@@ -17,7 +17,7 @@ func UpsertRun(code string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.Upsert(code, globs, flags.RootPflags)
+	results, err := structural.UpsertGlobs(code, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}

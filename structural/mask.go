@@ -16,7 +16,8 @@ val: #M: _
 mask: val.mask
 `
 
-func Mask(mask string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+// MaskGlobs will mask a subobject from globs on disk
+func MaskGlobs(mask string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	return MaskGlobsCue(mask, globs, rflags)
 }
 

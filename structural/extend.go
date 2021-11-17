@@ -15,7 +15,15 @@ val: #E: _
 extend: val.extend
 `
 
-func Extend(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func ExtendGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return ExtendGlobsCue(code, globs, rflags)
+}
+
+func ExtendGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return nil, nil
+}
+
+func ExtendGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"extend"}, nil)
 	if err != nil {
 		return nil, err

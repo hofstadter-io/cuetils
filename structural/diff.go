@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/cuecontext"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
@@ -15,7 +16,54 @@ val: #Y: _
 diff: val.diff
 `
 
-func Diff(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func DiffGlobs(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return DiffGlobsCue(orig, next, rflags)
+}
+
+func DiffGlobsGo(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	ctx := cuecontext.New()
+
+	ov, err := ReadArg(orig, rflags.Load, ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	inputs, err := LoadGlobs([]string{next})
+	if len(inputs) == 0 {
+		return nil, fmt.Errorf("no inputs found")
+	}
+
+	results := make([]GlobResult, 0)
+	for _, input := range inputs {
+
+		iv := ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
+		if iv.Err() != nil {
+			return nil, iv.Err()
+		}
+
+		v, err := DiffValues(ov.Value, iv)
+		if err != nil {
+			return nil, err
+		}
+
+		results = append(results, GlobResult{
+			Filename: input.Filename,
+			Value:    v,
+		})
+	}
+
+	return results, nil
+}
+
+func DiffValues(orig, next cue.Value) (cue.Value, error) {
+	return diffValues(orig, next)
+}
+
+func diffValues(orig, next cue.Value) (cue.Value, error) {
+	return orig, nil
+}
+
+func DiffGlobsCue(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"diff"}, nil)
 	if err != nil {
 		return nil, err

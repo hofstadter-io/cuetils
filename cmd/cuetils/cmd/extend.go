@@ -17,7 +17,7 @@ func ExtendRun(code string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.Extend(code, globs, flags.RootPflags)
+	results, err := structural.ExtendGlobs(code, globs, flags.RootPflags)
 	if err != nil {
 		return err
 	}

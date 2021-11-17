@@ -15,7 +15,15 @@ val: #P: _
 patch: val.patch
 `
 
-func Patch(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func PatchGlobs(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return PatchGlobsCue(patch, orig, rflags)
+}
+
+func PatchGlobsGo(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return nil, nil
+}
+
+func PatchGlobsCue(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"patch"}, nil)
 	if err != nil {
 		return nil, err

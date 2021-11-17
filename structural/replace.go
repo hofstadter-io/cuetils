@@ -15,7 +15,15 @@ val: #R: _
 replace: val.replace
 `
 
-func Replace(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func ReplaceGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return ReplaceGlobsCue(code, globs, rflags)
+}
+
+func ReplaceGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return nil, nil
+}
+
+func ReplaceGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"replace"}, nil)
 	if err != nil {
 		return nil, err

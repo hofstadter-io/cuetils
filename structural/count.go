@@ -20,7 +20,7 @@ type CountResult struct {
 	Count    int
 }
 
-func Count(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
+func CountGlobs(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}
@@ -34,32 +34,10 @@ func Count(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
 		return nil, fmt.Errorf("no matches found")
 	}
 
-	counter := func(val cue.Value) int {
-		sum := 0
-		after := func(v cue.Value) {
-			switch v.IncompleteKind() {
-			case cue.StructKind:
-				s, _ := v.Fields(defaultWalkOptions...)
-				for s.Next() {
-					sum += 1
-				}
-			case cue.ListKind:
-				// nothing
-			default:
-				sum += 1
-			}
-		}
-
-		Walk(val, nil, after)
-		return sum
-	}
-
 	ctx := cuecontext.New()
 
 	counts := make([]CountResult, 0)
 	for _, input := range inputs {
-
-		// need to handle encodings here?
 
 		iv := ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
 		if iv.Err() != nil {
@@ -76,4 +54,28 @@ func Count(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
 	}
 
 	return counts, nil
+}
+
+func CountValue(val cue.Value) int {
+	return counter(val)
+}
+
+func counter(val cue.Value) int {
+	sum := 0
+	after := func(v cue.Value) {
+		switch v.IncompleteKind() {
+		case cue.StructKind:
+			s, _ := v.Fields(defaultWalkOptions...)
+			for s.Next() {
+				sum += 1
+			}
+		case cue.ListKind:
+			// nothing
+		default:
+			sum += 1
+		}
+	}
+
+	Walk(val, nil, after)
+	return sum
 }
