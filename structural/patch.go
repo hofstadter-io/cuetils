@@ -21,7 +21,7 @@ func Patch(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult,
 		return nil, err
 	}
 
-	operator, err := ReadArg(patch, rflags.Load, cuest.ctx, nil)
+	operator, err := ReadArg(patch, true, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}

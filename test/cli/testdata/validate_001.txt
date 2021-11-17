@@ -23,9 +23,9 @@ cmp stdout golden.stdout
 a.json
 ----------------------
 a.b: conflicting values "B" and int (mismatched types string and int):
+    ./schema.cue:1:1
+    ./schema.cue:3:6
     a.json:3:8
-    schema.cue:1:1
-    schema.cue:3:6
 
 
 Errors in 1 file(s)

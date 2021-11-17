@@ -9,7 +9,10 @@ import (
 	"strings"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/ast"
 	"cuelang.org/go/cue/load"
+	"cuelang.org/go/encoding/json"
+	"cuelang.org/go/encoding/yaml"
 )
 
 type Input struct {
@@ -27,12 +30,26 @@ func ReadArg(arg string, doLoad bool, ctx *cue.Context, cfg *load.Config) (*Inpu
 	if err != nil {
 		return nil, err
 	}
-	op, err = LoadInput(op, doLoad, ctx, cfg)
+	op, err = LoadInput(op, ctx, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	return op, nil
+}
+
+func ReadGlobs(globs []string, ctx *cue.Context, cfg *load.Config) ([]*Input, error) {
+	ins := []*Input{}
+	for _, glob := range globs {
+		in, err := ReadArg(glob, true, ctx, cfg)
+		if err != nil {
+			return nil, err
+		}
+
+		ins = append(ins, in)
+	}
+
+	return ins, nil
 }
 
 // Parses arg into an Input.
@@ -66,43 +83,23 @@ func ParseInput(arg string) (*Input, error) {
 }
 
 // Loads a parsed Input and sets the Content and Value
-func LoadInput(i *Input, doLoad bool, ctx *cue.Context, cfg *load.Config) (*Input, error) {
+func LoadInput(i *Input, ctx *cue.Context, cfg *load.Config) (*Input, error) {
 	if i.Filename == "expression" {
+		// probably need to load into overlay
 		i.Content = []byte(i.Original)
 		i.Value = ctx.CompileString(i.Original)
 		return i, i.Value.Err()
 	}
 
-	if doLoad || i.Entrypoints != nil {
-		// handle entrypoints
-		if i.Entrypoints == nil {
-			i.Entrypoints = []string{i.Filename}
-		}
-		v, err := LoadCueInputs(i.Entrypoints, ctx, cfg)
-		if err != nil {
-			return i, err
-		}
-		i.Value = v
-	} else {
-		// handle stdin?
-
-		// handle single file
-		d, err := os.ReadFile(i.Filename)
-		if err != nil {
-			return i, err
-		}
-		// handle input types
-		ext := filepath.Ext(i.Filename)
-		switch ext {
-		case ".yml", ".yaml":
-			s := fmt.Sprintf(yamlMod, string(d))
-			d = []byte(s)
-		}
-
-		i.Content = d
-
-		i.Value = ctx.CompileBytes(i.Content, cue.Filename(i.Filename))
+	// handle entrypoints
+	if i.Entrypoints == nil {
+		i.Entrypoints = []string{i.Filename}
 	}
+	v, err := LoadCueInputs(i.Entrypoints, ctx, cfg)
+	if err != nil {
+		return i, err
+	}
+	i.Value = v
 
 	if i.Value.Err() != nil {
 		return i, i.Value.Err()
@@ -119,6 +116,12 @@ func LoadInput(i *Input, doLoad bool, ctx *cue.Context, cfg *load.Config) (*Inpu
 // returns the value from the load after validating it
 func LoadCueInputs(entrypoints []string, ctx *cue.Context, cfg *load.Config) (cue.Value, error) {
 
+	if cfg == nil {
+		cfg = &load.Config{
+			DataFiles: true,
+		}
+	}
+
 	bis := load.Instances(entrypoints, cfg)
 
 	bi := bis[0]
@@ -126,6 +129,42 @@ func LoadCueInputs(entrypoints []string, ctx *cue.Context, cfg *load.Config) (cu
 	// these are typically parsing errors
 	if bi.Err != nil {
 		return cue.Value{}, bi.Err
+	}
+
+	// add back any orphaned files (json/yaml)
+	for _, f := range bi.OrphanedFiles {
+		d, err := os.ReadFile(f.Filename)
+		if err != nil {
+			fmt.Println("error: ", err)
+			os.Exit(1)
+		}
+
+		switch f.Encoding {
+
+		case "json":
+			A, err := json.Extract(f.Filename, d)
+			if err != nil {
+				fmt.Println("error: ", err)
+				os.Exit(1)
+			}
+
+			F := &ast.File{
+				Filename: f.Filename,
+				Decls:    []ast.Decl{A},
+			}
+			bi.AddSyntax(F)
+
+		case "yaml":
+			F, err := yaml.Extract(f.Filename, d)
+			if err != nil {
+				fmt.Println("error: ", err)
+				os.Exit(1)
+			}
+			bi.AddSyntax(F)
+
+		default:
+			fmt.Println("unknown encoding for", f.Filename, f.Encoding)
+		}
 	}
 
 	// Use cue.Context to turn build.Instance to cue.Instance
@@ -141,7 +180,7 @@ func LoadCueInputs(entrypoints []string, ctx *cue.Context, cfg *load.Config) (cu
 		cue.Definitions(true),
 		cue.Hidden(true),
 		cue.Optional(true),
-		cue.Attributes(false),
+		cue.Attributes(true),
 		cue.Docs(false),
 	)
 	if err != nil {

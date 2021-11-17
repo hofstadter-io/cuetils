@@ -1,7 +1,7 @@
-exec cuetils patch --headers patch.json a.json
+exec cuetils patch --headers patch.cue a.json
 cmp stdout golden.stdout
 
--- patch.json --
+-- patch.cue --
 {
   "+": {
     b: "B"
