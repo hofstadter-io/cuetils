@@ -42,8 +42,8 @@ import "strings"
 //
 
 
-cli: _ @test(suite,cli)
 cli: {
+	@test(suite,cli)
 
 	test_all: #GoBashTest @test(bash,test)
 	test_all: {
@@ -53,11 +53,10 @@ cli: {
 	cover_all: {
 		dir: "test/cli"
 	}
-
 }
 
-lib: _ @test(suite,lib)
 lib: {
+	@test(suite,lib)
 
 	test_all: #GoBashTest @test(bash,test)
 	test_all: {
@@ -67,5 +66,19 @@ lib: {
 	cover_all: {
 		dir: "structural"
 	}
+}
 
+cue: {
+	@test(suite,cue)
+
+	eval: _ @test(bash,test)
+	eval: {
+		dir: "test/cue"
+		script: """
+		for file in `ls *.cue`; do
+			cue eval $file > /dev/null
+		done
+		"""
+
+	}
 }

@@ -13,13 +13,14 @@ build:
 install:
 	go install ./cmd/cuetils
 
-test: test.cli test.lib
-
+.PHONY: test test.cli test.lib test.cue
+test: test.cli test.lib test.cue
 test.cli:
 	hof test -s cli -t test
-
 test.lib:
 	hof test -s lib -t test
+test.cue:
+	hof test -s cue -t test
 
 WORKFLOWS = default
 

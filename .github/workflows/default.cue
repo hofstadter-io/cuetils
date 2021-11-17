@@ -7,9 +7,21 @@ common.#Workflow & {
 	on: ["push"]
 	jobs: test: {
 		steps: [ for step in common.#BuildSteps {step} ] + [{
-			name: "Run tests"
+			name: "Go tests"
+			run: """
+			go test -cover ./structural
+			"""
+		},{
+			name: "CLI tests"
 			run: """
 			go test -cover ./test/cli
+			"""
+		},{
+			name: "Cue tests"
+			run: """
+			for file in `ls test/cue/*.cue`; do
+				cue eval $file > /dev/null
+			done
 			"""
 		}]
 	}
