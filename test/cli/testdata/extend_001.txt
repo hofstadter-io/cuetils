@@ -1,0 +1,36 @@
+exec cuetils extend --headers extend.cue a.json
+cmp stdout golden.stdout
+
+-- extend.cue --
+{
+	a: "A"
+	b: "b"
+	e: {
+		b: 2
+		c: "c"
+	}
+	d: int
+}
+-- a.json --
+{
+	a: "a"
+	e: {
+		a: "a"
+		b: "b"
+	}
+}
+
+-- golden.stdout --
+a.json
+----------------------
+{
+	a: "a"
+	b: "b"
+	e: {
+		a: "a"
+		b: "b"
+		c: "c"
+	}
+	d: int
+}
+

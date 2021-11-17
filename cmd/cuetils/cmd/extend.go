@@ -5,6 +5,9 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
+	"github.com/hofstadter-io/cuetils/structural"
 )
 
 var extendLong = `extend file(s) with code (only if not present)`
@@ -12,7 +15,14 @@ var extendLong = `extend file(s) with code (only if not present)`
 func ExtendRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	results, err := structural.Extend(code, globs, flags.RootPflags)
+	if err != nil {
+		return err
+	}
+
+	err = structural.ProcessOutputs(results, flags.RootPflags)
 
 	return err
 }
