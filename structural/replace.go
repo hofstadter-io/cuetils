@@ -15,22 +15,18 @@ val: #R: _
 replace: val.replace
 `
 
-func Replace(orig string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func Replace(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"replace"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	operator, err := ParseOperator(orig)
-	if err != nil {
-		return nil, err
-	}
-	operator, err = LoadOperator(operator, rflags.Load, cuest.ctx)
+	operator, err := ReadArg(code, rflags.Load, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	inputs, err := ReadGlobs(globs)
+	inputs, err := LoadGlobs(globs)
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}

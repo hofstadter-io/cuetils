@@ -8,29 +8,24 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-
 const transformfmt = `
 #Transformer: _
 #In: _
 Out: #Transformer
 `
 
-func TransformGlobs(transformer string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func TransformGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest(nil, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	operator, err := ParseOperator(transformer)
-	if err != nil {
-		return nil, err
-	}
-	operator, err = LoadOperator(operator, rflags.Load, cuest.ctx)
+	operator, err := ReadArg(code, rflags.Load, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	inputs, err := ReadGlobs(globs)
+	inputs, err := LoadGlobs(globs)
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}
@@ -61,7 +56,6 @@ func TransformGlobs(transformer string, globs []string, rflags flags.RootPflagpo
 
 	return results, nil
 }
-
 
 func TransformValue(trans, orig cue.Value) (cue.Value, error) {
 

@@ -11,7 +11,7 @@ import (
 
 type DepthResult struct {
 	Filename string
-	Depth int
+	Depth    int
 }
 
 func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
@@ -20,7 +20,7 @@ func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 		globs = []string{"-"}
 	}
 
-	inputs, err := ReadGlobs(globs)
+	inputs, err := LoadGlobs(globs)
 	if err != nil {
 		return nil, err
 	}
@@ -28,18 +28,18 @@ func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 		return nil, fmt.Errorf("no matches found")
 	}
 
-	depther := func (val cue.Value) int {
+	depther := func(val cue.Value) int {
 		var max, depth int
 
 		// increase depth, check against max
-		before := func (v cue.Value) bool {
+		before := func(v cue.Value) bool {
 			switch v.IncompleteKind() {
-				case cue.StructKind:
-					depth += 1
-				case cue.ListKind:
-					// nothing
-				default:
-					depth += 1
+			case cue.StructKind:
+				depth += 1
+			case cue.ListKind:
+				// nothing
+			default:
+				depth += 1
 			}
 
 			if depth > max {
@@ -48,14 +48,14 @@ func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 			return true
 		}
 		// decrease depth after
-		after := func (v cue.Value) {
+		after := func(v cue.Value) {
 			switch v.IncompleteKind() {
-				case cue.StructKind:
-					depth -= 1
-				case cue.ListKind:
-					// nothing
-				default:
-					depth -= 1
+			case cue.StructKind:
+				depth -= 1
+			case cue.ListKind:
+				// nothing
+			default:
+				depth -= 1
 			}
 		}
 
@@ -79,7 +79,7 @@ func Depth(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
 
 		depths = append(depths, DepthResult{
 			Filename: input.Filename,
-			Depth: int(d),
+			Depth:    int(d),
 		})
 
 	}

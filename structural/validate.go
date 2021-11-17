@@ -14,16 +14,12 @@ func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([
 		return nil, err
 	}
 
-	operator, err := ParseOperator(schema)
-	if err != nil {
-		return nil, err
-	}
-	operator, err = LoadOperator(operator, rflags.Load, cuest.ctx)
+	operator, err := ReadArg(schema, rflags.Load, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	inputs, err := ReadGlobs(globs)
+	inputs, err := LoadGlobs(globs)
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}

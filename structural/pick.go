@@ -18,15 +18,12 @@ func Pick(pick string, globs []string, rflags flags.RootPflagpole) ([]GlobResult
 func PickGlobsGo(pick string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	ctx := cuecontext.New()
 
-	operator, err := ParseOperator(pick)
+	operator, err := ReadArg(pick, rflags.Load, ctx, nil)
 	if err != nil {
 		return nil, err
 	}
-	operator, err = LoadOperator(operator, rflags.Load, ctx)
-	if err != nil {
-		return nil, err
-	}
-	inputs, err := ReadGlobs(globs)
+
+	inputs, err := LoadGlobs(globs)
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}

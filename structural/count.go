@@ -11,13 +11,13 @@ import (
 
 type StatsResult struct {
 	Filename string
-	Count int
-	Depth int
+	Count    int
+	Depth    int
 }
 
 type CountResult struct {
 	Filename string
-	Count int
+	Count    int
 }
 
 func Count(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
@@ -26,7 +26,7 @@ func Count(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
 		globs = []string{"-"}
 	}
 
-	inputs, err := ReadGlobs(globs)
+	inputs, err := LoadGlobs(globs)
 	if err != nil {
 		return nil, err
 	}
@@ -34,19 +34,19 @@ func Count(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
 		return nil, fmt.Errorf("no matches found")
 	}
 
-	counter := func (val cue.Value) int {
+	counter := func(val cue.Value) int {
 		sum := 0
-		after := func (v cue.Value) {
+		after := func(v cue.Value) {
 			switch v.IncompleteKind() {
-				case cue.StructKind:
-					s, _ := v.Fields(defaultWalkOptions...)
-					for s.Next() {
-						sum += 1
-					}
-				case cue.ListKind:
-					// nothing
-				default:
+			case cue.StructKind:
+				s, _ := v.Fields(defaultWalkOptions...)
+				for s.Next() {
 					sum += 1
+				}
+			case cue.ListKind:
+				// nothing
+			default:
+				sum += 1
 			}
 		}
 
@@ -70,7 +70,7 @@ func Count(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
 
 		counts = append(counts, CountResult{
 			Filename: input.Filename,
-			Count: c,
+			Count:    c,
 		})
 
 	}

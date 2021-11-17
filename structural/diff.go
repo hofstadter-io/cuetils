@@ -21,16 +21,12 @@ func Diff(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, e
 		return nil, err
 	}
 
-	operator, err := ParseOperator(orig)
-	if err != nil {
-		return nil, err
-	}
-	operator, err = LoadOperator(operator, rflags.Load, cuest.ctx)
+	operator, err := ReadArg(orig, rflags.Load, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	inputs, err := ReadGlobs([]string{next})
+	inputs, err := LoadGlobs([]string{next})
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}

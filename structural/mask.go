@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/cuecontext"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
@@ -16,21 +17,32 @@ mask: val.mask
 `
 
 func Mask(mask string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return MaskGlobsCue(mask, globs, rflags)
+}
+
+func MaskGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	ctx := cuecontext.New()
+
+	_, err := ReadArg(code, rflags.Load, ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+func MaskGlobsCue(mask string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"mask"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	operator, err := ParseOperator(mask)
-	if err != nil {
-		return nil, err
-	}
-	operator, err = LoadOperator(operator, rflags.Load, cuest.ctx)
+	operator, err := ReadArg(mask, rflags.Load, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	inputs, err := ReadGlobs(globs)
+	inputs, err := LoadGlobs(globs)
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}

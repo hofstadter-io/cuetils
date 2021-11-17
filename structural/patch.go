@@ -21,16 +21,12 @@ func Patch(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult,
 		return nil, err
 	}
 
-	operator, err := ParseOperator(patch)
-	if err != nil {
-		return nil, err
-	}
-	operator, err = LoadOperator(operator, rflags.Load, cuest.ctx)
+	operator, err := ReadArg(patch, rflags.Load, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	inputs, err := ReadGlobs([]string{orig})
+	inputs, err := LoadGlobs([]string{orig})
 	if len(inputs) == 0 {
 		return nil, fmt.Errorf("no inputs found")
 	}
