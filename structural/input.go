@@ -16,24 +16,35 @@ type Input struct {
 	Original    string
 	Entrypoints []string
 	Filename    string
-	Filetype    string  // yaml, json, cue... toml?
-	Expression  string  // cue expression to select within document
+	Filetype    string // yaml, json, cue... toml?
+	Expression  string // cue expression to select within document
 	Content     []byte
 	Value       cue.Value
 }
 
-func ParseOperator(op string) (Input, error) {
-	i := Input{ Original: op, Filename: op }
+// Proxy for ParseInput
+//
+// Depreciated: use ParseInput
+func ParseOperator(arg string) (Input, error) {
+	return ParseInput(arg)
+}
 
-	// does the op look like a file or a CUE value?
+// Parses arg into an Input.
+// arg can be a value, filename, glob, or - for stdin
+// can be <arg>@<expr> to subselect from the root value
+// can be <entyrpoint>,<endtrypoint>[@<expr>] to support CUE like args
+func ParseInput(arg string) (Input, error) {
+	i := Input{Original: arg, Filename: arg}
+
+	// does the arg look like a file or a CUE value?
 	// this is an overly simple check, but should be sufficient for all formats (CUE, JSON, Yaml)
-	if strings.ContainsAny(op, "{}:") || op == "_" {
+	if strings.ContainsAny(arg, "{}:") || arg == "_" {
 		i.Filename = "expression"
 	}
 
 	// look for expression
 	if strings.Contains(i.Filename, "@") {
-		parts := strings.Split(op, "@")
+		parts := strings.Split(arg, "@")
 		if len(parts) != 2 {
 			return i, fmt.Errorf("more than on '@' found for input %q", i.Original)
 		}
@@ -48,7 +59,15 @@ func ParseOperator(op string) (Input, error) {
 	return i, nil
 }
 
+// Proxy for LoadInput
+//
+// Depreciated: use LoadInput
 func LoadOperator(i Input, doLoad bool, ctx *cue.Context) (Input, error) {
+	return LoadInput(i, doLoad, ctx)
+}
+
+// Loads a parsed Input and sets the Content and Value
+func LoadInput(i Input, doLoad bool, ctx *cue.Context) (Input, error) {
 	if i.Filename == "expression" {
 		i.Content = []byte(i.Original)
 		i.Value = ctx.CompileString(i.Original)
@@ -60,7 +79,7 @@ func LoadOperator(i Input, doLoad bool, ctx *cue.Context) (Input, error) {
 		if i.Entrypoints == nil {
 			i.Entrypoints = []string{i.Filename}
 		}
-		v, err := LoadInputs(i.Entrypoints, ctx)
+		v, err := LoadCueInputs(i.Entrypoints, ctx, nil)
 		if err != nil {
 			return i, err
 		}
@@ -99,9 +118,9 @@ func LoadOperator(i Input, doLoad bool, ctx *cue.Context) (Input, error) {
 
 // Loads the entrypoints using the context provided
 // returns the value from the load after validating it
-func LoadInputs(entrypoints []string, ctx *cue.Context) (cue.Value, error) {
+func LoadCueInputs(entrypoints []string, ctx *cue.Context, cfg *load.Config) (cue.Value, error) {
 
-	bis := load.Instances(entrypoints, nil)
+	bis := load.Instances(entrypoints, cfg)
 
 	bi := bis[0]
 	// check for errors on the instance
@@ -145,7 +164,7 @@ func ReadGlobs(globs []string) ([]Input, error) {
 		if err != nil {
 			return nil, err
 		}
-		i := []Input{ Input{Filename: "-",Content: b} }
+		i := []Input{Input{Filename: "-", Content: b}}
 		return i, nil
 	}
 
@@ -163,7 +182,7 @@ func ReadGlobs(globs []string) ([]Input, error) {
 
 		for _, m := range matches {
 			// continue on duplicate
-			if _,ok := inputs[m]; ok {
+			if _, ok := inputs[m]; ok {
 				continue
 			}
 
@@ -180,7 +199,7 @@ func ReadGlobs(globs []string) ([]Input, error) {
 				d = []byte(s)
 			}
 
-			inputs[m] = Input{ Filename: m, Content: d }
+			inputs[m] = Input{Filename: m, Content: d}
 		}
 	}
 
