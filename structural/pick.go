@@ -1,10 +1,7 @@
 package structural
 
 import (
-	"fmt"
-
 	"cuelang.org/go/cue"
-	"cuelang.org/go/cue/cuecontext"
 
 	// "cuelang.org/go/cue/errors"
 
@@ -12,56 +9,15 @@ import (
 )
 
 // PickGlobs will pick a subobject from globs on disk
-func PickGlobs(pick string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	ctx := cuecontext.New()
-
-	operator, err := ReadArg(pick, rflags.Load, ctx, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	inputs, err := LoadGlobs(globs)
-	if len(inputs) == 0 {
-		return nil, fmt.Errorf("no inputs found")
-	}
-
-	results := make([]GlobResult, 0)
-	for _, input := range inputs {
-
-		iv := ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
-		if iv.Err() != nil {
-			return nil, iv.Err()
-		}
-
-		// special case for pick
-		if pick == "_" {
-			results = append(results, GlobResult{
-				Filename: input.Filename,
-				Value:    iv,
-			})
-			continue
-		}
-
-		v := PickValue(operator.Value, iv)
-		if v.Err() != nil {
-			return nil, v.Err()
-		}
-
-		results = append(results, GlobResult{
-			Filename: input.Filename,
-			Value:    v,
-		})
-
-	}
-
-	return results, nil
+func PickGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(code, globs, rflags, PickValue)
 }
 
 // PickValue uses 'pick' to pick a subvalue from 'from'
 // by checking if values unify
-func PickValue(pick, from cue.Value) cue.Value {
+func PickValue(pick, from cue.Value) (cue.Value, error) {
 	p, _ := pickValue(pick, from)
-	return p
+	return p, nil
 }
 
 // this is the recursive version that also returns

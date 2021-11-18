@@ -4,17 +4,15 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/cuecontext"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
 func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	cuest, err := NewCuest(nil, nil)
-	if err != nil {
-		return nil, err
-	}
+	ctx := cuecontext.New()
 
-	operator, err := ReadArg(schema, rflags.Load, cuest.ctx, nil)
+	operator, err := ReadArg(schema, rflags.Load, ctx, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +25,7 @@ func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([
 	results := make([]GlobResult, 0)
 	for _, input := range inputs {
 
-		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
+		iv := ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
 		if iv.Err() != nil {
 			return nil, iv.Err()
 		}
@@ -50,6 +48,7 @@ func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([
 }
 
 func ValidateValue(schema, val cue.Value) (bool, error) {
+	// probably need to deal with some flags here...
 	e := val.Unify(schema).Err()
 	return e == nil, e
 }

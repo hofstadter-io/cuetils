@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/cue/cuecontext"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
@@ -22,14 +21,16 @@ func MaskGlobs(mask string, globs []string, rflags flags.RootPflagpole) ([]GlobR
 }
 
 func MaskGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	ctx := cuecontext.New()
+	return BinaryOpGlobs(code, globs, rflags, MaskValue)
+}
 
-	_, err := ReadArg(code, rflags.Load, ctx, nil)
-	if err != nil {
-		return nil, err
-	}
+func MaskValue(mask, val cue.Value) (cue.Value, error) {
+	r, _ := maskValue(mask, val)
+	return r, nil
+}
 
-	return nil, nil
+func maskValue(mask, val cue.Value) (cue.Value, bool) {
+	return mask, false
 }
 
 func MaskGlobsCue(mask string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
@@ -79,13 +80,4 @@ func MaskGlobsCue(mask string, globs []string, rflags flags.RootPflagpole) ([]Gl
 	}
 
 	return results, nil
-}
-
-func MaskValue(mask, val cue.Value) cue.Value {
-	r, _ := maskValue(mask, val)
-	return r
-}
-
-func maskValue(mask, val cue.Value) (cue.Value, bool) {
-	return mask, false
 }

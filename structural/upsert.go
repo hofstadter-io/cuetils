@@ -20,7 +20,16 @@ func UpsertGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]Glo
 }
 
 func UpsertGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return nil, nil
+	return BinaryOpGlobs(code, globs, rflags, UpsertValue)
+}
+
+func UpsertValue(up, val cue.Value) (cue.Value, error) {
+	r, _ := upsertValue(up, val)
+	return r, nil
+}
+
+func upsertValue(up, val cue.Value) (cue.Value, bool) {
+	return val, false
 }
 
 func UpsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
@@ -70,13 +79,4 @@ func UpsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]
 	}
 
 	return results, nil
-}
-
-func UpsertValue(up, val cue.Value) cue.Value {
-	r, _ := upsertValue(up, val)
-	return r
-}
-
-func upsertValue(up, val cue.Value) (cue.Value, bool) {
-	return val, false
 }

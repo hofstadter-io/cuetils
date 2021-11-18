@@ -20,7 +20,16 @@ func PatchGlobs(patch string, orig string, rflags flags.RootPflagpole) ([]GlobRe
 }
 
 func PatchGlobsGo(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return nil, nil
+	return BinaryOpGlobs(patch, []string{orig}, rflags, PatchValue)
+}
+
+func PatchValue(patch, val cue.Value) (cue.Value, error) {
+	r, _ := patchValue(patch, val)
+	return r, nil
+}
+
+func patchValue(patch, val cue.Value) (cue.Value, bool) {
+	return val, false
 }
 
 func PatchGlobsCue(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
@@ -70,13 +79,4 @@ func PatchGlobsCue(patch string, orig string, rflags flags.RootPflagpole) ([]Glo
 	}
 
 	return results, nil
-}
-
-func PatchValue(patch, val cue.Value) cue.Value {
-	r, _ := patchValue(patch, val)
-	return r
-}
-
-func patchValue(patch, val cue.Value) (cue.Value, bool) {
-	return val, false
 }

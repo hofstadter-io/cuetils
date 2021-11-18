@@ -20,7 +20,16 @@ func ExtendGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]Glo
 }
 
 func ExtendGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return nil, nil
+	return BinaryOpGlobs(code, globs, rflags, ExtendValue)
+}
+
+func ExtendValue(ext, val cue.Value) (cue.Value, error) {
+	r, _ := extendValue(ext, val)
+	return r, nil
+}
+
+func extendValue(ext, val cue.Value) (cue.Value, bool) {
+	return ext, false
 }
 
 func ExtendGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
@@ -70,13 +79,4 @@ func ExtendGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]
 	}
 
 	return results, nil
-}
-
-func ExtendValue(ext, val cue.Value) cue.Value {
-	r, _ := extendValue(ext, val)
-	return r
-}
-
-func extendValue(ext, val cue.Value) (cue.Value, bool) {
-	return ext, false
 }

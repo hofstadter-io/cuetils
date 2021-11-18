@@ -20,7 +20,16 @@ func ReplaceGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]Gl
 }
 
 func ReplaceGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return nil, nil
+	return BinaryOpGlobs(code, globs, rflags, ReplaceValue)
+}
+
+func ReplaceValue(rep, val cue.Value) (cue.Value, error) {
+	r, _ := replaceValue(rep, val)
+	return r, nil
+}
+
+func replaceValue(rep, val cue.Value) (cue.Value, bool) {
+	return val, false
 }
 
 func ReplaceGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
@@ -70,13 +79,4 @@ func ReplaceGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([
 	}
 
 	return results, nil
-}
-
-func ReplaceValue(rep, val cue.Value) cue.Value {
-	r, _ := replaceValue(rep, val)
-	return r
-}
-
-func replaceValue(rep, val cue.Value) (cue.Value, bool) {
-	return val, false
 }
