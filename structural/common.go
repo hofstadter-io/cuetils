@@ -8,18 +8,19 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-func newStruct(ctx *cue.Context) cue.Value {
+func newAny(ctx *cue.Context) cue.Value {
 	return ctx.CompileString("_")
-	// return ctx.BuildExpr(ast.NewIdent("_"))
 }
 
-func getLabel(val cue.Value) {
+func newStruct(ctx *cue.Context) cue.Value {
+	return ctx.CompileString("{...}")
+}
+
+func GetLabel(val cue.Value) cue.Selector {
 	ss := val.Path().Selectors()
 	s := ss[len(ss)-1]
-	fmt.Println(ss, s)
+	return s
 }
-
-type UnaryOpValueFunc func(val cue.Value) (cue.Value, error)
 
 type BinaryOpValueFunc func(lhs, rhs cue.Value) (cue.Value, error)
 
@@ -58,6 +59,8 @@ func BinaryOpGlobs(lhs string, rhs []string, rflags flags.RootPflagpole, fn Bina
 
 	return results, nil
 }
+
+type UnaryOpValueFunc func(val cue.Value) (cue.Value, error)
 
 func UnaryOpGlobs(globs []string, rflags flags.RootPflagpole, fn UnaryOpValueFunc) ([]GlobResult, error) {
 	ctx := cuecontext.New()
