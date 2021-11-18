@@ -8,7 +8,6 @@ import (
 
 const transformfmt = `
 #Transformer: _
-#In: _
 Out: #Transformer
 `
 
@@ -20,7 +19,7 @@ func TransformValue(trans, orig cue.Value) (cue.Value, error) {
 	ctx := trans.Context()
 	val := ctx.CompileString(transformfmt)
 	val = val.FillPath(cue.ParsePath("#Transformer"), trans)
-	val = val.FillPath(cue.ParsePath("#In"), trans)
+	val = val.FillPath(cue.ParsePath("#Transformer.#In"), orig)
 	out := val.LookupPath(cue.ParsePath("Out"))
 
 	return out, nil

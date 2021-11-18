@@ -47,7 +47,7 @@ func TestPick(t *testing.T) {
 		if f.Err() != nil {
 			t.Fatalf("failed to compile from in TestPick %d", i)
 		}
-		r := structural.PickValue(p, f)
+		r, _ := structural.PickValue(p, f)
 
 		o, err := structural.FormatOutput(r, "cue")
 		if err != nil {
