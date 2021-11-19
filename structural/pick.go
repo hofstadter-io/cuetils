@@ -10,119 +10,137 @@ import (
 )
 
 // PickGlobs will pick a subobject from globs on disk
-func PickGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(code, globs, rflags, PickValue)
+func PickGlobs(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(code, globs, opts, PickValue)
 }
 
 // PickValue uses 'pick' to pick a subvalue from 'from'
 // by checking if values unify
-func PickValue(pick, from cue.Value) (cue.Value, error) {
-	p, _ := pickValue(pick, from)
+func PickValue(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
+	p, _ := pickValue(pick, from, opts)
 	return p, nil
 }
 
 // this is the recursive version that also returns
 // whether the value was picked
-func pickValue(pick, from cue.Value) (cue.Value, bool) {
-	ctx := pick.Context()
-	//fmt.Println(pick)
-	//fmt.Println(from)
-
+func pickValue(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
 	switch pick.IncompleteKind() {
-	// just return
+	// pick everything
 	case cue.TopKind:
 		return from, true
 
 	// recurse on matching labels
 	case cue.StructKind:
-		if k := from.IncompleteKind(); k != cue.StructKind {
-			// should this return or just continue? do we need some way to specify?
-			// probably prefer to be more strict, so that you know your schemas
-			// return errors.Newf(from.Pos(), "expected struct, but got %v", k), true
-			return newStruct(ctx), false
-		}
-		result := newStruct(ctx)
-		iter, _ := pick.Fields(defaultWalkOptions...)
-
-		cnt := 0
-		for iter.Next() {
-			cnt++
-			s := iter.Selector()
-			p := cue.MakePath(s)
-			f := from.LookupPath(p)
-			// fmt.Println(cnt, iter.Value(), f, f.Exists())
-			// check that field exists in from. Should we be checking f.Err()?
-			if f.Exists() {
-				r, ok := pickValue(iter.Value(), f)
-				// fmt.Println("r:", r, ok, p)
-				if ok {
-					result = result.FillPath(p, r)
-				}
-			}
-		}
-
-		// need to check for {...}
-		// no fields and open
-		if cnt == 0 && pick.Allows(cue.AnyString) {
-			return from, true
-		}
-
-		// fmt.Println("result:", result)
-
-		return result, true
+		return pickStruct(pick, from, opts)
 
 	case cue.ListKind:
-		if k := from.IncompleteKind(); k != cue.ListKind {
-			// should this return or just continue? do we need some way to specify?
-			// probably prefer to be more strict, so that you know your schemas
-			// return errors.Newf(from.Pos(), "expected list, but got %v", k), true
-			return newStruct(ctx), false
-		}
+		return pickList(pick, from, opts)
 
-		lpt, err := getListProcType(pick)
-		if err != nil {
-			ce := errors.Newf(pick.Pos(), "%v", err)
-			ev := ctx.MakeError(ce)
+	default:
+		return pickLeaf(pick, from, opts)
+	}
+}
+
+func pickStruct(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	ctx := pick.Context()
+
+	if k := from.IncompleteKind(); k != cue.StructKind {
+		if opts.NodeTypeErrors {
+			e := errors.Newf(pick.Pos(), "mask type '%v' does not match target value type '%v'", pick.IncompleteKind(), from.IncompleteKind())
+			ev := ctx.MakeError(e)
 			return ev, true
 		}
+	}
 
-		_ = lpt
+	result := newStruct(ctx)
+	iter, _ := pick.Fields(defaultWalkOptions...)
 
-		// how to consider different list sizes
-		// if len(pick) == 1, apply to all elements
-		// if len(pick) > 1
-		//   attributes? @pick(and,or,pos)
-		// maybe we don't care about length if attribute is used?
-
-		pi, _ := pick.List()
-		fi, _ := from.List()
-
-		result := []cue.Value{}
-		for pi.Next() && fi.Next() {
-			p, ok := pickValue(pi.Value(), fi.Value())
+	cnt := 0
+	for iter.Next() {
+		cnt++
+		s := iter.Selector()
+		p := cue.MakePath(s)
+		f := from.LookupPath(p)
+		// fmt.Println(cnt, iter.Value(), f, f.Exists())
+		// check that field exists in from. Should we be checking f.Err()?
+		if f.Exists() {
+			r, ok := pickValue(iter.Value(), f, opts)
+			// fmt.Println("r:", r, ok, p)
 			if ok {
-				result = append(result, p)
+				result = result.FillPath(p, r)
 			}
 		}
+	}
 
-		return ctx.NewList(result...), true
+	// need to check for {...}
+	// no fields and open
+	if cnt == 0 && pick.Allows(cue.AnyString) {
+		return from, true
+	}
 
-	// (basic lit types)
-	default:
-		// if pick is concrete, so must from
-		// make sure 1 does not pick int
-		// but we do want int to pick any num
-		if pick.IsConcrete() {
-			if from.IsConcrete() {
-				r := pick.Unify(from)
-				return r, r.Exists()
-			} else {
-				return cue.Value{}, false
-			}
-		} else {
+	// fmt.Println("result:", result)
+
+	return result, true
+
+	return pick, false
+}
+
+func pickList(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	ctx := pick.Context()
+
+	if k := from.IncompleteKind(); k != cue.ListKind {
+		// should this return or just continue? do we need some way to specify?
+		// probably prefer to be more strict, so that you know your schemas
+		// return errors.Newf(from.Pos(), "expected list, but got %v", k), true
+		return newStruct(ctx), false
+	}
+
+	lpt, err := getListProcType(pick)
+	if err != nil {
+		ce := errors.Newf(pick.Pos(), "%v", err)
+		ev := ctx.MakeError(ce)
+		return ev, true
+	}
+
+	_ = lpt
+
+	// how to consider different list sizes
+	// if len(pick) == 1, apply to all elements
+	// if len(pick) > 1
+	//   attributes? @pick(and,or,pos)
+	// maybe we don't care about length if attribute is used?
+
+	pi, _ := pick.List()
+	fi, _ := from.List()
+
+	result := []cue.Value{}
+	for pi.Next() && fi.Next() {
+		p, ok := pickValue(pi.Value(), fi.Value(), opts)
+		if ok {
+			result = append(result, p)
+		}
+	}
+
+	return ctx.NewList(result...), true
+
+	return pick, false
+}
+
+func pickLeaf(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	// if pick is concrete, so must from
+	// make sure 1 does not pick int
+	// but we do want int to pick any num
+	if pick.IsConcrete() {
+		if from.IsConcrete() {
 			r := pick.Unify(from)
 			return r, r.Exists()
+		} else {
+			return cue.Value{}, false
 		}
-
+	} else {
+		r := pick.Unify(from)
+		return r, r.Exists()
 	}
+
+	return pick, false
 }

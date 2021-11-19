@@ -17,12 +17,12 @@ func PatchRun(patch string, orig string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.PatchGlobs(patch, orig, flags.RootPflags)
+	results, err := structural.PatchGlobs(patch, orig, &flags.RootPflags)
 	if err != nil {
 		return err
 	}
 
-	err = structural.ProcessOutputs(results, flags.RootPflags)
+	err = structural.ProcessOutputs(results, &flags.RootPflags)
 
 	return err
 }

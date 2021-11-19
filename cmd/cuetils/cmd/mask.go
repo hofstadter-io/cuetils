@@ -17,12 +17,12 @@ func MaskRun(code string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.MaskGlobs(code, globs, flags.RootPflags)
+	results, err := structural.MaskGlobs(code, globs, &flags.RootPflags)
 	if err != nil {
 		return err
 	}
 
-	err = structural.ProcessOutputs(results, flags.RootPflags)
+	err = structural.ProcessOutputs(results, &flags.RootPflags)
 
 	return err
 }

@@ -112,7 +112,7 @@ Cli: gen.#HofGenerator & {
 		Default: "false"
 		Help:    "overwrite files being processed"
 	},{
-		Name:    "typeErrors"
+		Name:    "allTypeErrors"
 		Long:    "type-errors"
 		Short:   "E"
 		Type:    "bool"

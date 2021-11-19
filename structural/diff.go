@@ -15,24 +15,24 @@ val: #Y: _
 diff: val.diff
 `
 
-func DiffGlobs(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return DiffGlobsCue(orig, next, rflags)
+func DiffGlobs(orig string, next string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return DiffGlobsCue(orig, next, opts)
 }
 
-func DiffGlobsGo(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(orig, []string{next}, rflags, DiffValues)
+func DiffGlobsGo(orig string, next string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(orig, []string{next}, opts, DiffValues)
 }
 
-func DiffValues(orig, next cue.Value) (cue.Value, error) {
-	r, _ := diffValues(orig, next)
+func DiffValues(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
+	r, _ := diffValues(orig, next, opts)
 	return r, nil
 }
 
-func diffValues(orig, next cue.Value) (cue.Value, bool) {
+func diffValues(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
 	return orig, false
 }
 
-func DiffGlobsCue(orig string, next string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func DiffGlobsCue(orig string, next string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"diff"}, nil)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func DiffGlobsCue(orig string, next string, rflags flags.RootPflagpole) ([]GlobR
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := rflags.Maxiter; mi > 0 {
+	if mi := opts.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(difffmt, maxiter)

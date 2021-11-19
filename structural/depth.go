@@ -14,7 +14,7 @@ type DepthResult struct {
 	Depth    int
 }
 
-func DepthGlobs(globs []string, rflags flags.RootPflagpole) ([]DepthResult, error) {
+func DepthGlobs(globs []string, opts *flags.RootPflagpole) ([]DepthResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}

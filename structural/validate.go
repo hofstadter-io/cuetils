@@ -9,7 +9,7 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func ValidateGlobs(schema string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	ctx := cuecontext.New()
 
 	operator, err := ReadArg(schema, ctx, nil)
@@ -47,7 +47,7 @@ func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([
 
 }
 
-func ValidateValue(schema, val cue.Value) (bool, error) {
+func ValidateValue(schema, val cue.Value, opts *flags.RootPflagpole) (bool, error) {
 	// probably need to deal with some flags here...
 	e := val.Unify(schema).Err()
 	return e == nil, e

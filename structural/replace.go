@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/cue/errors"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
@@ -16,38 +15,27 @@ val: #R: _
 replace: val.replace
 `
 
-func ReplaceGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return ReplaceGlobsCue(code, globs, rflags)
+func ReplaceGlobs(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return ReplaceGlobsCue(code, globs, opts)
 }
 
-func ReplaceGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(code, globs, rflags, ReplaceValue)
+func ReplaceGlobsGo(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(code, globs, opts, ReplaceValue)
 }
 
-func ReplaceValue(repl, val cue.Value) (cue.Value, error) {
-	r, _ := replaceValue(repl, val)
+// TODO, make opts a pointer so we are only passing that during recursion
+func ReplaceValue(repl, val cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
+	r, _ := replaceValue(repl, val, opts)
 	return r, nil
 }
 
-func replaceValue(repl, val cue.Value) (cue.Value, bool) {
-	ctx := repl.Context()
-
-	// the lhs/rhs values should have the same label / type
-	// are we sure they do at this point?
-	// TODO, make tests
-
+func replaceValue(repl, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
 	switch val.IncompleteKind() {
 	case cue.StructKind:
+		return replaceStruct(repl, val, opts)
 
 	case cue.ListKind:
-		lpt, err := getListProcType(repl)
-		if err != nil {
-			ce := errors.Newf(repl.Pos(), "%v", err)
-			ev := ctx.MakeError(ce)
-			return ev, true
-		}
-
-		_ = lpt
+		return replaceList(repl, val, opts)
 
 	default:
 		// should already have the same label by now
@@ -56,7 +44,17 @@ func replaceValue(repl, val cue.Value) (cue.Value, bool) {
 	return val, false
 }
 
-func ReplaceGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func replaceStruct(repl, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+
+	return repl, false
+}
+
+func replaceList(repl, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+
+	return repl, false
+}
+
+func ReplaceGlobsCue(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"replace"}, nil)
 	if err != nil {
 		return nil, err
@@ -74,7 +72,7 @@ func ReplaceGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := rflags.Maxiter; mi > 0 {
+	if mi := opts.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(replacefmt, maxiter)

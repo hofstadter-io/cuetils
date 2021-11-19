@@ -17,7 +17,7 @@ func ValidateRun(schema string, globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	results, err := structural.ValidateGlobs(schema, globs, flags.RootPflags)
+	results, err := structural.ValidateGlobs(schema, globs, &flags.RootPflags)
 	if err != nil {
 		return err
 	}

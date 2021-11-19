@@ -15,24 +15,25 @@ val: #E: _
 insert: val.insert
 `
 
-func InsertGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return InsertGlobsCue(code, globs, rflags)
+func InsertGlobs(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return InsertGlobsCue(code, globs, opts)
 }
 
-func InsertGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(code, globs, rflags, InsertValue)
+func InsertGlobsGo(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(code, globs, opts, InsertValue)
 }
 
-func InsertValue(ext, val cue.Value) (cue.Value, error) {
-	r, _ := insertValue(ext, val)
+func InsertValue(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
+	r, _ := insertValue(ins, val, opts)
 	return r, nil
 }
 
-func insertValue(ext, val cue.Value) (cue.Value, bool) {
-	return ext, false
+func insertValue(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+
+	return ins, false
 }
 
-func InsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func InsertGlobsCue(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"insert"}, nil)
 	if err != nil {
 		return nil, err
@@ -50,7 +51,7 @@ func InsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := rflags.Maxiter; mi > 0 {
+	if mi := opts.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(replacefmt, maxiter)

@@ -17,7 +17,7 @@ func DepthRun(globs []string) (err error) {
 	// you can safely comment this print out
 	// fmt.Println("not implemented")
 
-	depths, err := structural.DepthGlobs(globs, flags.RootPflags)
+	depths, err := structural.DepthGlobs(globs, &flags.RootPflags)
 	if err != nil {
 		return err
 	}

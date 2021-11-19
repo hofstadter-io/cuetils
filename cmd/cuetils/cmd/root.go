@@ -28,7 +28,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Out), "out", "", "cue", "output encoding [cue,yaml,json]")
 	RootCmd.PersistentFlags().StringVarP(&(flags.RootPflags.Outname), "outname", "o", "", "output filename when being used")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.Overwrite), "overwrite", "F", false, "overwrite files being processed")
-	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.TypeErrors), "type-errors", "E", false, "error when nodes or leafs have type mismatches")
+	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.AllTypeErrors), "type-errors", "E", false, "error when nodes or leafs have type mismatches")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.NodeTypeErrors), "node-type-errors", "N", false, "error when nodes have type mismatches")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.LeafTypeErrors), "leaf-type-errors", "L", false, "error when leafs have type mismatches")
 }

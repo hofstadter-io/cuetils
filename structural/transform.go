@@ -11,11 +11,11 @@ const transformfmt = `
 Out: #Transformer
 `
 
-func TransformGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(code, globs, rflags, TransformValue)
+func TransformGlobs(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(code, globs, opts, TransformValue)
 }
 
-func TransformValue(trans, orig cue.Value) (cue.Value, error) {
+func TransformValue(trans, orig cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
 	ctx := trans.Context()
 	val := ctx.CompileString(transformfmt)
 	val = val.FillPath(cue.ParsePath("#Transformer"), trans)

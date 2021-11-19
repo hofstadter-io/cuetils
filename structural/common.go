@@ -54,9 +54,9 @@ func GetLabel(val cue.Value) cue.Selector {
 	return s
 }
 
-type BinaryOpValueFunc func(lhs, rhs cue.Value) (cue.Value, error)
+type BinaryOpValueFunc func(lhs, rhs cue.Value, opts *flags.RootPflagpole) (cue.Value, error)
 
-func BinaryOpGlobs(lhs string, rhs []string, rflags flags.RootPflagpole, fn BinaryOpValueFunc) ([]GlobResult, error) {
+func BinaryOpGlobs(lhs string, rhs []string, opts *flags.RootPflagpole, fn BinaryOpValueFunc) ([]GlobResult, error) {
 	ctx := cuecontext.New()
 
 	lv, err := ReadArg(lhs, ctx, nil)
@@ -78,7 +78,7 @@ func BinaryOpGlobs(lhs string, rhs []string, rflags flags.RootPflagpole, fn Bina
 		}
 
 		// Call our OpValueFunc
-		v, err := fn(lv.Value, iv)
+		v, err := fn(lv.Value, iv, opts)
 		if err != nil {
 			return nil, err
 		}
@@ -92,9 +92,9 @@ func BinaryOpGlobs(lhs string, rhs []string, rflags flags.RootPflagpole, fn Bina
 	return results, nil
 }
 
-type UnaryOpValueFunc func(val cue.Value) (cue.Value, error)
+type UnaryOpValueFunc func(val cue.Value, opts *flags.RootPflagpole) (cue.Value, error)
 
-func UnaryOpGlobs(globs []string, rflags flags.RootPflagpole, fn UnaryOpValueFunc) ([]GlobResult, error) {
+func UnaryOpGlobs(globs []string, opts *flags.RootPflagpole, fn UnaryOpValueFunc) ([]GlobResult, error) {
 	ctx := cuecontext.New()
 
 	vals, err := LoadGlobs(globs)
@@ -114,7 +114,7 @@ func UnaryOpGlobs(globs []string, rflags flags.RootPflagpole, fn UnaryOpValueFun
 		}
 
 		// Call our OpValueFunc
-		v, err := fn(iv)
+		v, err := fn(iv, opts)
 		if err != nil {
 			return nil, err
 		}

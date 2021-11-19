@@ -15,24 +15,24 @@ val: #U: _
 upsert: val.upsert
 `
 
-func UpsertGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return UpsertGlobsCue(code, globs, rflags)
+func UpsertGlobs(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return UpsertGlobsCue(code, globs, opts)
 }
 
-func UpsertGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(code, globs, rflags, UpsertValue)
+func UpsertGlobsGo(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(code, globs, opts, UpsertValue)
 }
 
-func UpsertValue(up, val cue.Value) (cue.Value, error) {
-	r, _ := upsertValue(up, val)
+func UpsertValue(up, val cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
+	r, _ := upsertValue(up, val, opts)
 	return r, nil
 }
 
-func upsertValue(up, val cue.Value) (cue.Value, bool) {
+func upsertValue(up, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
 	return val, false
 }
 
-func UpsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func UpsertGlobsCue(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"upsert"}, nil)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func UpsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := rflags.Maxiter; mi > 0 {
+	if mi := opts.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(upsertfmt, maxiter)

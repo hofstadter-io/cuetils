@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/errors"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -41,4 +42,19 @@ func FormatCueError(err error) string {
 
 	s := w.String()
 	return s
+}
+
+func getErrorAttrMsg(val cue.Value) (string, bool) {
+	msg, has := "", false
+	attr := val.Attribute("error")
+	if attr.Err() == nil {
+		has = true
+		if attr.NumArgs() > 0 {
+			m, _ := attr.String(0)
+			if m != "" {
+				msg = m
+			}
+		}
+	}
+	return msg, has
 }

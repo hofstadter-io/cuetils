@@ -20,7 +20,7 @@ type CountResult struct {
 	Count    int
 }
 
-func CountGlobs(globs []string, rflags flags.RootPflagpole) ([]CountResult, error) {
+func CountGlobs(globs []string, opts *flags.RootPflagpole) ([]CountResult, error) {
 	// no globs, then stdin
 	if len(globs) == 0 {
 		globs = []string{"-"}

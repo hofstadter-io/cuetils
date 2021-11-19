@@ -15,24 +15,24 @@ val: #P: _
 patch: val.patch
 `
 
-func PatchGlobs(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return PatchGlobsCue(patch, orig, rflags)
+func PatchGlobs(patch string, orig string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return PatchGlobsCue(patch, orig, opts)
 }
 
-func PatchGlobsGo(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(patch, []string{orig}, rflags, PatchValue)
+func PatchGlobsGo(patch string, orig string, opts *flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(patch, []string{orig}, opts, PatchValue)
 }
 
-func PatchValue(patch, val cue.Value) (cue.Value, error) {
-	r, _ := patchValue(patch, val)
+func PatchValue(patch, val cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
+	r, _ := patchValue(patch, val, opts)
 	return r, nil
 }
 
-func patchValue(patch, val cue.Value) (cue.Value, bool) {
+func patchValue(patch, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
 	return val, false
 }
 
-func PatchGlobsCue(patch string, orig string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+func PatchGlobsCue(patch string, orig string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	cuest, err := NewCuest([]string{"patch"}, nil)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func PatchGlobsCue(patch string, orig string, rflags flags.RootPflagpole) ([]Glo
 
 	// construct reusable val with function
 	maxiter := ""
-	if mi := rflags.Maxiter; mi > 0 {
+	if mi := opts.Maxiter; mi > 0 {
 		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
 	}
 	content := fmt.Sprintf(patchfmt, maxiter)

@@ -23,9 +23,9 @@ type GlobResult struct {
 	Error    error
 }
 
-func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error) {
-	//if rflags.Accum != "" {
-	//results, err = AccumOutputs(results, rflags.Accum)
+func ProcessOutputs(results []GlobResult, opts *flags.RootPflagpole) (err error) {
+	//if opts.Accum != "" {
+	//results, err = AccumOutputs(results, opts.Accum)
 	//if err != nil {
 	//return err
 	//}
@@ -33,13 +33,13 @@ func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error
 	w := os.Stdout
 	for _, r := range results {
 		// Format
-		r.Content, err = FormatOutput(r.Value, rflags.Out)
+		r.Content, err = FormatOutput(r.Value, opts.Out)
 		if err != nil {
 			return err
 		}
 
 		// clean
-		if rflags.Clean {
+		if opts.Clean {
 			// need to trim before because Unquote doesn't work if there is a newline, etc
 			r.Content = strings.TrimSpace(r.Content)
 			c, err := strconv.Unquote(r.Content)
@@ -51,8 +51,8 @@ func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error
 
 		// make outname
 		outname := ""
-		if rflags.Outname != "" {
-			outname = rflags.Outname
+		if opts.Outname != "" {
+			outname = opts.Outname
 			// look for interpolation syntax
 			if strings.Contains(outname, "<") {
 				dir, file := filepath.Split(r.Filename)
@@ -76,7 +76,7 @@ func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error
 
 		// are we writing a file?
 		writeFile := false
-		if rflags.Overwrite || outname != "" {
+		if opts.Overwrite || outname != "" {
 			writeFile = true
 		}
 		// now possibly fill filename
@@ -88,7 +88,7 @@ func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error
 		if writeFile {
 			_, err = os.Stat(outname)
 			// if no overwrite and exists, return err
-			if !rflags.Overwrite && err == nil {
+			if !opts.Overwrite && err == nil {
 				return fmt.Errorf("output file %q exists, use --overwrite to replace", outname)
 			}
 			w, err = os.Create(outname)
@@ -98,7 +98,7 @@ func ProcessOutputs(results []GlobResult, rflags flags.RootPflagpole) (err error
 		}
 
 		// now do actual writing
-		if rflags.Headers {
+		if opts.Headers {
 			fmt.Fprintf(w, "%s\n----------------------\n%s\n\n", outname, r.Content)
 		} else {
 			fmt.Fprintf(w, "%s\n", r.Content)

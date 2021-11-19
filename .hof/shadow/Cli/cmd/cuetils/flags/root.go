@@ -57,7 +57,7 @@ type RootPflagpole struct {
 	Out            string
 	Outname        string
 	Overwrite      bool
-	TypeErrors     bool
+	AllTypeErrors  bool
 	NodeTypeErrors bool
 	LeafTypeErrors bool
 }
