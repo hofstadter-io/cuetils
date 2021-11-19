@@ -7,6 +7,7 @@ require (
 	github.com/hofstadter-io/hof v0.5.17
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/spf13/cobra v1.0.0
+	golang.org/x/text v0.3.3
 )
 
 require (
@@ -52,7 +53,6 @@ require (
 	golang.org/x/mod v0.3.1-0.20200828183125-ce943fd02449 // indirect
 	golang.org/x/net v0.0.0-20201021035429-f5854403a974 // indirect
 	golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f // indirect
-	golang.org/x/text v0.3.3 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect
 	gopkg.in/errgo.v2 v2.1.0 // indirect
 	gopkg.in/inconshreveable/log15.v2 v2.0.0-20200109203555-b30bc20e4fd1 // indirect
@@ -62,3 +62,5 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 	moul.io/http2curl v1.0.0 // indirect
 )
+
+replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.0-hofpatch-1

@@ -29,8 +29,8 @@ Cli: gen.#HofGenerator & {
 		#PickCommand,
 		#MaskCommand,
 		#ReplaceCommand,
+		#InsertCommand,
 		#UpsertCommand,
-		#ExtendCommand,
 		#TransformCommand,
 		#ValidateCommand,
 		#PipelineCommand,
@@ -72,12 +72,6 @@ Cli: gen.#HofGenerator & {
 		Default: "true"
 		Help:    "process optional fields in inputs and objects"
 	},{
-		Name:    "load"
-		Long:    "load"
-		Type:    "bool"
-		Default: "false"
-		Help:    "use cue/load to support entrypoint and imports for args"
-	},{
 		Name:    "headers"
 		Long:    "headers"
 		Type:    "bool"
@@ -86,12 +80,14 @@ Cli: gen.#HofGenerator & {
 	},{
 		Name:    "accum"
 		Long:    "accum"
+		Short:   "a"
 		Type:    "string"
 		Default: ""
 		Help:    "accumulate operand results into a single value using accum as the label"
 	},{
 		Name:    "clean"
 		Long:    "clean"
+		Short:   "r"
 		Type:    "bool"
 		Default: "false"
 		Help:    "trim and unquote output, useful for basic lit output"
@@ -104,15 +100,38 @@ Cli: gen.#HofGenerator & {
 	},{
 		Name:    "outname"
 		Long:    "outname"
+		Short:   "o"
 		Type:    "string"
 		Default: ""
 		Help:    "output filename when being used"
 	},{
 		Name:    "overwrite"
 		Long:    "overwrite"
+		Short:   "F"
 		Type:    "bool"
 		Default: "false"
 		Help:    "overwrite files being processed"
+	},{
+		Name:    "typeErrors"
+		Long:    "type-errors"
+		Short:   "E"
+		Type:    "bool"
+		Default: "false"
+		Help:    "error when nodes or leafs have type mismatches"
+	},{
+		Name:    "nodeTypeErrors"
+		Long:    "node-type-errors"
+		Short:   "N"
+		Type:    "bool"
+		Default: "false"
+		Help:    "error when nodes have type mismatches"
+	},{
+		Name:    "leafTypeErrors"
+		Long:    "leaf-type-errors"
+		Short:   "L"
+		Type:    "bool"
+		Default: "false"
+		Help:    "error when leafs have type mismatches"
 	}]
 
 	//
@@ -168,6 +187,7 @@ Cli: gen.#HofGenerator & {
 
 #DiffCommand: schema.#Command & {
 	Name:  "diff"
+	Aliases: ["D"]
 	Usage: "diff <orig> <next>"
 	Short: "calculate the diff from orig to next file(s)"
 	Long:  Short
@@ -187,6 +207,7 @@ Cli: gen.#HofGenerator & {
 
 #PatchCommand: schema.#Command & {
 	Name:  "patch"
+	Aliases: ["P"]
 	Usage: "patch <patch> <orig>"
 	Short: "apply pacth to orig file(s)"
 	Long:  Short
@@ -206,6 +227,7 @@ Cli: gen.#HofGenerator & {
 
 #PickCommand: schema.#Command & {
 	Name:  "pick"
+	Aliases: ["p"]
 	Usage: "pick <code> [files...]"
 	Short: "pick from file(s) with code"
 	Long:  Short
@@ -225,6 +247,7 @@ Cli: gen.#HofGenerator & {
 
 #MaskCommand: schema.#Command & {
 	Name:  "mask"
+	Aliases: ["m"]
 	Usage: "mask <code> [files...]"
 	Short: "mask from file(s) with code"
 	Long:  Short
@@ -244,6 +267,7 @@ Cli: gen.#HofGenerator & {
 
 #ReplaceCommand: schema.#Command & {
 	Name:  "replace"
+	Aliases: ["r"]
 	Usage: "replace <code> [files...]"
 	Short: "replace in file(s) with code (only if present)"
 	Long:  Short
@@ -261,10 +285,11 @@ Cli: gen.#HofGenerator & {
 	}]
 }
 
-#ExtendCommand: schema.#Command & {
-	Name:  "extend"
-	Usage: "upsert <code> [files...]"
-	Short: "extend file(s) with code (only if not present)"
+#InsertCommand: schema.#Command & {
+	Name:  "insert"
+	Aliases: ["i"]
+	Usage: "insert <code> [files...]"
+	Short: "insert into file(s) with code (only if not present)"
 	Long:  Short
 
 	Args: [{
@@ -282,6 +307,7 @@ Cli: gen.#HofGenerator & {
 
 #UpsertCommand: schema.#Command & {
 	Name:  "upsert"
+	Aliases: ["u"]
 	Usage: "upsert <code> [files...]"
 	Short: "upsert file(s) with code (extend and replace)"
 	Long:  Short
@@ -301,6 +327,7 @@ Cli: gen.#HofGenerator & {
 
 #TransformCommand: schema.#Command & {
 	Name:  "transform"
+	Aliases: ["t"]
 	Usage: "transform <code> [files...]"
 	Short: "transform file(s) with code"
 	Long:  Short
@@ -320,6 +347,7 @@ Cli: gen.#HofGenerator & {
 
 #ValidateCommand: schema.#Command & {
 	Name:  "validate"
+	Aliases: ["v"]
 	Usage: "validate <schema> [files...]"
 	Short: "validate file(s) with schema"
 	Long:  Short
@@ -339,6 +367,7 @@ Cli: gen.#HofGenerator & {
 
 #PipelineCommand: schema.#Command & {
 	Name:  "pipeline"
+	Aliases: ["pipe", "dag"]
 	Usage: "pipeline <code> [files...]"
 	Short: "run file(s) through a pipeline of operations"
 	Long:  Short

@@ -21,6 +21,10 @@ var ValidateCmd = &cobra.Command{
 
 	Use: "validate <schema> [files...]",
 
+	Aliases: []string{
+		"v",
+	},
+
 	Short: "validate file(s) with schema",
 
 	Long: validateLong,

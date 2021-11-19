@@ -31,6 +31,10 @@ var DiffCmd = &cobra.Command{
 
 	Use: "diff <orig> <next>",
 
+	Aliases: []string{
+		"D",
+	},
+
 	Short: "calculate the diff from orig to next file(s)",
 
 	Long: diffLong,

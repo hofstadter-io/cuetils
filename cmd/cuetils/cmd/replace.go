@@ -31,6 +31,10 @@ var ReplaceCmd = &cobra.Command{
 
 	Use: "replace <code> [files...]",
 
+	Aliases: []string{
+		"r",
+	},
+
 	Short: "replace in file(s) with code (only if present)",
 
 	Long: replaceLong,

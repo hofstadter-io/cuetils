@@ -21,6 +21,11 @@ var PipelineCmd = &cobra.Command{
 
 	Use: "pipeline <code> [files...]",
 
+	Aliases: []string{
+		"pipe",
+		"dag",
+	},
+
 	Short: "run file(s) through a pipeline of operations",
 
 	Long: pipelineLong,

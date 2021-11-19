@@ -1,0 +1,7 @@
+### Test "insert --help" prints help
+call __cuetils insert --help
+
+### Test "insert -h" prints help
+call __cuetils insert -h
+
+

@@ -4,17 +4,17 @@ import (
 	"github.com/hofstadter-io/cuetils/recurse"
 )
 
-#extendF: {
+#insertF: {
 	#next: _
 	#func: {
 		#X: _
 		#E: _
-		extend: {
+		insert: {
 			for i,x in #X {
 				let e = #E[i]
 				if e != _|_ {
 					if (x & {...}) != _|_ {
-						"\(i)": (#next & { #X: x, #E: e }).extend
+						"\(i)": (#next & { #X: x, #E: e }).insert
 					}
 					// keep anything in x
 					if (x & {...}) == _|_ {
@@ -39,4 +39,4 @@ import (
 	}
 }
 
-#Extend: recurse.#RecurseN & { #funcFactory: #extendF }
+#Insert: recurse.#RecurseN & { #funcFactory: #insertF }

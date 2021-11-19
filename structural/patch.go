@@ -38,7 +38,7 @@ func PatchGlobsCue(patch string, orig string, rflags flags.RootPflagpole) ([]Glo
 		return nil, err
 	}
 
-	operator, err := ReadArg(patch, true, cuest.ctx, nil)
+	operator, err := ReadArg(patch, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}

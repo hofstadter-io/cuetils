@@ -4,7 +4,7 @@ import (
 	st "github.com/hofstadter-io/cuetils/structural"
 )
 
-extend_tests: [
+insert_tests: [
 	{
 		x: {
 			a: "a"
@@ -22,7 +22,7 @@ extend_tests: [
 			}
 			d: int
 		}
-		#extend: (st.#Extend & { #X: x, #E: e }).extend
+		#insert: (st.#Insert & { #X: x, #E: e }).insert
 		#real: {
 			a: "a"
 			b: "b"
@@ -33,7 +33,7 @@ extend_tests: [
 			}
 			d: int
 		}
-		same: #real & #extend
+		same: #real & #insert
 	},
 ]
 

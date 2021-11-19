@@ -46,18 +46,20 @@ func PrintSubject(title, prefix, subject string, subjects map[string]string) boo
 }
 
 type RootPflagpole struct {
-	Maxiter     int
-	Concrete    bool
-	Definitions bool
-	Hidden      bool
-	Optional    bool
-	Load        bool
-	Headers     bool
-	Accum       string
-	Clean       bool
-	Out         string
-	Outname     string
-	Overwrite   bool
+	Maxiter        int
+	Concrete       bool
+	Definitions    bool
+	Hidden         bool
+	Optional       bool
+	Headers        bool
+	Accum          string
+	Clean          bool
+	Out            string
+	Outname        string
+	Overwrite      bool
+	TypeErrors     bool
+	NodeTypeErrors bool
+	LeafTypeErrors bool
 }
 
 var RootPflags RootPflagpole

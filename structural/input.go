@@ -25,7 +25,7 @@ type Input struct {
 	Value       cue.Value
 }
 
-func ReadArg(arg string, doLoad bool, ctx *cue.Context, cfg *load.Config) (*Input, error) {
+func ReadArg(arg string, ctx *cue.Context, cfg *load.Config) (*Input, error) {
 	op, err := ParseInput(arg)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func ReadArg(arg string, doLoad bool, ctx *cue.Context, cfg *load.Config) (*Inpu
 func ReadGlobs(globs []string, ctx *cue.Context, cfg *load.Config) ([]*Input, error) {
 	ins := []*Input{}
 	for _, glob := range globs {
-		in, err := ReadArg(glob, true, ctx, cfg)
+		in, err := ReadArg(glob, ctx, cfg)
 		if err != nil {
 			return nil, err
 		}

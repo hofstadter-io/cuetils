@@ -31,6 +31,10 @@ var UpsertCmd = &cobra.Command{
 
 	Use: "upsert <code> [files...]",
 
+	Aliases: []string{
+		"u",
+	},
+
 	Short: "upsert file(s) with code (extend and replace)",
 
 	Long: upsertLong,

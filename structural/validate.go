@@ -12,7 +12,7 @@ import (
 func ValidateGlobs(schema string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
 	ctx := cuecontext.New()
 
-	operator, err := ReadArg(schema, rflags.Load, ctx, nil)
+	operator, err := ReadArg(schema, ctx, nil)
 	if err != nil {
 		return nil, err
 	}

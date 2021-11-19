@@ -38,7 +38,7 @@ func DiffGlobsCue(orig string, next string, rflags flags.RootPflagpole) ([]GlobR
 		return nil, err
 	}
 
-	operator, err := ReadArg(orig, rflags.Load, cuest.ctx, nil)
+	operator, err := ReadArg(orig, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}

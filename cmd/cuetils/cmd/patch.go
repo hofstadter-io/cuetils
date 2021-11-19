@@ -31,6 +31,10 @@ var PatchCmd = &cobra.Command{
 
 	Use: "patch <patch> <orig>",
 
+	Aliases: []string{
+		"P",
+	},
+
 	Short: "apply pacth to orig file(s)",
 
 	Long: patchLong,

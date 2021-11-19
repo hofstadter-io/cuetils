@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/errors"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
@@ -23,12 +24,35 @@ func ReplaceGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]
 	return BinaryOpGlobs(code, globs, rflags, ReplaceValue)
 }
 
-func ReplaceValue(rep, val cue.Value) (cue.Value, error) {
-	r, _ := replaceValue(rep, val)
+func ReplaceValue(repl, val cue.Value) (cue.Value, error) {
+	r, _ := replaceValue(repl, val)
 	return r, nil
 }
 
-func replaceValue(rep, val cue.Value) (cue.Value, bool) {
+func replaceValue(repl, val cue.Value) (cue.Value, bool) {
+	ctx := repl.Context()
+
+	// the lhs/rhs values should have the same label / type
+	// are we sure they do at this point?
+	// TODO, make tests
+
+	switch val.IncompleteKind() {
+	case cue.StructKind:
+
+	case cue.ListKind:
+		lpt, err := getListProcType(repl)
+		if err != nil {
+			ce := errors.Newf(repl.Pos(), "%v", err)
+			ev := ctx.MakeError(ce)
+			return ev, true
+		}
+
+		_ = lpt
+
+	default:
+		// should already have the same label by now
+		return repl, true
+	}
 	return val, false
 }
 
@@ -38,7 +62,7 @@ func ReplaceGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([
 		return nil, err
 	}
 
-	operator, err := ReadArg(code, rflags.Load, cuest.ctx, nil)
+	operator, err := ReadArg(code, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -39,7 +39,7 @@ func MaskGlobsCue(mask string, globs []string, rflags flags.RootPflagpole) ([]Gl
 		return nil, err
 	}
 
-	operator, err := ReadArg(mask, rflags.Load, cuest.ctx, nil)
+	operator, err := ReadArg(mask, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -21,6 +21,10 @@ var TransformCmd = &cobra.Command{
 
 	Use: "transform <code> [files...]",
 
+	Aliases: []string{
+		"t",
+	},
+
 	Short: "transform file(s) with code",
 
 	Long: transformLong,

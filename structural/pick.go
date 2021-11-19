@@ -2,6 +2,7 @@ package structural
 
 import (
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/errors"
 
 	// "cuelang.org/go/cue/errors"
 
@@ -77,6 +78,15 @@ func pickValue(pick, from cue.Value) (cue.Value, bool) {
 			// return errors.Newf(from.Pos(), "expected list, but got %v", k), true
 			return newStruct(ctx), false
 		}
+
+		lpt, err := getListProcType(pick)
+		if err != nil {
+			ce := errors.Newf(pick.Pos(), "%v", err)
+			ev := ctx.MakeError(ce)
+			return ev, true
+		}
+
+		_ = lpt
 
 		// how to consider different list sizes
 		// if len(pick) == 1, apply to all elements

@@ -5,25 +5,39 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
+	"github.com/hofstadter-io/cuetils/structural"
 )
 
-var extendLong = `extend file(s) with code (only if not present)`
+var insertLong = `insert into file(s) with code (only if not present)`
 
-func ExtendRun(code string, globs []string) (err error) {
+func InsertRun(code string, globs []string) (err error) {
 
 	// you can safely comment this print out
-	fmt.Println("not implemented")
+	// fmt.Println("not implemented")
+
+	results, err := structural.InsertGlobs(code, globs, flags.RootPflags)
+	if err != nil {
+		return err
+	}
+
+	err = structural.ProcessOutputs(results, flags.RootPflags)
 
 	return err
 }
 
-var ExtendCmd = &cobra.Command{
+var InsertCmd = &cobra.Command{
 
-	Use: "upsert <code> [files...]",
+	Use: "insert <code> [files...]",
 
-	Short: "extend file(s) with code (only if not present)",
+	Aliases: []string{
+		"i",
+	},
 
-	Long: extendLong,
+	Short: "insert into file(s) with code (only if not present)",
+
+	Long: insertLong,
 
 	PreRun: func(cmd *cobra.Command, args []string) {
 
@@ -56,7 +70,7 @@ var ExtendCmd = &cobra.Command{
 
 		}
 
-		err = ExtendRun(code, globs)
+		err = InsertRun(code, globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -70,8 +84,8 @@ func init() {
 		return false
 	}
 
-	ohelp := ExtendCmd.HelpFunc()
-	ousage := ExtendCmd.UsageFunc()
+	ohelp := InsertCmd.HelpFunc()
+	ousage := InsertCmd.UsageFunc()
 	help := func(cmd *cobra.Command, args []string) {
 		if extra(cmd) {
 			return
@@ -85,7 +99,7 @@ func init() {
 		return ousage(cmd)
 	}
 
-	ExtendCmd.SetHelpFunc(help)
-	ExtendCmd.SetUsageFunc(usage)
+	InsertCmd.SetHelpFunc(help)
+	InsertCmd.SetUsageFunc(usage)
 
 }

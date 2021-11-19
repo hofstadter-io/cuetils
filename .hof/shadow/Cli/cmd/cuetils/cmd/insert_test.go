@@ -9,10 +9,10 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/cmd"
 )
 
-func TestScriptExtendCliTests(t *testing.T) {
+func TestScriptInsertCliTests(t *testing.T) {
 	// setup some directories
 
-	dir := "extend"
+	dir := "insert"
 
 	workdir := ".workdir/cli/" + dir
 	yagu.Mkdir(workdir)
@@ -26,7 +26,7 @@ func TestScriptExtendCliTests(t *testing.T) {
 		Funcs: map[string]func(ts *runtime.Script, args []string) error{
 			"__cuetils": cmd.CallTS,
 		},
-		Dir:         "hls/cli/extend",
+		Dir:         "hls/cli/insert",
 		WorkdirRoot: workdir,
 	})
 }

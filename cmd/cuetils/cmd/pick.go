@@ -31,6 +31,10 @@ var PickCmd = &cobra.Command{
 
 	Use: "pick <code> [files...]",
 
+	Aliases: []string{
+		"p",
+	},
+
 	Short: "pick from file(s) with code",
 
 	Long: pickLong,

@@ -21,6 +21,10 @@ var MaskCmd = &cobra.Command{
 
 	Use: "mask <code> [files...]",
 
+	Aliases: []string{
+		"m",
+	},
+
 	Short: "mask from file(s) with code",
 
 	Long: maskLong,

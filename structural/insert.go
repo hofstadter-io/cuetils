@@ -8,37 +8,37 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-const extendfmt = `
-val: #Extend%s
+const insertfmt = `
+val: #Insert%s
 val: #X: _
 val: #E: _
-extend: val.extend
+insert: val.insert
 `
 
-func ExtendGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return ExtendGlobsCue(code, globs, rflags)
+func InsertGlobs(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return InsertGlobsCue(code, globs, rflags)
 }
 
-func ExtendGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(code, globs, rflags, ExtendValue)
+func InsertGlobsGo(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	return BinaryOpGlobs(code, globs, rflags, InsertValue)
 }
 
-func ExtendValue(ext, val cue.Value) (cue.Value, error) {
-	r, _ := extendValue(ext, val)
+func InsertValue(ext, val cue.Value) (cue.Value, error) {
+	r, _ := insertValue(ext, val)
 	return r, nil
 }
 
-func extendValue(ext, val cue.Value) (cue.Value, bool) {
+func insertValue(ext, val cue.Value) (cue.Value, bool) {
 	return ext, false
 }
 
-func ExtendGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
-	cuest, err := NewCuest([]string{"extend"}, nil)
+func InsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]GlobResult, error) {
+	cuest, err := NewCuest([]string{"insert"}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	operator, err := ReadArg(code, rflags.Load, cuest.ctx, nil)
+	operator, err := ReadArg(code, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func ExtendGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]
 
 		result := val.FillPath(cue.ParsePath("val.#X"), iv)
 
-		v := result.LookupPath(cue.ParsePath("extend"))
+		v := result.LookupPath(cue.ParsePath("insert"))
 
 		results = append(results, GlobResult{
 			Filename: input.Filename,

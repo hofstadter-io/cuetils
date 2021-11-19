@@ -38,7 +38,7 @@ func UpsertGlobsCue(code string, globs []string, rflags flags.RootPflagpole) ([]
 		return nil, err
 	}
 
-	operator, err := ReadArg(code, rflags.Load, cuest.ctx, nil)
+	operator, err := ReadArg(code, cuest.ctx, nil)
 	if err != nil {
 		return nil, err
 	}
