@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"cuelang.org/go/cue/cuecontext"
+
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
@@ -47,7 +49,7 @@ func TestPick(t *testing.T) {
 		if f.Err() != nil {
 			t.Fatalf("failed to compile from in TestPick %d", i)
 		}
-		r, _ := structural.PickValue(p, f)
+		r, _ := structural.PickValue(p, f, &flags.RootPflags)
 
 		o, err := structural.FormatOutput(r, "cue")
 		if err != nil {
