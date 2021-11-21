@@ -10,8 +10,8 @@ import (
 func TestCliCount(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "count_*.txt",
+		Dir:         "testdata",
+		Glob:        "count_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -19,8 +19,8 @@ func TestCliCount(t *testing.T) {
 func TestCliDepth(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "depth_*.txt",
+		Dir:         "testdata",
+		Glob:        "depth_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -28,8 +28,8 @@ func TestCliDepth(t *testing.T) {
 func TestCliDiff(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "diff_*.txt",
+		Dir:         "testdata",
+		Glob:        "diff_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -37,8 +37,8 @@ func TestCliDiff(t *testing.T) {
 func TestCliMask(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "mask_*.txt",
+		Dir:         "testdata",
+		Glob:        "mask_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -46,8 +46,8 @@ func TestCliMask(t *testing.T) {
 func TestCliPatch(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "patch_*.txt",
+		Dir:         "testdata",
+		Glob:        "patch_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -55,8 +55,8 @@ func TestCliPatch(t *testing.T) {
 func TestCliPick(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "pick_*.txt",
+		Dir:         "testdata",
+		Glob:        "pick_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -64,8 +64,8 @@ func TestCliPick(t *testing.T) {
 func TestCliReplace(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "replace_*.txt",
+		Dir:         "testdata",
+		Glob:        "replace_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -73,8 +73,17 @@ func TestCliReplace(t *testing.T) {
 func TestCliTransform(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "transform_*.txt",
+		Dir:         "testdata",
+		Glob:        "transform_*.txt",
+		WorkdirRoot: ".workdir/tests",
+	})
+}
+
+func TestCliInsert(t *testing.T) {
+	yagu.Mkdir(".workdir/tests")
+	runtime.Run(t, runtime.Params{
+		Dir:         "testdata",
+		Glob:        "insert_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -82,8 +91,8 @@ func TestCliTransform(t *testing.T) {
 func TestCliUpsert(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "upsert_*.txt",
+		Dir:         "testdata",
+		Glob:        "upsert_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -91,8 +100,8 @@ func TestCliUpsert(t *testing.T) {
 func TestCliValidate(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata",
-		Glob: "validate_*.txt",
+		Dir:         "testdata",
+		Glob:        "validate_*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }
@@ -100,8 +109,8 @@ func TestCliValidate(t *testing.T) {
 func TestCliBugs(t *testing.T) {
 	yagu.Mkdir(".workdir/bugs")
 	runtime.Run(t, runtime.Params{
-		Dir: "testdata/bugs",
-		Glob: "*.txt",
+		Dir:         "testdata/bugs",
+		Glob:        "*.txt",
 		WorkdirRoot: ".workdir/bugs",
 	})
 }

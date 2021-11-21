@@ -1,25 +1,12 @@
 package structural
 
 import (
-	"fmt"
-
 	"cuelang.org/go/cue"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-const insertfmt = `
-val: #Insert%s
-val: #X: _
-val: #E: _
-insert: val.insert
-`
-
 func InsertGlobs(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
-	return InsertGlobsCue(code, globs, opts)
-}
-
-func InsertGlobsGo(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	return BinaryOpGlobs(code, globs, opts, InsertValue)
 }
 
@@ -29,55 +16,60 @@ func InsertValue(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, erro
 }
 
 func insertValue(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	switch val.IncompleteKind() {
+	case cue.StructKind:
+		return insertStruct(ins, val, opts)
 
-	return ins, false
+	case cue.ListKind:
+		return insertList(ins, val, opts)
+
+	default:
+		// should already have the same label by now
+		// but maybe not if target is basic and repl is not
+		return val, true
+	}
 }
 
-func InsertGlobsCue(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
-	cuest, err := NewCuest([]string{"insert"}, nil)
-	if err != nil {
-		return nil, err
-	}
+func insertStruct(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
 
-	operator, err := ReadArg(code, cuest.ctx, nil)
-	if err != nil {
-		return nil, err
-	}
+	result := val
+	iter, _ := ins.Fields(defaultWalkOptions...)
 
-	inputs, err := LoadGlobs(globs)
-	if len(inputs) == 0 {
-		return nil, fmt.Errorf("no inputs found")
-	}
+	cnt := 0
+	for iter.Next() {
+		cnt++
+		s := iter.Selector()
+		p := cue.MakePath(s)
+		v := val.LookupPath(p)
 
-	// construct reusable val with function
-	maxiter := ""
-	if mi := opts.Maxiter; mi > 0 {
-		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
-	}
-	content := fmt.Sprintf(replacefmt, maxiter)
-	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
-
-	// fill val with the orig value, so we only need to once before loop
-	val = val.FillPath(cue.ParsePath("val.#E"), operator.Value)
-
-	results := make([]GlobResult, 0)
-	for _, input := range inputs {
-
-		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
-		if iv.Err() != nil {
-			return nil, iv.Err()
+		// check that field exists in from. Should we be checking f.Err()?
+		if v.Exists() {
+			r, ok := insertValue(iter.Value(), v, opts)
+			// fmt.Println("r:", r, ok, p)
+			if ok {
+				result = result.FillPath(p, r)
+			}
+		} else {
+			// include if not in val
+			result = result.FillPath(p, iter.Value())
 		}
-
-		result := val.FillPath(cue.ParsePath("val.#X"), iv)
-
-		v := result.LookupPath(cue.ParsePath("insert"))
-
-		results = append(results, GlobResult{
-			Filename: input.Filename,
-			Value:    v,
-		})
-
 	}
 
-	return results, nil
+	return result, true
+}
+
+func insertList(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	ctx := val.Context()
+
+	ii, _ := ins.List()
+	vi, _ := val.List()
+
+	result := []cue.Value{}
+	for ii.Next() && vi.Next() {
+		r, ok := insertValue(ii.Value(), vi.Value(), opts)
+		if ok {
+			result = append(result, r)
+		}
+	}
+	return ctx.NewList(result...), true
 }

@@ -6,13 +6,6 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-const replacefmt = `
-val: #Replace%s
-val: #X: _
-val: #R: _
-replace: val.replace
-`
-
 func ReplaceGlobs(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	return BinaryOpGlobs(code, globs, opts, ReplaceValue)
 }

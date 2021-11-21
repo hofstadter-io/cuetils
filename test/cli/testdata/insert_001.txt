@@ -1,7 +1,7 @@
-exec cuetils extend --headers extend.cue a.json
+exec cuetils insert --headers insert.cue a.json
 cmp stdout golden.stdout
 
--- extend.cue --
+-- insert.cue --
 {
 	a: "A"
 	b: "b"
@@ -26,11 +26,11 @@ a.json
 {
 	a: "a"
 	b: "b"
+	d: int
 	e: {
 		a: "a"
-		b: "b"
 		c: "c"
+		b: "b"
 	}
-	d: int
 }
 

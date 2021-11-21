@@ -7,13 +7,6 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
-const maskfmt = `
-val: #Mask%s
-val: #X: _
-val: #M: _
-mask: val.mask
-`
-
 // MaskGlobs will mask a subobject from globs on disk
 func MaskGlobs(mask string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
 	return BinaryOpGlobs(mask, globs, opts, MaskValue)

@@ -13,7 +13,7 @@ insert_tests: [
 				b: "b"
 			}
 		}
-		e: {
+		i: {
 			a: "A"
 			b: "b"
 			e: {
@@ -22,7 +22,7 @@ insert_tests: [
 			}
 			d: int
 		}
-		#insert: (st.#Insert & { #X: x, #E: e }).insert
+		#insert: (st.#Insert & { #X: x, #I: i }).insert
 		#real: {
 			a: "a"
 			b: "b"

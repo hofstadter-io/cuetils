@@ -8,30 +8,30 @@ import (
 	#next: _
 	#func: {
 		#X: _
-		#E: _
+		#I: _
 		insert: {
-			for i,x in #X {
-				let e = #E[i]
-				if e != _|_ {
+			for l,x in #X {
+				let i = #I[l]
+				if i != _|_ {
 					if (x & {...}) != _|_ {
-						"\(i)": (#next & { #X: x, #E: e }).insert
+						"\(l)": (#next & { #X: x, #I: i }).insert
 					}
 					// keep anything in x
 					if (x & {...}) == _|_ {
-						"\(i)": x
+						"\(l)": x
 					}
 				}
 				// keep anything in x
-				if e == _|_ {
-					"\(i)": x
+				if i == _|_ {
+					"\(l)": x
 				}
 			}
 
-			// now look for anything in U that is not in X
+			// now look for anything in E that is not in X
 			{
-				for i,e in #E {
-					if #X[i] == _|_ {
-						"\(i)": e
+				for l,i in #I {
+					if #X[l] == _|_ {
+						"\(l)": i
 					}
 				}
 			}
