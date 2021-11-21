@@ -1,8 +1,6 @@
 package structural
 
 import (
-	"fmt"
-
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/errors"
 
@@ -18,11 +16,7 @@ mask: val.mask
 
 // MaskGlobs will mask a subobject from globs on disk
 func MaskGlobs(mask string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
-	return MaskGlobsCue(mask, globs, opts)
-}
-
-func MaskGlobsGo(code string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
-	return BinaryOpGlobs(code, globs, opts, MaskValue)
+	return BinaryOpGlobs(mask, globs, opts, MaskValue)
 }
 
 func MaskValue(mask, val cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
@@ -70,15 +64,18 @@ func maskStruct(mask, from cue.Value, opts *flags.RootPflagpole) (cue.Value, boo
 		cnt++
 		s := iter.Selector()
 		p := cue.MakePath(s)
-		f := from.LookupPath(p)
+		m := mask.LookupPath(p)
 		// fmt.Println(cnt, iter.Value(), f, f.Exists())
 		// check that field exists in from. Should we be checking f.Err()?
-		if f.Exists() {
-			r, keep := maskValue(iter.Value(), f, opts)
+		if m.Exists() {
+			r, include := maskValue(m, iter.Value(), opts)
 			// fmt.Println("r:", r, ok, p)
-			if keep {
+			if include {
 				result = result.FillPath(p, r)
 			}
+		} else {
+			// include if not in mask
+			result = result.FillPath(p, iter.Value())
 		}
 	}
 
@@ -101,7 +98,7 @@ func maskList(mask, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool)
 		// should this return or just continue? do we need some way to specify?
 		// probably prefer to be more strict, so that you know your schemas
 		// return errors.Newf(from.Pos(), "expected list, but got %v", k), true
-		return newStruct(ctx), false
+		return from, true
 	}
 
 	lpt, err := getListProcType(mask)
@@ -118,8 +115,8 @@ func maskList(mask, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool)
 
 	result := []cue.Value{}
 	for mi.Next() && fi.Next() {
-		p, ok := maskValue(mi.Value(), fi.Value(), opts)
-		if ok {
+		p, include := maskValue(mi.Value(), fi.Value(), opts)
+		if include {
 			result = append(result, p)
 		}
 	}
@@ -127,6 +124,7 @@ func maskList(mask, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool)
 	return ctx.NewList(result...), true
 }
 
+// returns a value and whether it should be included
 func maskLeaf(mask, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
 	// if mask is concrete, so must from
 	// make sure 1 does not mask int
@@ -158,62 +156,15 @@ func maskLeaf(mask, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool)
 	if mask.IsConcrete() {
 		if from.IsConcrete() {
 			r := mask.Unify(from)
-			return r, r.Exists()
+			// need to check for errors here?
+			return r, !r.Exists()
 		} else {
 			return cue.Value{}, false
 		}
 	} else {
 		r := mask.Unify(from)
-		return r, r.Exists()
+		// need to check for errors here?
+		return r, !r.Exists()
 	}
 
-}
-
-func MaskGlobsCue(mask string, globs []string, opts *flags.RootPflagpole) ([]GlobResult, error) {
-	cuest, err := NewCuest([]string{"mask"}, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	operator, err := ReadArg(mask, cuest.ctx, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	inputs, err := LoadGlobs(globs)
-	if len(inputs) == 0 {
-		return nil, fmt.Errorf("no inputs found")
-	}
-
-	// construct reusable val with function
-	maxiter := ""
-	if mi := opts.Maxiter; mi > 0 {
-		maxiter = fmt.Sprintf(" & { #maxiter: %d }", mi)
-	}
-	content := fmt.Sprintf(maskfmt, maxiter)
-	val := cuest.ctx.CompileString(content, cue.Scope(cuest.orig))
-
-	// fill val with the orig value, so we only need to once before loop
-	val = val.FillPath(cue.ParsePath("val.#M"), operator.Value)
-
-	results := make([]GlobResult, 0)
-	for _, input := range inputs {
-
-		iv := cuest.ctx.CompileBytes(input.Content, cue.Filename(input.Filename))
-		if iv.Err() != nil {
-			return nil, iv.Err()
-		}
-
-		result := val.FillPath(cue.ParsePath("val.#X"), iv)
-
-		v := result.LookupPath(cue.ParsePath("mask"))
-
-		results = append(results, GlobResult{
-			Filename: input.Filename,
-			Value:    v,
-		})
-
-	}
-
-	return results, nil
 }
