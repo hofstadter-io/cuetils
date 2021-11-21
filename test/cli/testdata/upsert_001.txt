@@ -24,12 +24,12 @@ cmp stdout golden.stdout
 a.json
 ----------------------
 {
-	b: 1
-	c: 2
-	e: "E"
 	a: {
-		b: "B"
+		b: string
 	}
+	b: 1
+	c: int
 	d: "d"
+	e: "E"
 }
 

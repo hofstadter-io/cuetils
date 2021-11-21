@@ -35,9 +35,7 @@ func insertStruct(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, boo
 	result := val
 	iter, _ := ins.Fields(defaultWalkOptions...)
 
-	cnt := 0
 	for iter.Next() {
-		cnt++
 		s := iter.Selector()
 		p := cue.MakePath(s)
 		v := val.LookupPath(p)
