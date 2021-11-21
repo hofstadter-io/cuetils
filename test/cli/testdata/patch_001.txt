@@ -26,9 +26,9 @@ cmp stdout golden.stdout
 a.json
 ----------------------
 {
-	b: "B"
 	a: {
 		c: "C"
 	}
+	b: "B"
 }
 
