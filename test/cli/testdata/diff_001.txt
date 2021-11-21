@@ -17,9 +17,6 @@ cmp stdout golden.stdout
 
 -- golden.stdout --
 {
-	"+": {
-		b: "B"
-	}
 	a: {
 		"-": {
 			b: "B"
@@ -27,5 +24,8 @@ cmp stdout golden.stdout
 		"+": {
 			c: "C"
 		}
+	}
+	"+": {
+		b: "B"
 	}
 }

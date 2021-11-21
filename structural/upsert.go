@@ -68,7 +68,6 @@ func upsertStruct(up, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool
 	}
 
 	return result, true
-
 }
 
 func upsertList(up, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
