@@ -122,8 +122,6 @@ func pickList(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool)
 	}
 
 	return ctx.NewList(result...), true
-
-	return pick, false
 }
 
 func pickLeaf(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {

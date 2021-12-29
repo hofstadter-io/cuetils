@@ -81,6 +81,16 @@ func diffStruct(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, boo
 		result = result.FillPath(cue.ParsePath("\"+\""), add)
 	}
 
+	// checks to see if nothing changed
+	i := 0
+	iter, _ = result.Fields()
+	for iter.Next() {
+		i++
+	}
+	if i == 0 {
+		return result, false
+	}
+
 	return result, true
 }
 
@@ -91,7 +101,7 @@ func diffList(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, bool)
 
 	result := []cue.Value{}
 	for oi.Next() && ni.Next() {
-		v, ok := pickValue(oi.Value(), ni.Value(), opts)
+		v, ok := diffValue(oi.Value(), ni.Value(), opts)
 		if ok {
 			result = append(result, v)
 		}
