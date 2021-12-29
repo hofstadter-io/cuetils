@@ -11,7 +11,10 @@ func DiffGlobs(orig string, next string, opts *flags.RootPflagpole) ([]GlobResul
 }
 
 func DiffValue(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, error) {
-	r, _ := diffValue(orig, next, opts)
+	r, ok := diffValue(orig, next, opts)
+	if !ok {
+		return cue.Value{}, nil
+	}
 	return r, nil
 }
 
@@ -107,7 +110,7 @@ func diffList(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, bool)
 		}
 	}
 
-	return ctx.NewList(result...), true
+	return ctx.NewList(result...), len(result) != 0
 }
 
 func diffLeaf(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
