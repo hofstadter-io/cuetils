@@ -2,10 +2,10 @@ module github.com/hofstadter-io/cuetils
 
 go 1.17
 
-replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.0-hofpatch-1
+replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.1-hofpatch-1
 
 require (
-	cuelang.org/go v0.4.0
+	cuelang.org/go v0.4.1
 	github.com/hofstadter-io/hof v0.5.17
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/spf13/cobra v1.0.0
@@ -61,6 +61,6 @@ require (
 	gopkg.in/ini.v1 v1.57.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	moul.io/http2curl v1.0.0 // indirect
 )
