@@ -42,6 +42,12 @@ func pickValue(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool
 }
 
 func pickStruct(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	// TODO, implement proper default helper func
+	// for flags in hofmod-cli
+	if opts == nil {
+		opts = &flags.RootPflagpole{}
+	}
+
 	ctx := pick.Context()
 
 	if k := from.IncompleteKind(); k != cue.StructKind {

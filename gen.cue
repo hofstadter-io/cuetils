@@ -5,8 +5,8 @@ import (
 	"github.com/hofstadter-io/hofmod-cli/schema"
 )
 
-Cli: _ @gen(cli,st)
 Cli: gen.#HofGenerator & {
+	@gen(cli,st)
   Outdir: "./"
 	Cli: #CLI
 }
@@ -153,6 +153,7 @@ Cli: gen.#HofGenerator & {
 			Repo:       "hofstadter"
 		}
 	}
+
 	Updates:  true
 	EnablePProf: true
 }
@@ -373,11 +374,6 @@ Cli: gen.#HofGenerator & {
 	Long:  Short
 
 	Args: [{
-		Name:     "code"
-		Type:     "string"
-		Required: true
-		Help:     "code for the operation"
-	}, {
 		Name:     "globs"
 		Type:     "[]string"
 		Help:     "file globs to the operation"

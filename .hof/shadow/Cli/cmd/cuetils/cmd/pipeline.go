@@ -9,7 +9,7 @@ import (
 
 var pipelineLong = `run file(s) through a pipeline of operations`
 
-func PipelineRun(code string, globs []string) (err error) {
+func PipelineRun(globs []string) (err error) {
 
 	// you can safely comment this print out
 	fmt.Println("not implemented")
@@ -39,29 +39,15 @@ var PipelineCmd = &cobra.Command{
 
 		// Argument Parsing
 
-		if 0 >= len(args) {
-			fmt.Println("missing required argument: 'code'")
-			cmd.Usage()
-			os.Exit(1)
-		}
-
-		var code string
+		var globs []string
 
 		if 0 < len(args) {
 
-			code = args[0]
+			globs = args[0:]
 
 		}
 
-		var globs []string
-
-		if 1 < len(args) {
-
-			globs = args[1:]
-
-		}
-
-		err = PipelineRun(code, globs)
+		err = PipelineRun(globs)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

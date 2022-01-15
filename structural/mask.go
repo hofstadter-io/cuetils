@@ -39,6 +39,12 @@ func maskValue(mask, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool
 }
 
 func maskStruct(mask, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	// TODO, implement proper default helper func
+	// for flags in hofmod-cli
+	if opts == nil {
+		opts = &flags.RootPflagpole{}
+	}
+
 	ctx := mask.Context()
 	eflags := opts.AllTypeErrors || opts.NodeTypeErrors
 

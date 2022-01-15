@@ -1,0 +1,36 @@
+exec cuetils diff a.json b.yaml
+cmp stdout golden.stdout
+
+-- in.cue --
+x: {
+	a: {
+		b: string
+	}
+	c: int
+	d: "D"
+}
+
+y: {
+	"a": {
+		"b": "B"
+	},
+	"b": 1,
+	"c": 2,
+	"d": "D"
+}
+
+p1: { #X: x, #P: y } @pick()
+
+m1: { #X: p1, #M: { c: int } } @mask()
+m2: { #X: p1, #M: { a: _ } } @mask()
+
+u1: { #X: m1, #U: m2 } @upsert()
+
+
+x   y
+ \ /
+  p1
+ /  \
+m1  m2
+ \ /
+  u1
