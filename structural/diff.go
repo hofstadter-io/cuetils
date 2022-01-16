@@ -19,6 +19,12 @@ func DiffValue(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, erro
 }
 
 func diffValue(orig, next cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	// TODO, implement proper default helper func
+	// for flags in hofmod-cli
+	if opts == nil {
+		opts = &flags.RootPflagpole{}
+	}
+
 	switch orig.IncompleteKind() {
 	case cue.StructKind:
 		// fmt.Println("struct", orig, next)

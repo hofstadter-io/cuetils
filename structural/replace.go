@@ -16,6 +16,10 @@ func ReplaceValue(repl, val cue.Value, opts *flags.RootPflagpole) (cue.Value, er
 }
 
 func replaceValue(repl, target cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	if opts == nil {
+		opts = &flags.RootPflagpole{}
+	}
+
 	switch target.IncompleteKind() {
 	case cue.StructKind:
 		return replaceStruct(repl, target, opts)
