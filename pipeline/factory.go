@@ -5,6 +5,9 @@ import (
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/tools/flow"
+
+	"github.com/hofstadter-io/cuetils/pipeline/tasks/api"
+	"github.com/hofstadter-io/cuetils/pipeline/tasks/st"
 )
 
 // This function implements the Runner interface.
@@ -43,13 +46,31 @@ func TaskFactory(val cue.Value) (flow.Runner, error) {
 }
 
 func maybeTask(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
-	switch attr.Name() {
-	case "pick":
-		return &PickTask{}, nil
-	case "mask":
-		return &MaskTask{}, nil
-	case "upsert":
-		return &UpsertTask{}, nil
+	n := attr.Name()
+	if n != "task" {
+		return nil, nil
+	}
+
+	if attr.NumArgs() == 0 {
+		return nil, fmt.Errorf("No type provided to task:", attr)
+	}
+
+	t, err := attr.String(0)
+	if err != nil {
+		return nil, err
+	}
+
+	switch t {
+	case "st/pick":
+		return &st.PickTask{}, nil
+	case "st/mask":
+		return &st.MaskTask{}, nil
+	case "st/upsert":
+		return &st.UpsertTask{}, nil
+
+	case "api/call":
+		return &api.CallTask{}, nil
+
 	default:
 		fmt.Println("unknown attribute:", attr)
 	}

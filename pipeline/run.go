@@ -30,6 +30,7 @@ func run(globs []string, opts *flags.RootPflagpole) ([]structural.GlobResult, er
 	// find tasks and then execute
 	results := make([]structural.GlobResult, 0)
 	for _, val := range vals {
+		// walk tree, looking for `@pipeline(tags)`
 		do(val, opts)
 	}
 
@@ -38,13 +39,11 @@ func run(globs []string, opts *flags.RootPflagpole) ([]structural.GlobResult, er
 
 func do(in *structural.Input, opts *flags.RootPflagpole) error {
 	var err error
-	fmt.Println("Custom Flow Pipeline")
-
-	fmt.Printf("%# v\n", in.Value)
 	value := in.Value
 
 	// Setup the flow Config
 	cfg := &flow.Config{
+		// make the Root, the Path to the value
 		Root: cue.ParsePath("tasks"),
 	}
 
@@ -58,7 +57,8 @@ func do(in *structural.Input, opts *flags.RootPflagpole) error {
 	// run our custom workflow
 	err = workflow.Run(context.Background())
 	if err != nil {
-		fmt.Println("Error:", err)
+		s := structural.FormatCueError(err)
+		fmt.Println("Error:", s)
 		return err
 	}
 

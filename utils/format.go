@@ -1,11 +1,11 @@
-package pipeline
+package utils
 
 import (
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/format"
 )
 
-func formatCue(val cue.Value) (string, error) {
+func FormatCue(val cue.Value) (string, error) {
 	syn := val.Syntax(
 		cue.Final(),
 		cue.ResolveReferences(true),
