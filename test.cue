@@ -68,6 +68,19 @@ lib: {
 	}
 }
 
+pipeline: {
+	@test(suite,pipeline)
+
+	test_all: #GoBashTest @test(bash,test)
+	test_all: {
+		dir: "test/pipeline"
+	}
+	cover_all: #GoBashCover @test(bash,cover)
+	cover_all: {
+		dir: "test/pipeline"
+	}
+}
+
 cue: {
 	@test(suite,cue)
 

@@ -31,7 +31,10 @@ func run(globs []string, opts *flags.RootPflagpole) ([]structural.GlobResult, er
 	results := make([]structural.GlobResult, 0)
 	for _, val := range vals {
 		// walk tree, looking for `@pipeline(tags)`
-		do(val, opts)
+		err = do(val, opts)
+    if err != nil {
+      return nil, err
+    }
 	}
 
 	return results, nil
@@ -58,8 +61,7 @@ func do(in *structural.Input, opts *flags.RootPflagpole) error {
 	err = workflow.Run(context.Background())
 	if err != nil {
 		s := structural.FormatCueError(err)
-		fmt.Println("Error:", s)
-		return err
+		return fmt.Errorf("Error: %s", s)
 	}
 
 	return nil

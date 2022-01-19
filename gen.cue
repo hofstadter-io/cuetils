@@ -379,6 +379,15 @@ Cli: gen.#HofGenerator & {
 		Help:     "file globs to the operation"
 		Rest:			true
 	}]
+
+	Flags: [{
+		Name:    "tags"
+		Long:    "tags"
+		Short:   "t"
+		Type:    "[]string"
+    Default: "nil"
+		Help:    "tags to match for what to run"
+	}]
 }
 
 #CountHelp: ""

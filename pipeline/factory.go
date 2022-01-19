@@ -69,12 +69,14 @@ func maybeTask(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
 	case "st/upsert":
 		return &st.UpsertTask{}, nil
 
-	case "os/readfile":
-		return &os.ReadFileTask{}, nil
-	case "os/stdin":
+	case "os.Stdin":
 		return &os.StdinTask{}, nil
-	case "os/stdout":
+	case "os.Stdout":
 		return &os.StdoutTask{}, nil
+	case "os.ReadFile":
+		return &os.ReadFileTask{}, nil
+	case "os.WriteFile":
+		return &os.WriteFileTask{}, nil
 
 	case "api/call":
 		return &api.CallTask{}, nil

@@ -10,7 +10,7 @@ import (
   "github.com/hofstadter-io/cuetils/utils"
 )
 
-type ReadFileTask struct {
+type WriteFileTask struct {
   // might need F to be an object the helps us to
   // understand how to load the contents back in
   // such as a string, bytes, or a cue struct
@@ -18,7 +18,7 @@ type ReadFileTask struct {
   C cue.Value // the file contents
 }
 
-func (T* ReadFileTask) Run(t *flow.Task, err error) error {
+func (T* WriteFileTask) Run(t *flow.Task, err error) error {
 
 	if err != nil {
 		fmt.Println("Dep error", err)
@@ -26,14 +26,9 @@ func (T* ReadFileTask) Run(t *flow.Task, err error) error {
 
 	v := t.Value()
 
-	f := v.LookupPath(cue.ParsePath("f"))
+	f := v.LookupPath(cue.ParsePath("filename"))
 
   fn, err := f.String()
-  if err != nil {
-    return err
-  }
-
-  bs, err := g_os.ReadFile(fn)
   if err != nil {
     return err
   }
@@ -41,31 +36,38 @@ func (T* ReadFileTask) Run(t *flow.Task, err error) error {
   // switch on c's type to fill appropriately
 	c := v.LookupPath(cue.ParsePath("contents"))
 
-  var res cue.Value
+  var bs []byte
   switch k := c.IncompleteKind(); k {
   case cue.StringKind:
-    res = v.FillPath(cue.ParsePath("contents"), string(bs))
-  case cue.BytesKind:
-    res = v.FillPath(cue.ParsePath("contents"), bs)
-
-  case cue.StructKind:
-    ctx := v.Context()
-    c := ctx.CompileBytes(bs)
-    if c.Err() != nil {
-      return c.Err() 
+    s, err := c.Bytes()
+    if err != nil {
+      return err
     }
-    res = v.FillPath(cue.ParsePath("contents"), c)
+    bs = []byte(s)
+    
+  case cue.BytesKind:
+    bs, err = c.Bytes()
+    if err != nil {
+      return err
+    }
 
   default:
-    return fmt.Errorf("Unsupported Content type in ReadFile task: %q", k)
+    return fmt.Errorf("Unsupported content type in WriteFile task: %q", k)
   }
 
+	mode := v.LookupPath(cue.ParsePath("mode"))
+  m, err := mode.Int64()
+  if err != nil {
+    return err
+  }
 
-	// Use fill to "return" a result to the workflow engine
-	t.Fill(res)
+  err = g_os.WriteFile(fn, bs, g_os.FileMode(m))
+  if err != nil {
+    return err
+  }
 
 	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, res)
+	err = utils.PrintAttr(attr, v)
 
 	return err
 }

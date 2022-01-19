@@ -1,4 +1,4 @@
 tasks: {
   @pipeline(readfile)
-	r: { #F: "readfile_001.txt", Contents: string } @task(os/readfile) @print(Contents)
+	r: { f: "stdata/readfile_001.txt", contents: string } @task(os.ReadFile)
 }

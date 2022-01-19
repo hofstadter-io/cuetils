@@ -5,9 +5,16 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 )
 
 var pipelineLong = `run file(s) through a pipeline of operations`
+
+func init() {
+
+	PipelineCmd.Flags().StringSliceVarP(&(flags.PipelineFlags.Tags), "tags", "t", nil, "tags to match for what to run")
+}
 
 func PipelineRun(globs []string) (err error) {
 
