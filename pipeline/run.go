@@ -12,7 +12,7 @@ import (
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
-func Run(globs []string, opts *flags.RootPflagpole) ([]structural.GlobResult, error) {
+func Run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]structural.GlobResult, error) {
 	return run(globs, opts)
 }
 
