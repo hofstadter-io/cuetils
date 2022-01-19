@@ -52,7 +52,7 @@ func maybeTask(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
 	}
 
 	if attr.NumArgs() == 0 {
-		return nil, fmt.Errorf("No type provided to task:", attr)
+		return nil, fmt.Errorf("No type provided to task: %s", attr)
 	}
 
 	t, err := attr.String(0)
