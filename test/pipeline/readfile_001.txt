@@ -1,0 +1,23 @@
+exec cuetils pipeline in.cue
+# cmp stdout golden.stdout
+
+-- pipe.cue --
+tasks: {
+  @pipeline(readfile)
+	r1: { #F: "readfile_001.txt", Resp: _ } @task(os/readfile) @print("#Req",Resp)
+	p1: { #X: r1.Resp, #P: pick } @task(st/pick) @print(Out)
+}
+
+-- in.json --
+"x": {
+	"a": {
+		"b": "B"
+	},
+	"b": 1
+	"c": 2
+	"d": "D"
+}
+
+-- golden.stdout --
+t.b.d.
+

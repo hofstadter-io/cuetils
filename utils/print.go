@@ -9,7 +9,6 @@ import (
 func PrintAttr(attr cue.Attribute, val cue.Value) error {
 	// maybe print
 	if attr.Err() == nil {
-		fmt.Println("PrintAttr", attr)
 		for i := 0; i < attr.NumArgs(); i++ {
 			a, _ := attr.String(i)
 			v := val.LookupPath(cue.ParsePath(a))

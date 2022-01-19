@@ -47,12 +47,12 @@ func do(in *structural.Input, opts *flags.RootPflagpole) error {
 		Root: cue.ParsePath("tasks"),
 	}
 
-	fmt.Println("Dagging...")
+	// fmt.Println("Dagging...")
 
 	// create the workflow which will build the task graph
 	workflow := flow.New(cfg, value, TaskFactory)
 
-	fmt.Println("Running...")
+	// fmt.Println("Running...")
 
 	// run our custom workflow
 	err = workflow.Run(context.Background())

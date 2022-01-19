@@ -7,6 +7,7 @@ import (
 	"cuelang.org/go/tools/flow"
 
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/api"
+	"github.com/hofstadter-io/cuetils/pipeline/tasks/os"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/st"
 )
 
@@ -68,11 +69,18 @@ func maybeTask(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
 	case "st/upsert":
 		return &st.UpsertTask{}, nil
 
+	case "os/readfile":
+		return &os.ReadFileTask{}, nil
+	case "os/stdin":
+		return &os.StdinTask{}, nil
+	case "os/stdout":
+		return &os.StdoutTask{}, nil
+
 	case "api/call":
 		return &api.CallTask{}, nil
 
 	default:
-		fmt.Println("unknown attribute:", attr)
+		fmt.Println("unknown task:", attr)
 	}
 
 	return nil, nil

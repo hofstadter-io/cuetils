@@ -14,7 +14,7 @@ import (
 )
 
 type CallTask struct {
-	Req cue.Value `cue: "#Req"`
+	Req cue.Value
 	Ret cue.Value
 }
 
@@ -25,21 +25,9 @@ func (T *CallTask) Run(t *flow.Task, err error) error {
 		fmt.Println("Dep error", err)
 	}
 
-	// not sure this is OK, but the value which was used for this task
 	val := t.Value()
 
-	//s, err := utils.FormatCue(val)
-	//if err != nil {
-	//fmt.Println("Fmt error", err)
-	//}
-	// fmt.Printf("CallTask: %v\n", s)
-
 	req := val.LookupPath(cue.ParsePath("#Req"))
-
-	// fmt.Printf("req: %v\n", req)
-
-	/*****/
-	// expected := val.LookupPath(cue.ParsePath("resp"))
 
 	R, err := buildRequest(req)
 	if err != nil {
@@ -56,25 +44,8 @@ func (T *CallTask) Run(t *flow.Task, err error) error {
 		return err
 	}
 
-	// fmt.Println("body:", body)
-
 	// name better based on path in CUE code
 	resp := val.Context().CompileBytes(body, cue.Filename("resp"))
-
-	// resp := actual
-
-	//fail := val.LookupPath(cue.ParsePath("fail"))
-	//failVal, err := fail.Bool()
-	//if err != nil {
-	//// likely not found
-	//failVal = false
-	//}
-
-	//err = checkResponse(T, verbose, actual, expected, failVal)
-
-	/*****/
-
-	// fmt.Printf("resp: %v\n", resp)
 
 	// Use fill to "return" a result to the workflow engine
 	res := val.FillPath(cue.ParsePath("Resp"), resp)
