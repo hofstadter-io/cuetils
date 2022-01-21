@@ -1,3 +1,3 @@
 package os
 
-type SetenvTask struct {}
+type Setenv struct {}

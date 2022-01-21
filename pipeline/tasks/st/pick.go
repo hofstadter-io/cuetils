@@ -10,14 +10,18 @@ import (
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
-type PickTask struct {
-	X   cue.Value `cue: "#X"`
-	P   cue.Value `cue: "#P"`
+type Pick struct {
+	X   cue.Value
+	P   cue.Value
 	Ret cue.Value
 }
 
+func NewPick(val cue.Value) (flow.Runner, error) {
+  return &Pick{}, nil
+}
+
 // Tasks must implement a Run func, this is where we execute our task
-func (P *PickTask) Run(t *flow.Task, err error) error {
+func (P *Pick) Run(t *flow.Task, err error) error {
 
 	if err != nil {
 		fmt.Println("Dep error", err)

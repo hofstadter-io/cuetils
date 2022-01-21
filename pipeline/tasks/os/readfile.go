@@ -10,7 +10,7 @@ import (
   "github.com/hofstadter-io/cuetils/utils"
 )
 
-type ReadFileTask struct {
+type ReadFile struct {
   // might need F to be an object the helps us to
   // understand how to load the contents back in
   // such as a string, bytes, or a cue struct
@@ -18,7 +18,11 @@ type ReadFileTask struct {
   C cue.Value // the file contents
 }
 
-func (T* ReadFileTask) Run(t *flow.Task, err error) error {
+func NewReadFile(val cue.Value) (flow.Runner, error) {
+  return &ReadFile{}, nil
+}
+
+func (T* ReadFile) Run(t *flow.Task, err error) error {
 
 	if err != nil {
 		fmt.Println("Dep error", err)

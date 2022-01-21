@@ -11,9 +11,13 @@ import (
   "github.com/hofstadter-io/cuetils/utils"
 )
 
-type StdinTask struct {}
+type Stdin struct {}
 
-func (T* StdinTask) Run(t *flow.Task, err error) error {
+func NewStdin(val cue.Value) (flow.Runner, error) {
+  return &Stdin{}, nil
+}
+
+func (T* Stdin) Run(t *flow.Task, err error) error {
 
 	if err != nil {
 		fmt.Println("Dep error", err)

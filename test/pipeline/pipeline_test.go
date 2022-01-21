@@ -11,7 +11,7 @@ func TestPipeline(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
 		Dir:         "testdata",
-		Glob:        "write*.txt",
+		Glob:        "nested*.txt",
 		WorkdirRoot: ".workdir/tests",
 	})
 }

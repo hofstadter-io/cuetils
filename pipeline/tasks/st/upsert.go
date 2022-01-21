@@ -10,14 +10,18 @@ import (
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
-type UpsertTask struct {
+type Upsert struct {
 	X   cue.Value `cue: "#X"`
 	U   cue.Value `cue: "#U"`
 	Ret cue.Value
 }
 
+func NewUpsert(val cue.Value) (flow.Runner, error) {
+  return &Upsert{}, nil
+}
+
 // Tasks must implement a Run func, this is where we execute our task
-func (U *UpsertTask) Run(t *flow.Task, err error) error {
+func (U *Upsert) Run(t *flow.Task, err error) error {
 
 	if err != nil {
 		fmt.Println("Dep error", err)

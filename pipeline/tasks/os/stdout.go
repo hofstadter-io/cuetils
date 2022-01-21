@@ -9,9 +9,13 @@ import (
   "github.com/hofstadter-io/cuetils/utils"
 )
 
-type StdoutTask struct {}
+type Stdout struct {}
 
-func (T* StdoutTask) Run(t *flow.Task, err error) error {
+func NewStdout(val cue.Value) (flow.Runner, error) {
+  return &Stdout{}, nil
+}
+
+func (T* Stdout) Run(t *flow.Task, err error) error {
 
 	if err != nil {
 		fmt.Println("Dep error", err)

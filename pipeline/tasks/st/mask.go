@@ -10,14 +10,18 @@ import (
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
-type MaskTask struct {
-	X   cue.Value `cue: "#X"`
-	M   cue.Value `cue: "#M"`
+type Mask struct {
+	X   cue.Value
+	M   cue.Value
 	Ret cue.Value
 }
 
+func NewMask(val cue.Value) (flow.Runner, error) {
+  return &Mask{}, nil
+}
+
 // Tasks must implement a Run func, this is where we execute our task
-func (M *MaskTask) Run(t *flow.Task, err error) error {
+func (M *Mask) Run(t *flow.Task, err error) error {
 
 	if err != nil {
 		fmt.Println("Dep error", err)

@@ -13,12 +13,16 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
-type CallTask struct {
+type Call struct {
 	Req cue.Value
 	Ret cue.Value
 }
 
-func (T *CallTask) Run(t *flow.Task, err error) error {
+func NewCall(val cue.Value) (flow.Runner, error) {
+  return &Call{}, nil
+}
+
+func (T *Call) Run(t *flow.Task, err error) error {
 
 	// fmt.Println("CT start")
 	if err != nil {
