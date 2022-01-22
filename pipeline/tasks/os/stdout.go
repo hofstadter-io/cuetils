@@ -1,7 +1,9 @@
 package os
 
 import (
+  "bufio"
   "fmt"
+  "os"
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/tools/flow"
@@ -16,6 +18,8 @@ func NewStdout(val cue.Value) (flow.Runner, error) {
 }
 
 func (T* Stdout) Run(t *flow.Task, err error) error {
+  bufStdout := bufio.NewWriter(os.Stdout)
+  defer bufStdout.Flush()
 
 	if err != nil {
 		fmt.Println("Dep error", err)
@@ -23,9 +27,21 @@ func (T* Stdout) Run(t *flow.Task, err error) error {
 
 	v := t.Value()
 
-	o := v.LookupPath(cue.ParsePath("#O"))
+  msg := v.LookupPath(cue.ParsePath("text")) 
+  if msg.Err() != nil {
+    return msg.Err() 
+  } else if msg.Exists() {
+    // print strings directly to remove quotes
+    if m, err := msg.String(); err == nil {
+      fmt.Fprint(bufStdout, m)
+    } else {
+      fmt.Fprint(bufStdout, msg)
+    }
 
-  fmt.Println(o)
+  } else {
+    err := fmt.Errorf("unknown msg:", msg)
+    return err
+  }
 
 	attr := v.Attribute("print")
 	err = utils.PrintAttr(attr, v)

@@ -381,12 +381,12 @@ Cli: gen.#HofGenerator & {
 	}]
 
 	Flags: [{
-		Name:    "tags"
-		Long:    "tags"
-		Short:   "t"
+		Name:    "pipeline"
+		Long:    "pipeline"
+		Short:   "p"
 		Type:    "[]string"
     Default: "nil"
-		Help:    "tags to match for what to run"
+		Help:    "pipeline tags to match and run"
 	}]
 }
 

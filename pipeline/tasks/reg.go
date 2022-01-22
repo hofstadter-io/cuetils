@@ -1,33 +1,42 @@
 package tasks
 
 import (
+	"cuelang.org/go/tools/flow"
+
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/api"
+	"github.com/hofstadter-io/cuetils/pipeline/tasks/db"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/os"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/st"
 )
 
-type TaskMap map[string]TaskMaker
+type TaskMap map[string]flow.TaskFunc
 
-var TaskRegistry map[string]TaskMaker
+var TaskRegistry map[string]flow.TaskFunc
 
 func init() {
   TaskRegistry = TaskMap {
     "pipeline": NewPipeline,
 
-    // structural
-    "st/pick": st.NewPick,
-    "st/mask": st.NewMask,
-    "st/upsert": st.NewUpsert,
+    "st.Diff": st.NewDiff,
+    "st.Patch": st.NewPatch,
+    "st.Pick": st.NewPick,
+    "st.Mask": st.NewMask,
+    "st.Insert": st.NewInsert,
+    "st.Replace": st.NewReplace,
+    "st.Upsert": st.NewUpsert,
 
-    // io
-    // "os.Exec": os.NewExec,
+    "os.Exec": os.NewExec,
+    "os.Getenv": os.NewGetenv,
     "os.Stdin": os.NewStdin,
     "os.Stdout": os.NewStdout,
     "os.ReadFile": os.NewReadFile,
     "os.WriteFile": os.NewWriteFile,
 
     // api / db
-    "api/call": api.NewCall,
+    "api.Call": api.NewCall,
+    "db.Query": db.NewQuery,
+
+    // message bus (rabbit,kafka,cloud,cloud-events)
 
     // channels / async
 

@@ -22,3 +22,11 @@ CLI:
 - Support expression on globs, to select out a field on each file
 
 
+### Memory issues
+
+https://github.com/lipence/cue/commit/6ed69100ebd62509577826657536172ab46cf257
+
+### cue/flow
+
+return final value: https://github.com/cue-lang/cue/pull/1390
+

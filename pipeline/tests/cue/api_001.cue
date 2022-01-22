@@ -18,6 +18,10 @@ tasks: [string]: {
 
 tasks: {
   @pipeline(api-test)
-	r1: { #Req: req, Resp: _ } @task(api/call) @print("#Req",Resp)
-	p1: { #X: r1.Resp, #P: pick } @task(st/pick) @print(Out)
+  In: { 
+    "req": req
+    "p": pick
+  }
+	r: { #Req: In.req, Resp: _ } @task(api.Call)
+	o: { text: r.Resp } @task(os.Stdout)
 }

@@ -1,12 +1,17 @@
 package utils
 
 import (
-	"fmt"
+  "bufio"
+  "fmt"
+  "os"
 
 	"cuelang.org/go/cue"
 )
 
 func PrintAttr(attr cue.Attribute, val cue.Value) error {
+  bufStdout := bufio.NewWriter(os.Stdout)
+  defer bufStdout.Flush()
+
 	// maybe print
 	if attr.Err() == nil {
 		for i := 0; i < attr.NumArgs(); i++ {
@@ -14,9 +19,9 @@ func PrintAttr(attr cue.Attribute, val cue.Value) error {
 			v := val.LookupPath(cue.ParsePath(a))
 			s, err := FormatCue(v)
 			if err != nil {
-				fmt.Println("Fmt error", err)
+        fmt.Fprintln(bufStdout, "Fmt error: %s", err)
 			}
-			fmt.Printf("%s: %v\n", a, s)
+      fmt.Fprintf(bufStdout, "%s: %v\n", a, s)
 		}
 	}
 

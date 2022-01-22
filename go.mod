@@ -2,11 +2,12 @@ module github.com/hofstadter-io/cuetils
 
 go 1.17
 
-replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.1-hofpatch-1
+replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.1-hofpatches
 
 require (
 	cuelang.org/go v0.4.1
 	github.com/hofstadter-io/hof v0.5.17
+	github.com/mattn/go-sqlite3 v1.14.10
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/spf13/cobra v1.0.0
 	golang.org/x/text v0.3.3

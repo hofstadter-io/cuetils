@@ -23,15 +23,14 @@ func NewCall(val cue.Value) (flow.Runner, error) {
 }
 
 func (T *Call) Run(t *flow.Task, err error) error {
-
-	// fmt.Println("CT start")
+  // fmt.Println("beg: API call")
 	if err != nil {
 		fmt.Println("Dep error", err)
 	}
 
 	val := t.Value()
 
-	req := val.LookupPath(cue.ParsePath("#Req"))
+	req := val.LookupPath(cue.ParsePath("req"))
 
 	R, err := buildRequest(req)
 	if err != nil {
@@ -52,13 +51,14 @@ func (T *Call) Run(t *flow.Task, err error) error {
 	resp := val.Context().CompileBytes(body, cue.Filename("resp"))
 
 	// Use fill to "return" a result to the workflow engine
-	res := val.FillPath(cue.ParsePath("Resp"), resp)
-
-	t.Fill(res)
+	res := val.FillPath(cue.ParsePath("resp"), resp)
 
 	attr := val.Attribute("print")
 	err = utils.PrintAttr(attr, res)
 
+	t.Fill(res)
+
+  // fmt.Println("end: API call")
 	return err
 }
 
@@ -195,7 +195,7 @@ func buildRequest(val cue.Value) (R *gorequest.SuperAgent, err error) {
 func makeRequest(R *gorequest.SuperAgent) (gorequest.Response, error) {
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("Recovered in HTTP: %v %v\n", R, r)
+			fmt.Printf("Recovered in HTTP: %v %v\n", R, r)
 		}
 	}()
 
@@ -214,66 +214,3 @@ func makeRequest(R *gorequest.SuperAgent) (gorequest.Response, error) {
 
 	return resp, nil
 }
-
-//func checkResponse(T *Tester, verbose int, actual gorequest.Response, expect cue.Value, expectFail bool) (err error) {
-//expect = expect.Eval()
-
-//S, err := expect.Struct()
-//if err != nil {
-//return err
-//}
-//iter := S.Fields()
-//for iter.Next() {
-//label := iter.Label()
-//value := iter.Value()
-
-//// fmt.Println("checking:", label)
-
-//switch label {
-//case "status":
-//status, err := value.Int64()
-//if err != nil {
-//return err
-//}
-//if int64(actual.StatusCode) != status {
-//return fmt.Errorf("status code mismatch %v != %v", actual.StatusCode, status)
-//}
-
-//case "body":
-//body, err := ioutil.ReadAll(actual.Body)
-//if err != nil {
-//return err
-//}
-
-//V := T.CTX.CompileBytes(body, cue.Filename("body.json"))
-//if V.Err() != nil {
-//return V.Err()
-//}
-
-////inst, err := json.Decode(T.CRT, "", body)
-
-////V := inst.Value()
-
-//// TODO: bi-directional subsume to check for equality?
-//result := value.Unify(V)
-//if result.Err() != nil {
-//if !expectFail {
-//return result.Err()
-//}
-//}
-//// fmt.Println("result: ", result)
-//err = result.Validate()
-//if err != nil {
-//if !expectFail {
-//fmt.Println(value)
-//return err
-//}
-//}
-
-//default:
-//return fmt.Errorf("Unknown field in expected response:", label)
-//}
-//}
-
-//return nil
-//}

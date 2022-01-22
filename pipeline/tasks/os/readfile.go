@@ -30,7 +30,7 @@ func (T* ReadFile) Run(t *flow.Task, err error) error {
 
 	v := t.Value()
 
-	f := v.LookupPath(cue.ParsePath("f"))
+	f := v.LookupPath(cue.ParsePath("filename"))
 
   fn, err := f.String()
   if err != nil {
@@ -65,11 +65,11 @@ func (T* ReadFile) Run(t *flow.Task, err error) error {
   }
 
 
-	// Use fill to "return" a result to the workflow engine
-	t.Fill(res)
 
 	attr := v.Attribute("print")
 	err = utils.PrintAttr(attr, res)
 
+	// Use fill to "return" a result to the workflow engine
+	t.Fill(res)
 	return err
 }

@@ -1,0 +1,8 @@
+{
+  "host": "https://postman-echo.com",
+  "method": "GET",
+  "path": "/get",
+  "query": {
+    "req": "two"
+  }
+}

@@ -15,7 +15,7 @@ var pipelineLong = `run file(s) through a pipeline of operations`
 
 func init() {
 
-	PipelineCmd.Flags().StringSliceVarP(&(flags.PipelineFlags.Tags), "tags", "t", nil, "tags to match for what to run")
+	PipelineCmd.Flags().StringSliceVarP(&(flags.PipelineFlags.Pipeline), "pipeline", "p", nil, "pipeline tags to match and run")
 }
 
 func PipelineRun(globs []string) (err error) {

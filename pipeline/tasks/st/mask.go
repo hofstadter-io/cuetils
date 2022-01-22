@@ -10,11 +10,7 @@ import (
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
-type Mask struct {
-	X   cue.Value
-	M   cue.Value
-	Ret cue.Value
-}
+type Mask struct {}
 
 func NewMask(val cue.Value) (flow.Runner, error) {
   return &Mask{}, nil
@@ -30,21 +26,21 @@ func (M *Mask) Run(t *flow.Task, err error) error {
 
 	v := t.Value()
 
-	x := v.LookupPath(cue.ParsePath("#X"))
-	m := v.LookupPath(cue.ParsePath("#M"))
+	x := v.LookupPath(cue.ParsePath("val"))
+	m := v.LookupPath(cue.ParsePath("mask"))
 
 	r, err := structural.MaskValue(m, x, nil)
 	if err != nil {
 		return err
 	}
 
-	// Use fill to "return" a result to the workflow engine
-	res := v.FillPath(cue.ParsePath("Out"), r)
-
-	t.Fill(res)
+	res := v.FillPath(cue.ParsePath("out"), r)
 
 	attr := v.Attribute("print")
 	err = utils.PrintAttr(attr, res)
+
+	// Use fill to "return" a result to the workflow engine
+	t.Fill(res)
 
 	return err
 }

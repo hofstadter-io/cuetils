@@ -1,7 +1,7 @@
 package flags
 
 type PipelineFlagpole struct {
-	Tags []string
+	Pipeline []string
 }
 
 var PipelineFlags PipelineFlagpole

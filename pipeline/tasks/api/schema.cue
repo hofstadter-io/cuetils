@@ -1,25 +1,24 @@
 package api
 
 #Request: {
-	Method: *"GET" | "POST" | "PUT" | "DELETE" | "OPTIONS" | "HEAD" | "CONNECT" | "TRACE" | "PATCH"
-	Host:   string
-	Path:   string | *""
-	Auth?:  string
-	Headers?: [string]: string
-	Query?: [string]:   string
-	Data?:    string | {...}
-	Timeout?: string
-	Retry?: {
-		Count?: int
-		Timer?: string
-		Codes: [...int]
+	method: *"GET" | "POST" | "PUT" | "DELETE" | "OPTIONS" | "HEAD" | "CONNECT" | "TRACE" | "PATCH"
+	host:   string
+	path:   string | *""
+	auth?:  string
+	headers?: [string]: string
+	query?: [string]:   string
+	data?:    string | {...}
+	timeout?: string
+	retry?: {
+		count?: int
+		timer?: string
+		codes: [...int]
 	}
 }
 
 #Response: {
-	Status?: int
-	Headers?: [string]: string
-	Body?: string
-	Value: _
-	// latency?: float
+	status?: int
+	headers?: [string]: string
+	body?: string
+	value: _
 }

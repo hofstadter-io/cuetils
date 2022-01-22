@@ -25,7 +25,7 @@ func (T* Stdin) Run(t *flow.Task, err error) error {
 
 	v := t.Value()
 
-  msg := v.LookupPath(cue.ParsePath("#Msg")) 
+  msg := v.LookupPath(cue.ParsePath("msg")) 
   if msg.Err() != nil {
     return err
   } else if msg.Exists() {
@@ -33,18 +33,19 @@ func (T* Stdin) Run(t *flow.Task, err error) error {
     if err != nil {
       return err
     }
+    // print message to user
     fmt.Print(m)
   }
 
   reader := bufio.NewReader(g_os.Stdin)
   text, _ := reader.ReadString('\n')
 
-  res := v.FillPath(cue.ParsePath("Contents"), text)
-	// Use fill to "return" a result to the workflow engine
-	t.Fill(res)
-
+  res := v.FillPath(cue.ParsePath("contents"), text)
 	attr := v.Attribute("print")
 	err = utils.PrintAttr(attr, v)
+
+	// Use fill to "return" a result to the workflow engine
+	t.Fill(res)
 
 	return err
 }

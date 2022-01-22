@@ -10,11 +10,7 @@ import (
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
-type Pick struct {
-	X   cue.Value
-	P   cue.Value
-	Ret cue.Value
-}
+type Pick struct {}
 
 func NewPick(val cue.Value) (flow.Runner, error) {
   return &Pick{}, nil
@@ -30,21 +26,21 @@ func (P *Pick) Run(t *flow.Task, err error) error {
 
 	v := t.Value()
 
-	x := v.LookupPath(cue.ParsePath("#X"))
-	p := v.LookupPath(cue.ParsePath("#P"))
+	x := v.LookupPath(cue.ParsePath("val"))
+	p := v.LookupPath(cue.ParsePath("pick"))
 
 	r, err := structural.PickValue(p, x, nil)
 	if err != nil {
 		return err
 	}
 
-	// Use fill to "return" a result to the workflow engine
-	res := v.FillPath(cue.ParsePath("Out"), r)
-
-	t.Fill(res)
+	res := v.FillPath(cue.ParsePath("out"), r)
 
 	attr := v.Attribute("print")
 	err = utils.PrintAttr(attr, res)
+
+	// Use fill to "return" a result to the workflow engine
+	t.Fill(res)
 
 	return err
 }

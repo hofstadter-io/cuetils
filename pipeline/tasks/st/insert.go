@@ -10,26 +10,26 @@ import (
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
-type Upsert struct {}
+type Insert struct {}
 
-func NewUpsert(val cue.Value) (flow.Runner, error) {
-  return &Upsert{}, nil
+func NewInsert(val cue.Value) (flow.Runner, error) {
+  return &Insert{}, nil
 }
 
 // Tasks must implement a Run func, this is where we execute our task
-func (U *Upsert) Run(t *flow.Task, err error) error {
+func (M *Insert) Run(t *flow.Task, err error) error {
 
 	if err != nil {
 		fmt.Println("Dep error", err)
 		// should we return?
 	}
 
-	// not sure this is OK, but the value which was used for this task
 	v := t.Value()
-	x := v.LookupPath(cue.ParsePath("val"))
-	u := v.LookupPath(cue.ParsePath("up"))
 
-	r, err := structural.UpsertValue(u, x, nil)
+	x := v.LookupPath(cue.ParsePath("val"))
+	ins := v.LookupPath(cue.ParsePath("ins"))
+
+	r, err := structural.InsertValue(ins, x, nil)
 	if err != nil {
 		return err
 	}
