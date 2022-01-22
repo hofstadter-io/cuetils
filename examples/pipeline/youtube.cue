@@ -40,9 +40,11 @@ playlists: {
       path: "/playlists?channelId=\(channel)&part=\(_parts)&key=\(call._key)"
     }
   }
+  // print: { text: json.Indent(json.Marshal(call.resp), "", "  ") + "\n" } @task(os.Stdout)
   pls: [ for item in call.resp.items { 
     id: item.id
     title: item.snippet.title
+    link: "https://youtube.com/platlist?list=\(item.id)"
   }]
 }
 
@@ -60,9 +62,11 @@ details: {
         path: "\(_path)&key=\(details._key)"
       }
     }
+    // print: (_id): { text: json.Indent(json.Marshal(call["\(_id)"].resp), "", "  ") + "\n" } @task(os.Stdout)
     info: (_id): [ for item in details.call["\(_id)"].resp.items {
       id: item.id
       title: item.snippet.title
+      link: "https://youtu.be/\(item.snippet.resourceId.videoId)"
     }]
   }
 }
@@ -70,6 +74,7 @@ details: {
 final: {
   data: {
     username: info.call.resp.items[0].snippet.title
+    "channel": "https://youtube.com/channel/\(channel)"
     for pl in playlists.pls {
       (pl.title): pl & { videos: details.info["\(pl.id)"] }
     }
