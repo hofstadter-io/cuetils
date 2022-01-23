@@ -11,30 +11,20 @@ CREATE TABLE `userinfo` (
 
 iQ: "INSERT INTO userinfo(username, departname, created) values(?,?,?)"
 
-create: {
+prep: {
   @task(db.Call)
   conn: sqlite: "test.db"
-  exec: tQ 
+
+  stmts: [
+    { exec: tQ },
+    { exec: iQ, args: ["astaxie", "研发部门", "2012-12-09"] },
+    { query: "SELECT * FROM userinfo;" },
+  ]
+
+  results: _
+  result: results[2].results
 }
-
-insert: {
-  @task(db.Call)
-  _dep: create.results
-
-  conn: sqlite: "test.db"
-  exec: iQ 
-  args: ["astaxie", "研发部门", "2012-12-09"]
-}
-
-query: {
-  @task(db.Call)
-  _dep: insert.results
-
-  conn: sqlite: "test.db"
-  query: "SELECT * FROM userinfo;"
-}
-
 results: {
   @task(os.Stdout)
-  text: query.results
+  text: prep.result
 }

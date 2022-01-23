@@ -34,7 +34,7 @@ func init() {
 
     // api / db
     "api.Call": api.NewCall,
-    "db.Query": db.NewQuery,
+    "db.Call": db.NewQuery,
 
     // message bus (rabbit,kafka,cloud,cloud-events)
 

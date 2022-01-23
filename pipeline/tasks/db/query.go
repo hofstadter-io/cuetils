@@ -39,20 +39,23 @@ func (T *Query) Run(t *flow.Task, err error) error {
 
 func handleQuery(val cue.Value) (interface{}, error) {
 
-  isQuery := true 
+  callType := ""
 	query := val.LookupPath(cue.ParsePath("query"))
-	if !query.Exists() {
-    isQuery = false
+	if query.Exists() && query.Err() == nil {
+    callType = "query"
+	}
+  if callType == "" {
     query = val.LookupPath(cue.ParsePath("exec"))
-    if !query.Exists() {
-      return nil, fmt.Errorf("field 'query' or 'exec' is required on db.Query at %q", val.Path())
+    if query.Exists() && query.Err() == nil {
+      callType = "exec"
     }
-	}
-
-	qs, err := query.String()
-	if err != nil {
-		return nil, fmt.Errorf("in field 'query' at %v", err)
-	}
+  }
+  if callType == "" {
+    query = val.LookupPath(cue.ParsePath("stmts"))
+    if query.Exists() && query.Err() == nil {
+      callType = "stmts"
+    }
+  }
 
 	conn := val.LookupPath(cue.ParsePath("conn"))
 	if !conn.Exists() {
@@ -86,24 +89,42 @@ func handleQuery(val cue.Value) (interface{}, error) {
 			if err != nil {
 				return nil, err
 			}
-      if isQuery {
-        rows, err := handleSQLiteQuery(dbname, qs, iargs)
-        if err != nil {
-          return nil, fmt.Errorf("error during query %v", err)
-        }
+      switch callType {
+        case "query":
+          qs, err := query.String()
+          if err != nil {
+            return nil, fmt.Errorf("in field 'query' at %v", err)
+          }
 
-        jstr, err := scanRowToJson(rows)
-        if err != nil {
-          return nil, fmt.Errorf("error during scan %v", err)
-        }
+          rows, err := handleSQLiteQuery(dbname, qs, iargs)
+          if err != nil {
+            return nil, fmt.Errorf("error during query %v", err)
+          }
 
-        return val.Context().CompileBytes(jstr), nil
-      } else {
-        out, err := handleSQLiteExec(dbname, qs, iargs)
-        if err != nil {
-          return nil, fmt.Errorf("error during query %v", err)
-        }
-        return out, nil
+          jstr, err := scanRowToJson(rows)
+          if err != nil {
+            return nil, fmt.Errorf("error during scan %v", err)
+          }
+          return val.Context().CompileBytes(jstr), nil
+
+        case "exec":
+          qs, err := query.String()
+          if err != nil {
+            return nil, fmt.Errorf("in field 'exec' at %v", err)
+          }
+
+          out, err := handleSQLiteExec(dbname, qs, iargs)
+          if err != nil {
+            return nil, fmt.Errorf("error during exec %v", err)
+          }
+          return out, nil
+
+        case "stmts":
+          out, err := handleSQLiteStmts(dbname, query, iargs)
+          if err != nil {
+            return nil, fmt.Errorf("error during query %v", err)
+          }
+          return out, nil
       }
 
 		}
