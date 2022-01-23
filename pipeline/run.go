@@ -3,6 +3,7 @@ package pipeline
 import (
 	// "context"
 	"fmt"
+	"strings"
 	// "time"
 
 	"cuelang.org/go/cue"
@@ -33,6 +34,11 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
   pipes := []*tasks.Pipeline{}
 	for _, in := range ins {
     val := in.Value
+    val, err = injectTags(val, popts.Tags)
+    if err != nil {
+      return nil, err
+    }
+
     ps, err := findPipelines(val, opts, popts)
     if err != nil {
       return nil, err
@@ -186,4 +192,16 @@ func matchPipeline(attr cue.Attribute, tags []string) (keep bool) {
   }
 
   return false
+}
+
+func injectTags(val cue.Value, tags []string) (cue.Value, error) {
+  tagMap := make(map[string]string)
+  for _, t := range tags {
+    fs := strings.SplitN(t, "=", 2)
+    if len(fs) != 2 {
+      return val, fmt.Errorf("tags must have form key=value, got %q", t)
+    }
+    tagMap[fs[0]] =fs[1] 
+  }
+  return structural.InjectAttrsValue(val, "tag", tagMap)
 }

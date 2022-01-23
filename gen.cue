@@ -386,7 +386,14 @@ Cli: gen.#HofGenerator & {
 		Short:   "p"
 		Type:    "[]string"
     Default: "nil"
-		Help:    "pipeline tags to match and run"
+		Help:    "pipeline labels to match and run"
+	},{
+		Name:    "tags"
+		Long:    "tags"
+		Short:   "t"
+		Type:    "[]string"
+    Default: "nil"
+		Help:    "data tags to inject before run"
 	}]
 }
 

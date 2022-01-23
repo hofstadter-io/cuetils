@@ -1,29 +1,32 @@
 import "encoding/json"
 
+// This pipeline fetches a YouTube channel's
+// [about, playlists, and videos] and
+// combines them into a singular, brief representation
+
 @pipeline()
 
 yt_api: "https://www.googleapis.com/youtube/v3"
-channel: "UC9OMpomeCDawRQ9hAcLKMsw"
+// channel: string @tag(channel)
+channel: "UC9OMpomeCDawRQ9hAcLKMsw" @tag(channel)
 
+
+// try to combine this with secrets
 init: {
   env: { HOF_YOUTUBE_APIKEY: _ } @task(os.Getenv)
 }
-
-_secrets: {
-  _key: init.env.HOF_YOUTUBE_APIKEY
+secrets: {
+  key: init.env.HOF_YOUTUBE_APIKEY
 }
-
 
 info: {
   call: {
     @task(api.Call)
-    _secrets
-    _parts: "id,snippet"
+    parts: "id,snippet"
     req: {
       host: yt_api
       method: "GET"
-      _path: "/channels?id=\(channel)&part=\(_parts)"
-      path: "\(_path)&key=\(call._key)"
+      path: "/channels?id=\(channel)&part=\(parts)&key=\(secrets.key)"
     }
   }
   // print: { text: json.Indent(json.Marshal(call.resp), "", "  ") + "\n" } @task(os.Stdout)
@@ -32,12 +35,12 @@ info: {
 playlists: {
   call: {
     @task(api.Call)
-    _secrets
+    parts: "id,snippet"
     req: {
-      _parts: "id,snippet"
       host: yt_api
       method: "GET"
-      path: "/playlists?channelId=\(channel)&part=\(_parts)&key=\(call._key)"
+      path: "/playlists?channelId=\(channel)&part=\(parts)&key=\(secrets.key)"
+      // path: "\(_path)"
     }
   }
   // print: { text: json.Indent(json.Marshal(call.resp), "", "  ") + "\n" } @task(os.Stdout)
@@ -49,17 +52,16 @@ playlists: {
 }
 
 details: {
-  _secrets
   for playlist in playlists.call.resp.items {
     _id: playlist.id
     call: (_id): { 
       @task(api.Call)
+      parts: "id,snippet"
       req: {
-        _parts: "id,snippet"
         host: yt_api
         method: "GET"
-        _path: "/playlistItems?playlistId=\(_id)&part=\(_parts)"
-        path: "\(_path)&key=\(details._key)"
+        _path: "/playlistItems?playlistId=\(_id)&part=\(parts)"
+        path: "\(_path)&key=\(secrets.key)"
       }
     }
     // print: (_id): { text: json.Indent(json.Marshal(call["\(_id)"].resp), "", "  ") + "\n" } @task(os.Stdout)
