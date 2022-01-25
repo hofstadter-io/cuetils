@@ -31,9 +31,11 @@ func init() {
     "os.Stdout": os.NewStdout,
     "os.ReadFile": os.NewReadFile,
     "os.WriteFile": os.NewWriteFile,
+    "os.Sleep": os.NewSleep,
 
     // api / db
     "api.Call": api.NewCall,
+    "api.Serve": api.NewServe,
     "db.Call": db.NewQuery,
 
     // message bus (rabbit,kafka,cloud,cloud-events)

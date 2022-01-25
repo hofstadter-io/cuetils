@@ -13,10 +13,7 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
-type Call struct {
-	Req cue.Value
-	Ret cue.Value
-}
+type Call struct {}
 
 func NewCall(val cue.Value) (flow.Runner, error) {
   return &Call{}, nil
@@ -47,8 +44,19 @@ func (T *Call) Run(t *flow.Task, err error) error {
 		return err
 	}
 
-	// name better based on path in CUE code
-	resp := val.Context().CompileBytes(body, cue.Filename("resp"))
+  var isString bool
+  r := val.LookupPath(cue.ParsePath("resp"))
+  if r.Exists() && r.IncompleteKind() == cue.StringKind {
+    isString = true
+  }
+
+  var resp interface{}
+  if isString {
+    resp = string(body)
+  } else {
+    resp = val.Context().CompileBytes(body, cue.Filename("resp"))
+  }
+
 
 	// Use fill to "return" a result to the workflow engine
 	res := val.FillPath(cue.ParsePath("resp"), resp)

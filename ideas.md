@@ -1,3 +1,32 @@
+# TODO
+
+Get server working:
+- wired up routes
+- route pipelines
+
+Example Pipeline:
+- Exponential retry as an api.Call wrapper with os.Sleep
+- replace sleep in example with wait for server ready
+
+CLI work:
+- list pipelines that can be run
+- enable docs for pipelines to be read/written
+
+--- 
+
+Centralized Printing:
+- chan for tasks to write strings to
+
+Secrets:
+- `secret: [string]: string` as secrets to be elided from output
+- add as a filter to centralized printing
+
+Bookkeeping:
+- debug flag to print tasks which run
+- stats for tasks & pipelines, chan to central
+
+
+
 # Ideas
 
 Helpers:
