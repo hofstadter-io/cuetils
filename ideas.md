@@ -26,7 +26,21 @@ Bookkeeping:
 - debug flag to print tasks which run
 - stats for tasks & pipelines, chan to central
 
+Exec & Serve
 
+- some way to run in background, and then kill / exit later?
+
+---
+
+Then...
+
+- OAuth workflow
+- Twitchbot
+
+More...
+
+- something like a goroutine, similar to api.Serve/pipeline
+- message passing, via chans, websockets, kafka/rabbit
 
 # Ideas
 
