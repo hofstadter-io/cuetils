@@ -1,12 +1,13 @@
 # TODO
 
 Get server working:
-- wired up routes
-- route pipelines
+- [x] wired up routes
+- [x] route pipelines
 
 Example Pipeline:
 - Exponential retry as an api.Call wrapper with os.Sleep
 - replace sleep in example with wait for server ready
+- could be tricky, because we need to generate extra tasks after the last one finished, or some conditional to ignore after success
 
 CLI work:
 - list pipelines that can be run

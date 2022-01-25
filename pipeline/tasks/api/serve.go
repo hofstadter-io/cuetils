@@ -1,32 +1,41 @@
 package api
 
 import (
-  "encoding/json"
+	"encoding/json"
 	"fmt"
-	// "io"
-  "net/http"
-  "strings"
+	"io"
+  "sync"
+
+	"net/http"
+	"strings"
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/tools/flow"
-  "github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+  "github.com/labstack/echo-contrib/prometheus"
 
-	// "github.com/hofstadter-io/cuetils/utils"
+  "github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
 )
 
-type Serve struct {}
+type Serve struct {
+  sync.Mutex
+  Orig cue.Value
+}
 
 func NewServe(val cue.Value) (flow.Runner, error) {
-  return &Serve{}, nil
+  return &Serve{
+    Orig: val,
+  }, nil
 }
 
 func (T *Serve) Run(t *flow.Task, err error) error {
-  fmt.Println("api.Serve - starting")
 	if err != nil {
 		fmt.Println("Dep error", err)
 	}
 
 	val := t.Value()
+  T.Orig = val
 
   // get the port
   p := val.LookupPath(cue.ParsePath("port"))
@@ -41,6 +50,16 @@ func (T *Serve) Run(t *flow.Task, err error) error {
   // create server
   e := echo.New()
   e.HideBanner = true
+  e.Use(middleware.Recover())
+  e.Use(middleware.Logger())
+
+  // liveliness and metrics
+	e.GET("/alive", func(c echo.Context) error {
+		return c.NoContent(http.StatusNoContent)
+	})
+
+  prom := prometheus.NewPrometheus("echo", nil)
+  prom.Use(e)
 
   //
   // Setup routes
@@ -55,27 +74,25 @@ func (T *Serve) Run(t *flow.Task, err error) error {
     label := iter.Selector().String()
     route := iter.Value()
 
-    fmt.Println("route:", label)
+    // fmt.Println("route:", label)
 
-    err := routeFromValue(label, route, e)
+    err := T.routeFromValue(label, route, e)
     if err != nil {
       return err
     }
   }
 
-
-  // run the server
-	e.GET("/alive", func(c echo.Context) error {
-		return c.String(http.StatusNoContent, "Hello, World!")
-	})
-
+  /*
+  // print routes
   data, err := json.MarshalIndent(e.Routes(), "", "  ")
   if err != nil {
     return err
   }
 
   fmt.Println(string(data))
+  */
 
+  // run the server
 	e.Logger.Fatal(e.Start(":" + port))
 
 
@@ -92,46 +109,12 @@ func (T *Serve) Run(t *flow.Task, err error) error {
 
 
   */
-
-
-	//req := val.LookupPath(cue.ParsePath("req"))
-
-  // =======================
-
-
-	//R, err := buildRequest(req)
-	//if err != nil {
-		//return err
-	//}
-
-	//actual, err := makeRequest(R)
-	//if err != nil {
-		//return err
-	//}
-
-	//body, err := io.ReadAll(actual.Body)
-	//if err != nil {
-		//return err
-	//}
-
-	//// name better based on path in CUE code
-	//resp := val.Context().CompileBytes(body, cue.Filename("resp"))
-
-	//// Use fill to "return" a result to the workflow engine
-	//res := val.FillPath(cue.ParsePath("resp"), resp)
-
-	//attr := val.Attribute("print")
-	//err = utils.PrintAttr(attr, res)
-
-	//t.Fill(res)
-
-  // fmt.Println("end: API call")
 	return err
 }
 
-func routeFromValue(path string, route cue.Value, e *echo.Echo) (error) {
+func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo) (error) {
   path = strings.Replace(path, "\"", "", -1)
-  fmt.Println(path + ":", route)
+  // fmt.Println(path + ":", route)
 
   // is this a pipeline handler?
   attrs := route.Attributes(cue.ValueAttr)
@@ -142,22 +125,41 @@ func routeFromValue(path string, route cue.Value, e *echo.Echo) (error) {
     } 
   }
 
-  if isPipe {
-    // TODO
-    return nil
-  }
-
   local := route
 
-  fmt.Println("setting up route:", path)
+  // fmt.Println("setting up route:", path, isPipe)
 
-  // e.Match([]string{"GET"}, path, func (c echo.Context) error {
-  e.GET(path, func (c echo.Context) error {
+  // (1) can we read the pipelinen once and reuse it
+  // (2) or do we need to construct a new one on each call
+
+  // setup handler, this will be invoked on all requests
+  handler := func (c echo.Context) error {
+    // fmt.Println("handling:", path)
     // pull apart c.request
+    req, err := T.buildReqValue(c)
+    if err != nil {
+      return err
+    }
+    // fmt.Println("reqVal", req)
 
-    tmp := local.FillPath(cue.ParsePath("req"), "foobar")
+    tmp := local.FillPath(cue.ParsePath("req"), req)
     if tmp.Err() != nil {
       return tmp.Err()
+    }
+
+    if isPipe {
+      p, err := pipe.NewPipeline(tmp)
+      if err != nil {
+        return err
+      }
+
+      np, _ := p.(*pipe.Pipeline)
+      err = np.Start()
+      if err != nil {
+        return err
+      }
+
+      tmp = np.Final
     }
 
     resp := tmp.LookupPath(cue.ParsePath("resp"))
@@ -165,16 +167,103 @@ func routeFromValue(path string, route cue.Value, e *echo.Echo) (error) {
       return resp.Err()
     }
 
-    var ret interface{}
-    err := resp.Decode(&ret)
+    return T.fillRespFromValue(resp, c)
+  }
+
+  // figure out route method(s): GET, POST, et al
+  mv := route.LookupPath(cue.ParsePath("method"))
+  methods := []string{}
+  switch mv.IncompleteKind() {
+  case cue.StringKind:
+    m, err := mv.String()
     if err != nil {
       return err
     }
+    m = strings.ToUpper(m)
+    methods = append(methods, m)
+  case cue.ListKind:
+    iter, err := mv.List()
+    if err != nil {
+      return err
+    }
+    for iter.Next() {
+      v := iter.Value()
+      m, err := v.String()
+      if err != nil {
+        return err
+      }
+      m = strings.ToUpper(m)
+      methods = append(methods, m)
+    }
 
-    c.JSON(http.StatusOK, ret)
+  case cue.BottomKind:
+    methods = append(methods, "GET")
 
-    return nil
-  })
+  default: 
+    return fmt.Errorf("unsupported type for method in %s %v", path, mv.IncompleteKind)
+  }
+
+  // fmt.Println("methods:", methods)
+  e.Match(methods, path, handler)
 
   return nil
+}
+
+func (T *Serve) buildReqValue(c echo.Context) (interface{},error) {
+  req := map[string]interface{}{}
+  R := c.Request()
+
+  req["method"] = R.Method
+  req["header"] = R.Header
+  req["url"] = R.URL
+  req["query"] = c.QueryParams()
+
+  b, err := io.ReadAll(R.Body)
+  if err != nil {
+    return nil, err
+  }
+
+  if len(b) > 0 {
+    var body interface{}
+    err = json.Unmarshal(b, &body)
+    if err != nil {
+      return nil, err
+    }
+    req["body"] = body
+  }
+
+  // form
+  // path params
+  return req, nil
+}
+
+func (T *Serve) fillRespFromValue(val cue.Value, c echo.Context) error {
+  var ret map[string]interface{}
+
+  {
+    T.Lock()
+    defer T.Unlock()
+
+    err := val.Decode(&ret)
+    if err != nil {
+      return err
+    }
+  }
+
+  // TODO, more http/response type things
+
+  st, ok := ret["status"]
+  if !ok {
+    st = 200
+  }
+  status := st.(int)
+
+  if ret["json"] != nil {
+    return c.JSON(status, ret["json"])
+  } else if ret["body"] != nil {
+    // todo, better type casts
+    return c.String(status, ret["body"].(string))
+  } else {
+    return c.NoContent(status)
+  }
 }

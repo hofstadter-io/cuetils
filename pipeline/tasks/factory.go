@@ -7,9 +7,13 @@ import (
 	"cuelang.org/go/tools/flow"
 )
 
+type TaskMap map[string]flow.TaskFunc
+
+var TaskRegistry TaskMap 
+
 // This function implements the Runner interface.
 // It parses Cue values, you will see all of them recursively
-func TaskFactory(P *Pipeline) func (cue.Value) (flow.Runner, error) {
+func TaskFactory() func (cue.Value) (flow.Runner, error) {
   return func(val cue.Value) (flow.Runner, error) {
 
     // Check that we have something that looks like a task
@@ -29,13 +33,13 @@ func TaskFactory(P *Pipeline) func (cue.Value) (flow.Runner, error) {
 
       switch n {
       case "pipeline":
-        t, err := maybePipeline(val, attr, P)
+        t, err := maybePipeline(val, attr)
         if err != nil {
           fmt.Println("maybePipeline err:", err)
         }
         return t, err 
       case "task":
-        t, err := maybeTask(val, attr, P)
+        t, err := maybeTask(val, attr)
         if err != nil {
           fmt.Println("maybeTask err:", err)
         }
@@ -47,8 +51,8 @@ func TaskFactory(P *Pipeline) func (cue.Value) (flow.Runner, error) {
   }
 }
 
-func maybePipeline(val cue.Value, attr cue.Attribute, P *Pipeline) (flow.Runner, error) {
-  // fmt.Println("maybePipeline:", attr)
+func maybePipeline(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
+  // fmt.Println("pipeline:", attr)
   //fmt.Println(" -", P.Orig.Path(), val.Path())
 
   // how to know this is the root pipeline we are running?
@@ -61,20 +65,19 @@ func maybePipeline(val cue.Value, attr cue.Attribute, P *Pipeline) (flow.Runner,
     return nil, nil
   }
 
-  // fmt.Println(" -- new'n")
-  p, err := NewPipeline(val)
-  if err != nil {
-    return nil, err
+  taskMaker, ok := TaskRegistry["pipeline"]
+  if !ok {
+    fmt.Println("uh oh") // this is not throwing an error, get here by having a bad task name
+    return nil, fmt.Errorf("unknown task: %q", attr)
   }
 
-  np, _ := p.(*Pipeline)
-  np.Prep()
+  t, err := taskMaker(val)
 
-  return p, nil
+  return t, err 
 }
 
-func maybeTask(val cue.Value, attr cue.Attribute, P *Pipeline) (flow.Runner, error) {
-  // fmt.Println("maybeTask:", attr)
+func maybeTask(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
+  // fmt.Println("task:", attr)
   if attr.NumArgs() == 0 {
     return nil, fmt.Errorf("No type provided to task: %s", attr)
   }
@@ -98,3 +101,4 @@ func maybeTask(val cue.Value, attr cue.Attribute, P *Pipeline) (flow.Runner, err
 
   return t, err 
 }
+

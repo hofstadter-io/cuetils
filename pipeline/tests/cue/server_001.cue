@@ -1,3 +1,5 @@
+import "encoding/json"
+
 @pipeline()
 
 config: {
@@ -11,16 +13,32 @@ run: {
   routes: {
     "/hello": {
       method: "GET"
-      resp: "hallo chat!"
+      resp: {
+        status: 200
+        body: "hallo chat!"
+      }
     }
     "/echo": {
-      method: "GET"
+      method: ["get", "post"]
       req: _
-      resp: req
-      // resp: req.query.cow
+      // resp: req.query
+      resp: json: req.query.cow
     }
     "/pipe": {
       @pipeline()
+      req: _
+      r: { filename: req.query.filename[0], contents: string } @task(os.ReadFile)
+      j: json.Unmarshal(r.contents)
+      resp: {
+        status: 200
+        json: j
+      }
+    }
+
+    "/str": {
+      resp: {
+        status: 204
+      }
     }
   }
 }
@@ -54,4 +72,19 @@ call: {
     @task(os.Stdout)
     text: do.resp
   }
+}
+
+stop: {
+  wait: {
+    // @task(os.Sleep)
+    duration: "2m"
+    done: _
+  }
+
+  send: {
+    // @task(msg.Chan)
+    // to:
+    // msg: "stop"
+  }
+
 }

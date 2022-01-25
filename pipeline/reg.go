@@ -1,21 +1,17 @@
-package tasks
+package pipeline
 
 import (
-	"cuelang.org/go/tools/flow"
-
+	"github.com/hofstadter-io/cuetils/pipeline/tasks"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/api"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/db"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/os"
+	"github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/st"
 )
 
-type TaskMap map[string]flow.TaskFunc
-
-var TaskRegistry map[string]flow.TaskFunc
-
 func init() {
-  TaskRegistry = TaskMap {
-    "pipeline": NewPipeline,
+  tasks.TaskRegistry = tasks.TaskMap {
+    "pipeline": pipe.NewPipeline,
 
     "st.Diff": st.NewDiff,
     "st.Patch": st.NewPatch,

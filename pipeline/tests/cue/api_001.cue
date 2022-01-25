@@ -17,11 +17,11 @@ tasks: [string]: {
 }
 
 tasks: {
-  @pipeline(api-test)
+  @pipeline()
   In: { 
     "req": req
     "p": pick
   }
-	r: { #Req: In.req, Resp: _ } @task(api.Call)
-	o: { text: r.Resp } @task(os.Stdout)
+	r: { req: In.req, resp: _ } @task(api.Call)
+	o: { text: r.resp } @task(os.Stdout)
 }

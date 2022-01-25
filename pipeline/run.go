@@ -4,13 +4,14 @@ import (
 	// "context"
 	"fmt"
 	"strings"
+
 	// "time"
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/cuecontext"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
-	"github.com/hofstadter-io/cuetils/pipeline/tasks"
+	"github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
@@ -31,9 +32,11 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
 	}
 
 	// find  pipelines
-  pipes := []*tasks.Pipeline{}
+  pipes := []*pipe.Pipeline{}
 	for _, in := range ins {
     val := in.Value
+
+    // this might be buggy?
     val, err = injectTags(val, popts.Tags)
     if err != nil {
       return nil, err
@@ -48,14 +51,6 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
 
   if len(pipes) == 0 {
     return nil, fmt.Errorf("no pipelines found")
-  }
-
-  // prep all of the pipelines and discover tasks
-  for _, pipe := range pipes {
-    err := pipe.Prep()
-    if err != nil {
-      return nil, err
-    }
   }
 
   // start all of the pipelines
@@ -75,8 +70,8 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
 // maybe this becomes recursive so we can find
 // nested pipelines, but not recurse when we find one
 // only recurse when we have something which is not a pipeline or task
-func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]*tasks.Pipeline, error) {
-  pipes := []*tasks.Pipeline{}
+func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]*pipe.Pipeline, error) {
+  pipes := []*pipe.Pipeline{}
 
   // TODO, look for lists?
   s, err := val.Struct()
@@ -91,11 +86,12 @@ func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pipeli
   // does our top-level (file-level) have @pipeline()
   _, found, keep := hasPipelineAttr(val, tags)
   if keep  {
-    p, err := tasks.NewPipeline(val)
+    // invoke TaskFactory
+    p, err := pipe.NewPipeline(val)
     if err != nil {
       return pipes, err
     }
-    P, _ := p.(*tasks.Pipeline)
+    P, _ := p.(*pipe.Pipeline)
     pipes = append(pipes, P)
   }
 
@@ -114,11 +110,11 @@ func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pipeli
 
     _, found, keep := hasPipelineAttr(v, tags)
     if keep  {
-      p, err := tasks.NewPipeline(v)
+      p, err := pipe.NewPipeline(v)
       if err != nil {
         return pipes, err
       }
-      P, _ := p.(*tasks.Pipeline)
+      P, _ := p.(*pipe.Pipeline)
       pipes = append(pipes, P)
     }
 

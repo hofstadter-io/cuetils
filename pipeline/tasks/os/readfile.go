@@ -23,7 +23,6 @@ func NewReadFile(val cue.Value) (flow.Runner, error) {
 }
 
 func (T* ReadFile) Run(t *flow.Task, err error) error {
-
 	if err != nil {
 		fmt.Println("Dep error", err)
 	}
@@ -59,6 +58,10 @@ func (T* ReadFile) Run(t *flow.Task, err error) error {
       return c.Err() 
     }
     res = v.FillPath(cue.ParsePath("contents"), c)
+
+  case cue.BottomKind:
+    fmt.Println("BOTTOM FILE")
+    res = v.FillPath(cue.ParsePath("contents"), string(bs))
 
   default:
     return fmt.Errorf("Unsupported Content type in ReadFile task: %q", k)
