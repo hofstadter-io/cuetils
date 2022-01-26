@@ -1,14 +1,15 @@
-import "encoding/json"
-
 // This pipeline fetches a YouTube channel's
 // [about, playlists, and videos] and
 // combines them into a singular, brief representation
 
+import "encoding/json"
+
 @pipeline()
 
 yt_api: "https://www.googleapis.com/youtube/v3"
-// channel: string @tag(channel)
-channel: "UC9OMpomeCDawRQ9hAcLKMsw" @tag(channel)
+channel: string @tag(channel)
+// channel: "UC9OMpomeCDawRQ9hAcLKMsw" @tag(channel)
+// UCNkQPOIA3sEVJBRQobPr2Fw
 
 
 // try to combine this with secrets
@@ -51,9 +52,10 @@ playlists: {
   }]
 }
 
+
 details: {
   for playlist in playlists.call.resp.items {
-    _id: playlist.id
+    let _id = playlist.id
     call: (_id): { 
       @task(api.Call)
       parts: "id,snippet"
@@ -77,8 +79,10 @@ final: {
   data: {
     username: info.call.resp.items[0].snippet.title
     "channel": "https://youtube.com/channel/\(channel)"
-    for pl in playlists.pls {
-      (pl.title): pl & { videos: details.info["\(pl.id)"] }
+    "playlists": {
+      for pl in playlists.pls {
+        (pl.title): pl & { videos: details.info["\(pl.id)"] }
+      }
     }
   }
   print: { text: json.Indent(json.Marshal(data), "", "  ") + "\n" } @task(os.Stdout)

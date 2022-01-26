@@ -206,6 +206,7 @@ func matchPipeline(attr cue.Attribute, args []string) (keep bool) {
 }
 
 func injectTags(val cue.Value, tags []string) (cue.Value, error) {
+  fmt.Println("injecting:", tags)
   tagMap := make(map[string]string)
   for _, t := range tags {
     fs := strings.SplitN(t, "=", 2)
@@ -214,19 +215,53 @@ func injectTags(val cue.Value, tags []string) (cue.Value, error) {
     }
     tagMap[fs[0]] =fs[1] 
   }
-  return structural.InjectAttrsValue(val, "tag", tagMap)
+
+  tagPaths := make(map[string]cue.Path)
+  errs := []error{}
+  collector := func (v cue.Value) bool {
+    attrs := v.Attributes(cue.ValueAttr)
+
+    var err error
+    for _, attr := range attrs {
+      if attr.Name() == "tag" {
+        if attr.NumArgs() == 0 {
+          err = fmt.Errorf("@tag() has no inner args at %s", v.Path())
+          errs = append(errs, err)
+          return false
+        }
+        // TODO, better options &| UX here
+        arg, _ := attr.String(0)
+        _, ok := tagMap[arg]
+        if ok {
+          tagPaths[arg] = v.Path()
+        }
+
+        return false
+      }
+    }
+
+    return true
+  }
+
+  structural.Walk(val, collector, nil, walkOptions...)
+
+  for arg, path := range tagPaths {
+    val = val.FillPath(path, tagMap[arg])
+  }
+
+  return val, nil
+}
+
+var walkOptions = []cue.Option{
+  cue.Attributes(true),
+  cue.Concrete(false),
+  cue.Definitions(true),
+  cue.Hidden(true),
+  cue.Optional(true),
+  cue.Docs(true),
 }
 
 func listPipelines(val cue.Value,  opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) (error) {
-  var walkOptions = []cue.Option{
-    cue.Attributes(true),
-    cue.Concrete(false),
-    cue.Definitions(true),
-    cue.Hidden(true),
-    cue.Optional(true),
-    cue.Docs(true),
-  }
-
   args := popts.Pipeline
 
   printer := func(v cue.Value) bool {
