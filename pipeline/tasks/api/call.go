@@ -13,6 +13,10 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
+/*  TODO
+    - catch / retry on failed connection
+*/
+
 type Call struct {}
 
 func NewCall(val cue.Value) (flow.Runner, error) {

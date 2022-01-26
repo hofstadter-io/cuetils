@@ -3,6 +3,8 @@ p1: {
   t: { text: "p1" } @task(os.Stdout)
 }
 
+// c1 docs string beforehand
+// a comment outside of the struct
 c1: {
   @pipeline(c1)
   p2: {

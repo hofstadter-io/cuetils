@@ -34,12 +34,6 @@ run: {
         json: j
       }
     }
-
-    "/str": {
-      resp: {
-        status: 204
-      }
-    }
   }
 }
 

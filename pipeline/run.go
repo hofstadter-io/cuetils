@@ -42,12 +42,26 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
       return nil, err
     }
 
-    ps, err := findPipelines(val, opts, popts)
+    var ps []*pipe.Pipeline
+    if popts.List {
+      err = listPipelines(val, opts, popts)
+      if err != nil {
+        return nil, err
+      } 
+
+      continue
+    }
+
+    ps, err = findPipelines(val, opts, popts)
     if err != nil {
       return nil, err
     }
     pipes = append(pipes, ps...)
 	}
+
+  if popts.List {
+    return nil, nil
+  }
 
   if len(pipes) == 0 {
     return nil, fmt.Errorf("no pipelines found")
@@ -81,10 +95,10 @@ func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pipeli
     return nil, nil
   }
 
-  tags := popts.Pipeline
+  args := popts.Pipeline
 
   // does our top-level (file-level) have @pipeline()
-  _, found, keep := hasPipelineAttr(val, tags)
+  _, found, keep := hasPipelineAttr(val, args)
   if keep  {
     // invoke TaskFactory
     p, err := pipe.NewPipeline(val)
@@ -108,7 +122,7 @@ func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pipeli
   for iter.Next() {
     v := iter.Value()
 
-    _, found, keep := hasPipelineAttr(v, tags)
+    _, found, keep := hasPipelineAttr(v, args)
     if keep  {
       p, err := pipe.NewPipeline(v)
       if err != nil {
@@ -134,16 +148,16 @@ func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pipeli
   return pipes, nil
 }
 
-func hasPipelineAttr(val cue.Value, tags[]string) (attr cue.Attribute, found, keep bool) {
+func hasPipelineAttr(val cue.Value, args []string) (attr cue.Attribute, found, keep bool) {
   attrs := val.Attributes(cue.ValueAttr)
 
   for _, attr := range attrs {
     if attr.Name() == "pipeline" {
       // found a pipeline, stop recursion
       found = true
-      // if it matches our tags, create and append
-      keep = matchPipeline(attr, tags)
-      if keep  {
+      // if it matches our args, create and append
+      keep = matchPipeline(attr, args)
+      if keep {
         return attr, true, true
       }
     }
@@ -152,10 +166,10 @@ func hasPipelineAttr(val cue.Value, tags[]string) (attr cue.Attribute, found, ke
   return cue.Attribute{}, found, false
 }
 
-func matchPipeline(attr cue.Attribute, tags []string) (keep bool) {
-  // fmt.Println("matching 1:", attr, tags, len(tags), attr.NumArgs())
-  // if no tags, match pipelines without tags
-  if len(tags) == 0 {
+func matchPipeline(attr cue.Attribute, args []string) (keep bool) {
+  // fmt.Println("matching 1:", attr, args, len(args), attr.NumArgs())
+  // if no args, match pipelines without args
+  if len(args) == 0 {
     if attr.NumArgs() == 0 {
       return true
     }
@@ -174,7 +188,7 @@ func matchPipeline(attr cue.Attribute, tags []string) (keep bool) {
 
   // for now, match any
   // upgrade logic for user later
-  for _, tag := range tags {
+  for _, tag := range args {
     for p := 0; p < attr.NumArgs(); p++ {
       s, err := attr.String(p)
       if err != nil {
@@ -200,4 +214,44 @@ func injectTags(val cue.Value, tags []string) (cue.Value, error) {
     tagMap[fs[0]] =fs[1] 
   }
   return structural.InjectAttrsValue(val, "tag", tagMap)
+}
+
+func listPipelines(val cue.Value,  opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) (error) {
+  var walkOptions = []cue.Option{
+    cue.Attributes(true),
+    cue.Concrete(false),
+    cue.Definitions(true),
+    cue.Hidden(true),
+    cue.Optional(true),
+    cue.Docs(true),
+  }
+
+  args := popts.Pipeline
+
+  printer := func(v cue.Value) bool {
+    attrs := v.Attributes(cue.ValueAttr)
+
+    for _, attr := range attrs {
+      if attr.Name() == "pipeline" {
+        if len(args) == 0 || matchPipeline(attr, args) {
+          fmt.Println(attr)
+          if popts.Docs {
+            docs := v.Doc()
+            s := ""
+            for _, d := range docs {
+              s += d.Text()
+            }
+            fmt.Println(s)
+          }
+        }
+        return false
+      }
+    }
+
+    return true
+  }
+
+  structural.Walk(val, printer, nil, walkOptions...)
+
+  return nil
 }

@@ -4,14 +4,10 @@ Get server working:
 - [x] wired up routes
 - [x] route pipelines
 
-Example Pipeline:
-- Exponential retry as an api.Call wrapper with os.Sleep
-- replace sleep in example with wait for server ready
-- could be tricky, because we need to generate extra tasks after the last one finished, or some conditional to ignore after success
-
 CLI work:
 - list pipelines that can be run
 - enable docs for pipelines to be read/written
+- revisit tags and get them working
 
 --- 
 
@@ -29,6 +25,7 @@ Bookkeeping:
 Exec & Serve
 
 - some way to run in background, and then kill / exit later?
+- write to file for stdio
 
 ---
 
@@ -43,6 +40,13 @@ More...
 - message passing, via chans, websockets, kafka/rabbit
 
 # Ideas
+
+Example Pipeline:
+- Exponential retry as an api.Call wrapper with os.Sleep
+- replace sleep in example with wait for server ready
+- could be tricky, because we need to generate extra tasks after the last one finished, or some conditional to ignore after success
+- api req timeout
+- retry status codes / message
 
 Helpers:
 
