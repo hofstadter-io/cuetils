@@ -13,6 +13,7 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
 	"github.com/hofstadter-io/cuetils/structural"
+	"github.com/hofstadter-io/cuetils/utils"
 )
 
 func Run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]structural.GlobResult, error) {
@@ -234,14 +235,19 @@ func listPipelines(val cue.Value,  opts *flags.RootPflagpole, popts *flags.Pipel
     for _, attr := range attrs {
       if attr.Name() == "pipeline" {
         if len(args) == 0 || matchPipeline(attr, args) {
-          fmt.Println(attr)
           if popts.Docs {
-            docs := v.Doc()
             s := ""
+            docs := v.Doc()
             for _, d := range docs {
               s += d.Text()
             }
-            fmt.Println(s)
+            fmt.Print(s)
+          }
+          if opts.Verbose {
+            s, _ := utils.FormatCue(v)
+            fmt.Printf("%s: %s\n", v.Path(), s)
+          } else {
+            fmt.Println(attr)
           }
         }
         return false
