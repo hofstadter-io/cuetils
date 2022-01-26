@@ -381,6 +381,20 @@ Cli: gen.#HofGenerator & {
 	}]
 
 	Flags: [{
+		Name:    "list"
+		Long:    "list"
+		Short:   "l"
+		Type:    "bool"
+    Default: "false"
+		Help:    "list available pipelines"
+	},{
+		Name:    "docs"
+		Long:    "docs"
+		Short:   "d"
+		Type:    "bool"
+    Default: "false"
+		Help:    "print pipeline docs"
+	},{
 		Name:    "pipeline"
 		Long:    "pipeline"
 		Short:   "p"
