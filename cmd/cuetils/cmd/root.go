@@ -31,6 +31,7 @@ func init() {
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.AllTypeErrors), "type-errors", "E", false, "error when nodes or leafs have type mismatches")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.NodeTypeErrors), "node-type-errors", "N", false, "error when nodes have type mismatches")
 	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.LeafTypeErrors), "leaf-type-errors", "L", false, "error when leafs have type mismatches")
+	RootCmd.PersistentFlags().BoolVarP(&(flags.RootPflags.Verbose), "verbose", "v", false, "verbose printing for some commands")
 }
 
 func RootPersistentPostRun(args []string) (err error) {

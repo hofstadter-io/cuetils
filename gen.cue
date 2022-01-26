@@ -132,6 +132,13 @@ Cli: gen.#HofGenerator & {
 		Type:    "bool"
 		Default: "false"
 		Help:    "error when leafs have type mismatches"
+	},{
+		Name:    "verbose"
+		Long:    "verbose"
+		Short:   "v"
+		Type:    "bool"
+		Default: "false"
+		Help:    "verbose printing for some commands"
 	}]
 
 	//
