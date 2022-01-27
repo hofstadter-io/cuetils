@@ -23,24 +23,34 @@ func (T* Getenv) Run(t *flow.Task, err error) error {
 
 	v := t.Value()
 
-  flds, err := v.Fields()
-  if err != nil {
-    return err
-  }
+  // If a struct, try to fill all fields with matching ENV VAR
+  if v.IncompleteKind() == cue.StructKind {
+    flds, err := v.Fields()
+    if err != nil {
+      return err
+    }
 
-  res := v
-  for flds.Next() {
-    sel := flds.Selector()
+    for flds.Next() {
+      sel := flds.Selector()
+      key := sel.String()
+      val := g_os.Getenv(key)
+      v = v.FillPath(cue.MakePath(sel), val)
+    }
+  } else {
+    // otherwise, try to fill a field
+    p := v.Path().Selectors()
+    sel := p[len(p)-1]
     key := sel.String()
     val := g_os.Getenv(key)
-    res = v.FillPath(cue.MakePath(sel), val)
+    v = v.FillPath(cue.ParsePath(""), val)
   }
+
 
 	attr := v.Attribute("print")
 	err = utils.PrintAttr(attr, v)
 
 	// Use fill to "return" a result to the workflow engine
-	t.Fill(res)
+	t.Fill(v)
 
 	return err
 }
