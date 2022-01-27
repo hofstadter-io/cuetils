@@ -206,7 +206,6 @@ func matchPipeline(attr cue.Attribute, args []string) (keep bool) {
 }
 
 func injectTags(val cue.Value, tags []string) (cue.Value, error) {
-  fmt.Println("injecting:", tags)
   tagMap := make(map[string]string)
   for _, t := range tags {
     fs := strings.SplitN(t, "=", 2)
