@@ -37,6 +37,18 @@ func (T *Serve) Run(t *flow.Task, err error) error {
 	val := t.Value()
   T.Orig = val
 
+  logging := false
+  l := val.LookupPath(cue.ParsePath("logging"))
+  if l.Exists() {
+    if l.Err() != nil {
+      return l.Err()
+    }
+    logging, err = l.Bool()
+    if err != nil {
+      return err
+    }
+  }
+
   // get the port
   p := val.LookupPath(cue.ParsePath("port"))
   if p.Err() != nil {
@@ -51,7 +63,9 @@ func (T *Serve) Run(t *flow.Task, err error) error {
   e := echo.New()
   e.HideBanner = true
   e.Use(middleware.Recover())
-  e.Use(middleware.Logger())
+  if logging {
+    e.Use(middleware.Logger())
+  }
 
   // liveliness and metrics
 	e.GET("/alive", func(c echo.Context) error {
