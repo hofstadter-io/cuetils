@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-  "sync"
-
 	"net/http"
 	"strings"
+  "sync"
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/tools/flow"
@@ -274,6 +273,9 @@ func (T *Serve) fillRespFromValue(val cue.Value, c echo.Context) error {
 
   if ret["json"] != nil {
     return c.JSON(status, ret["json"])
+  } else if ret["html"] != nil {
+    // todo, better type casts
+    return c.HTML(status, ret["html"].(string))
   } else if ret["body"] != nil {
     // todo, better type casts
     return c.String(status, ret["body"].(string))

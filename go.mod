@@ -13,6 +13,7 @@ require (
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/spf13/cobra v1.0.0
 	golang.org/x/text v0.3.7
+	gopkg.in/irc.v3 v3.1.4
 )
 
 require (

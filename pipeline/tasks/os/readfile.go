@@ -60,7 +60,6 @@ func (T* ReadFile) Run(t *flow.Task, err error) error {
     res = v.FillPath(cue.ParsePath("contents"), c)
 
   case cue.BottomKind:
-    fmt.Println("BOTTOM FILE")
     res = v.FillPath(cue.ParsePath("contents"), string(bs))
 
   default:

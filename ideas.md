@@ -1,15 +1,50 @@
 # TODO
 
+Docs...
+
+---
+
+- auth / oauth
+    - [x] twitch  (oauth code)
+- [ ] api calls
+    - [x] update stream title 
+    - [x] twitch (other)
+    - [ ] update go live message
+    - [ ] which of my streamers are live
+- [ ] chat
+    - [ ] twitch-irc 
+
+- [ ] memory store / load
+- [ ] prevent exit when error in handler pipelines
+---
+
 Get server working:
 - [x] wired up routes
 - [x] route pipelines
 
 CLI work:
-- list pipelines that can be run
-- enable docs for pipelines to be read/written
+- [x] list pipelines that can be run
+- [x] enable docs for pipelines to be read/written
+- [x] know what inputs / outputs of a pipeline are
 - revisit tags and get them working
+    - also print
+    - find and return path, unify at top?
 
 --- 
+
+Additional examples:
+- auth / oauth
+    - [ ] twitter
+    - [x] youtube (apikey)
+- [ ] api calls
+    - [ ] twitter
+    - [ ] youtube
+- [ ] chat
+    - [ ] slack
+    - [ ] discord
+
+Additional Tasks:
+- [ ] os.Getwd
 
 Centralized Printing:
 - chan for tasks to write strings to
@@ -78,3 +113,7 @@ https://github.com/lipence/cue/commit/6ed69100ebd62509577826657536172ab46cf257
 
 return final value: https://github.com/cue-lang/cue/pull/1390
 
+
+### streamer
+
+- other social networks / interaction systems

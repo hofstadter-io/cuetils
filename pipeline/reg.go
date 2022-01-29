@@ -4,6 +4,7 @@ import (
 	"github.com/hofstadter-io/cuetils/pipeline/tasks"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/api"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/db"
+	"github.com/hofstadter-io/cuetils/pipeline/tasks/msg"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/os"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/st"
@@ -34,8 +35,11 @@ func init() {
     "api.Serve": api.NewServe,
     "db.Call": db.NewQuery,
 
-    // message bus (rabbit,kafka,cloud,cloud-events)
+    // messaging
+    "msg.IrcClient": msg.NewIrcClient,
 
+    // websockets
+    // message bus (rabbit,kafka,cloud,cloud-events)
     // channels / async
 
   }

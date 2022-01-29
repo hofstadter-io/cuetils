@@ -54,6 +54,8 @@ func (T *Call) Run(t *flow.Task, err error) error {
     isString = true
   }
 
+  // TODO, make response object more interesting
+  // such as status, headers, body vs json
   var resp interface{}
   if isString {
     resp = string(body)
@@ -82,11 +84,15 @@ func buildRequest(val cue.Value) (R *gorequest.SuperAgent, err error) {
 	req := val.Eval()
 	R = gorequest.New()
 
+  R.Method = "GET"
 	method := req.LookupPath(cue.ParsePath("method"))
-	R.Method, err = method.String()
-	if err != nil {
-		return
-	}
+  if method.Exists() {
+    R.Method, err = method.String()
+    if err != nil {
+      return R, err
+    }
+    R.Method = strings.ToUpper(R.Method)
+  }
 
 	host := req.LookupPath(cue.ParsePath("host"))
 	hostStr, err := host.String()

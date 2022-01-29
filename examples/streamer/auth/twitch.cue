@@ -1,5 +1,4 @@
-// This pipeline tests OAuth workflow
-// with the twitch API
+// This pipeline gets an api code with OAuth workflow
 
 import (
   "encoding/json"
@@ -8,77 +7,138 @@ import (
   "github.com/hofstadter-io/cuetils/examples/utils"
 )
 
-@pipeline()
 
-vars: {
-  r: utils.RepoRoot
-  root: r.Out
-  code_fn: "\(vars.root)/examples/streamer/secrets/twitch.code"
-}
+meta: {
+  @pipeline(meta) 
 
-secrets: {
-  env: { 
-    TWITCH_CLIENT_ID: _ @task(os.Getenv)
-    TWITCH_SECRET_KEY: _ @task(os.Getenv)
-  } 
-  cid: env.TWITCH_CLIENT_ID
-  key: env.TWITCH_SECRET_KEY
-}
-
-twitch_cfg: {
-  auth_domain: "https://id.twitch.tv"
-  auth_path: "/oauth2/authorize"
-  auth_url: "\(auth_domain)\(auth_path)"
-  scopes: [
-    "user:read:email",
-  ]
-  auth_query: {
-    response_type: "code"
-    redirect_uri: "http://localhost:2323/callback"
-    state: "testing"
-    scope: strings.Join(scopes,",")
-    client_id: secrets.cid
+  vars: {
+    r: utils.RepoRoot
+    root: r.Out
+    code_fn: "\(vars.root)/examples/streamer/secrets/twitch.code"
+    token_fn: "\(vars.root)/examples/streamer/secrets/twitch.json"
   }
-  query: [for k,v in auth_query { "\(k)=\(v)" }]
 
-  url: "\(auth_url)?" + strings.Join(query,"&")
+  secrets: {
+    env: { 
+      TWITCH_CLIENT_ID: _ @task(os.Getenv)
+      TWITCH_SECRET_KEY: _ @task(os.Getenv)
+    } 
+    cid: env.TWITCH_CLIENT_ID
+    key: env.TWITCH_SECRET_KEY
+  }
+
+  twitch_cfg: {
+    callback: "http://localhost:2323/callback"
+    domain: "https://id.twitch.tv"
+    scopes: [
+      "channel:manage:broadcast",
+      "chat:read",
+      "chat:edit",
+    ]
+    code_path: "/oauth2/authorize"
+    code_query: {
+      response_type: "code"
+      state: "testing"
+      scope: strings.Join(scopes," ")
+      client_id: secrets.cid
+      redirect_uri: callback 
+      force_verify: "true"
+    }
+    cquery: [for k,v in code_query { "\(k)=\(v)" }]
+    code_url: "\(domain)\(code_path)?" + strings.Join(cquery,"&")
+
+    token_path: "/oauth2/token"
+    token_query: {
+      client_id: secrets.cid
+      client_secret: secrets.key
+      grant_type: "authorization_code"
+      redirect_uri: callback 
+    }
+  }
 }
 
-prompt: {
-  @task(os.Stdout)
-  text: """
-  please open the following link in your browser
+// This pipeline will load a saved token
+// for making calls to the Twitch API
+load_token: {
+  @pipeline(load)
 
-  \(twitch_cfg.url)
-
-  you can ctrl-c this script after authorizing twitch
-
-  """
 }
 
-server: {
-  @pipeline(server)
+// This pipeline will run the OAuth workflow
+// go get a new token for the Twitch API
+get_token: {
+  @pipeline(get)
 
-  run: {
-    @task(api.Serve)
-    port: "2323"
-    routes: {
-      "/callback": {
-        @pipeline()
-        req: _
-        code: req.query.code[0]
-        resp: {
-          status: 200
-          body: "code received"
+  cfg: meta
+
+  prompt: {
+    @task(os.Stdout)
+    text: """
+    please open the following link in your browser
+
+    \(cfg.twitch_cfg.code_url)
+
+    you can ctrl-c this script after authorizing twitch
+    """
+  }
+
+  server: {
+    @pipeline(server)
+
+    run: {
+      @task(api.Serve)
+      port: "2323"
+      routes: {
+        "/callback": {
+          @pipeline()
+          req: _
+          code: req.query.code[0]
+          resp: {
+            status: 200
+            html: """
+            <html><body>
+            <h1 style="margin-top:32px">
+              OAuth token saved
+            </h1>
+            </body></html>
+            """
+          }
+          // write auth code to file
+          write_code: {
+            @task(os.WriteFile)
+            filename: "\(cfg.vars.code_fn)"
+            contents: code
+            mode: 0o666
+          } 
+
+          get_token: {
+            @task(api.Call)
+            req: {
+              method: "POST"
+              host: cfg.twitch_cfg.domain
+              path: cfg.twitch_cfg.token_path
+              query: cfg.twitch_cfg.token_query & {
+                "code": code
+              }
+            }
+            resp: string
+          }
+
+          write_token: {
+            @task(os.WriteFile)
+            filename: "\(cfg.vars.token_fn)"
+            contents: get_token.resp
+            mode: 0o666
+          }
         }
-        // write auth code to file
-        write: {
-          @task(os.WriteFile)
-          filename: "\(vars.code_fn)"
-          contents: code
-          mode: 0o666
-        } 
       }
     }
   }
 }
+
+// This pipeline will refresh an existing token
+// if it has not expired
+refresh_token: {
+  @pipeline(refresh)
+}
+
