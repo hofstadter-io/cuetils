@@ -8,9 +8,25 @@ vars: {
   channel: string | *"#dr_verm" @tag(channel)
 }
 
-cfg: {
-  today: "working on a twitch bot in CUEtils pipelines"
-  music: "streaming https://www.youtube.com/watch?v=udGvUx70Q3U"
+links: {
+  github:   "https://github.com/hofstadter-io"
+  hof:      "https://github.com/hofstadter-io/hof"
+  cuetils:  "https://github.com/hofstadter-io/cuetils"
+  neoverm:      "https://github.com/verdverm/neoverm"
+
+}
+
+respHandlers: {
+  "!today":    "working on a twitch bot in CUEtils pipelines"
+  "!music":    "streaming https://www.youtube.com/watch?v=udGvUx70Q3U"
+  "!go-learn": "Checkout my currated links: https://verdverm.com/resources/learning-go"
+  "!github":   links.github 
+  "!hof":      links.hof 
+  "!cuetils":  links.cuetils 
+  "!vim":      links.neoverm
+  "!nvim":     links.neoverm
+  "!neovim":   links.neoverm
+  "!neoverm":  links.neoverm
 }
 
 meta: {
@@ -65,16 +81,22 @@ IRCHandler: {
   pipe?: _
 
   if msg.Command == "PRIVMSG" {
-    cmd: msg.Params[1]
+    msg_cmd: msg.Params[1]
+    parts: strings.Split(msg_cmd, " ")
+    cmd: parts[0]
 
-    [
-      if cmd == "!today" { resp: cfg.today },
-      if cmd == "!music" { resp: cfg.music },
-      if cmd == "!docker" { pipe: IRCHandlers.docker },
-      if strings.HasPrefix(cmd, "!so") { pipe: IRCHandlers.shoutout & { args: cmd } },
+    switch: [
+      if respHandlers[cmd] != _|_ {
+        resp: respHandlers[cmd]
+      }
+      if pipeHandlers[cmd] != _|_ {
+        pipe: pipeHandlers[cmd] & { args: parts }
+      }
 
       { error: "unknown cmd: " + cmd },
-    ][0] 
+    ] 
+
+    switch[0]
   }
 
   if msg.Command == "USEREVENT" {
@@ -82,11 +104,11 @@ IRCHandler: {
   }
 }
 
-IRCHandlers: {
-  docker: {
+pipeHandlers: {
+  "!docker": {
     @pipeline()
 
-    args?: _
+    args?: [...string]
 
     get: {
       @task(os.Exec)
@@ -94,21 +116,40 @@ IRCHandlers: {
       stdout: string  
     }
 
-    resp: get.stdout
+    resp: strings.Replace(get.stdout, "\n", "", -1)
   }
 
-  shoutout: {
+  "!k8s": {
     @pipeline()
 
-    args: string
-    who: strings.TrimPrefix(args, "!so @")
+    args?: [...string]
+
+    get: {
+      @task(os.Exec)
+      cmd: ["kubectl", "get", "pods", "--all-namespaces"]
+      stdout: string  
+    }
+
+    chill: { duration: "4s" } @task(os.Sleep)
+
+    lines: strings.Split(get.stdout, "\n")
+    count: len(lines) - 1
+
+    resp: "there are \(count) pods running in Dr Verm's cluster" 
+  }
+
+  "!so": {
+    // @pipeline()
+
+    args?: [...string]
+    who: args[1] 
 
     get: {
       // call twitch api for info about the user
       // eventually also look up custom data in DB
     }
 
-    resp: "not implemented yet"
+    resp: "you're the best \(who)"
 
   }
 }
