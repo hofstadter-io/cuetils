@@ -1,4 +1,5 @@
 // This pipeline gets an api code with OAuth workflow
+package auth
 
 import (
   "encoding/json"
@@ -7,15 +8,29 @@ import (
   "github.com/hofstadter-io/cuetils/examples/utils"
 )
 
+// This pipeline will load a saved token
+// for making calls to the Twitch API
+load: {
+  @pipeline(load,auth)
+
+  cfg: meta
+
+  files: { 
+    token_txt: { filename: cfg.vars.token_fn } @task(os.ReadFile)
+    token_json: json.Unmarshal(token_txt.contents)
+  } 
+  data: files.token_json
+  token: data.access_token
+}
 
 meta: {
-  @pipeline(meta) 
+  @pipeline(meta,auth) 
 
   vars: {
     r: utils.RepoRoot
     root: r.Out
-    code_fn: "\(vars.root)/examples/streamer/secrets/twitch.code"
-    token_fn: "\(vars.root)/examples/streamer/secrets/twitch.json"
+    code_fn: "\(root)/examples/streamer/secrets/twitch.code"
+    token_fn: "\(root)/examples/streamer/secrets/twitch.json"
   }
 
   secrets: {
@@ -57,17 +72,11 @@ meta: {
   }
 }
 
-// This pipeline will load a saved token
-// for making calls to the Twitch API
-load_token: {
-  @pipeline(load)
-
-}
 
 // This pipeline will run the OAuth workflow
 // go get a new token for the Twitch API
 get_token: {
-  @pipeline(get)
+  @pipeline(get,auth)
 
   cfg: meta
 
@@ -83,7 +92,7 @@ get_token: {
   }
 
   server: {
-    @pipeline(server)
+    @pipeline(server,auth/get)
 
     run: {
       @task(api.Serve)

@@ -11,21 +11,22 @@ import (
   "github.com/hofstadter-io/cuetils/utils"
 )
 
-type Stdout struct {}
+type Stdout struct {
+  Orig cue.Value
+}
 
 func NewStdout(val cue.Value) (flow.Runner, error) {
-  return &Stdout{}, nil
+  return &Stdout{ Orig: val }, nil
 }
 
 func (T* Stdout) Run(t *flow.Task, err error) error {
   bufStdout := bufio.NewWriter(os.Stdout)
   defer bufStdout.Flush()
 
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
+  // fmt.Println(t.Dependencies())
 
 	v := t.Value()
+ //  v := T.Orig
 
   msg := v.LookupPath(cue.ParsePath("text")) 
   if msg.Err() != nil {

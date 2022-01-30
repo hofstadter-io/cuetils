@@ -1,5 +1,6 @@
 // This pipeline listens to the channel chat
 // and does things, hopefully
+package twitch
 
 import "strings"
 
@@ -12,14 +13,13 @@ links: {
   github:   "https://github.com/hofstadter-io"
   hof:      "https://github.com/hofstadter-io/hof"
   cuetils:  "https://github.com/hofstadter-io/cuetils"
-  neoverm:      "https://github.com/verdverm/neoverm"
-
+  neoverm:  "https://github.com/verdverm/neoverm"
+  grasshopper: "https://grasshopper.app/"
 }
 
 respHandlers: {
   "!today":    "working on a twitch bot in CUEtils pipelines"
   "!music":    "streaming https://www.youtube.com/watch?v=udGvUx70Q3U"
-  "!go-learn": "Checkout my currated links: https://verdverm.com/resources/learning-go"
   "!github":   links.github 
   "!hof":      links.hof 
   "!cuetils":  links.cuetils 
@@ -27,6 +27,11 @@ respHandlers: {
   "!nvim":     links.neoverm
   "!neovim":   links.neoverm
   "!neoverm":  links.neoverm
+  "!dox":      "google 'verdverm'"
+
+  "!grasshopper": links.grasshopper 
+  "!learn/code": "Try out the Grasshopper App \(links.grasshopper)"
+  "!learn/go": "Checkout my currated links: https://verdverm.com/resources/learning-go"
 }
 
 meta: {
@@ -130,7 +135,7 @@ pipeHandlers: {
       stdout: string  
     }
 
-    chill: { duration: "4s" } @task(os.Sleep)
+    // chill: { duration: "4s" } @task(os.Sleep)
 
     lines: strings.Split(get.stdout, "\n")
     count: len(lines) - 1
@@ -148,6 +153,7 @@ pipeHandlers: {
       // call twitch api for info about the user
       // eventually also look up custom data in DB
     }
+    // chill: { duration: "4s" } @task(os.Sleep)
 
     resp: "you're the best \(who)"
 

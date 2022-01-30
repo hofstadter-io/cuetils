@@ -1,7 +1,6 @@
 package os
 
 import (
-	"fmt"
 	g_os "os"
 
 	"cuelang.org/go/cue"
@@ -10,18 +9,19 @@ import (
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
-type Getenv struct {}
+type Getenv struct {
+  Orig cue.Value
+}
 
 func NewGetenv(val cue.Value) (flow.Runner, error) {
-  return &Getenv{}, nil
+  return &Getenv{ Orig: val }, nil
 }
 
 func (T* Getenv) Run(t *flow.Task, err error) error {
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
+	// v := T.Orig
+  v := t.Value()
 
-	v := t.Value()
+  // fmt.Println("getenv(deps):", t.Dependencies())
 
   // If a struct, try to fill all fields with matching ENV VAR
   if v.IncompleteKind() == cue.StructKind {
@@ -34,6 +34,7 @@ func (T* Getenv) Run(t *flow.Task, err error) error {
       sel := flds.Selector()
       key := sel.String()
       val := g_os.Getenv(key)
+      // fmt.Println("pdeps:", t.PathDependencies(cue.MakePath(sel)))
       v = v.FillPath(cue.MakePath(sel), val)
     }
   } else {

@@ -52,8 +52,7 @@ func TaskFactory() func (cue.Value) (flow.Runner, error) {
 }
 
 func maybePipeline(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
-  // fmt.Println("pipeline:", attr)
-  //fmt.Println(" -", P.Orig.Path(), val.Path())
+  // fmt.Println("  PIPE:", attr, val.Path())
 
   // how to know this is the root pipeline we are running?
   // if we return a Task for the root pipeline, we won't recurse
@@ -64,6 +63,8 @@ func maybePipeline(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
   if len(val.Path().Selectors()) == 0 {
     return nil, nil
   }
+
+  // fmt.Println("  ++PP:", attr, val.Path())
 
   taskMaker, ok := TaskRegistry["pipeline"]
   if !ok {
@@ -77,7 +78,10 @@ func maybePipeline(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
 }
 
 func maybeTask(val cue.Value, attr cue.Attribute) (flow.Runner, error) {
-  // fmt.Println("task:", attr)
+  if len(val.Path().Selectors()) == 0 {
+    return nil, nil
+  }
+  // fmt.Println("    TASK:", attr, val.Path())
   if attr.NumArgs() == 0 {
     return nil, fmt.Errorf("No type provided to task: %s", attr)
   }

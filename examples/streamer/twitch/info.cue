@@ -1,10 +1,8 @@
 // This pipeline gets an api code with OAuth workflow
+package twitch
 
 import (
-  "encoding/json"
-  "strings"
-
-  "github.com/hofstadter-io/cuetils/examples/utils"
+  "github.com/hofstadter-io/cuetils/examples/streamer/auth"
 )
 
 vars: {
@@ -21,15 +19,18 @@ meta: {
     } 
     cid: env.TWITCH_CLIENT_ID
 
-    r: utils.RepoRoot
-    root: r.Out
-    token_fn: "\(root)/examples/streamer/secrets/twitch.json"
+    // r: utils.RepoRoot
+    // root: r.Out
+    // token_fn: "\(root)/examples/streamer/secrets/twitch.json"
 
-    files: { 
-      token_txt: { filename: token_fn } @task(os.ReadFile)
-      token_json: json.Unmarshal(token_txt.contents)
-    } 
-    token: files.token_json.access_token
+    // files: { 
+    //   token_txt: { filename: token_fn } @task(os.ReadFile)
+    //   token_json: json.Unmarshal(token_txt.contents)
+    // } 
+    // token: files.token_json.access_token
+
+    tLoad: auth.load
+    token: tLoad.token
   }
 
   twitch_req: {
@@ -45,21 +46,17 @@ meta: {
 
 user: {
   @pipeline(user)
-
-  cfg: meta
-
+  ucfg: meta
   get: {
     @task(api.Call)
-    req: cfg.twitch_req & {
+    req: ucfg.twitch_req & {
       path: "/helix/users"
       query: {
         login: vars.user
       }
     }
-  }
-
-  id: get.resp.data[0].id
-  print: { text: id + "\n" } @task(os.Stdout)
+  } 
+  print: { text: get.resp.data[0].id + "\n" } @task(os.Stdout)
 }
 
 title: {
