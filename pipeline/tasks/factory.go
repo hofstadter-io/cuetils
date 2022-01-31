@@ -32,12 +32,12 @@ func TaskFactory() func (cue.Value) (flow.Runner, error) {
       n := attr.Name()
 
       switch n {
-      case "pipeline":
-        t, err := maybePipeline(val, attr)
-        if err != nil {
-          fmt.Println("maybePipeline err:", err)
-        }
-        return t, err 
+      //case "pipeline":
+        //t, err := maybePipeline(val, attr)
+        //if err != nil {
+          //fmt.Println("maybePipeline err:", err)
+        //}
+        //return t, err 
       case "task":
         t, err := maybeTask(val, attr)
         if err != nil {

@@ -10,11 +10,11 @@ import (
 )
 
 type Getenv struct {
-  Orig cue.Value
+  Obj cue.Value
 }
 
 func NewGetenv(val cue.Value) (flow.Runner, error) {
-  return &Getenv{ Orig: val }, nil
+  return &Getenv{}, nil
 }
 
 func (T* Getenv) Run(t *flow.Task, err error) error {

@@ -14,7 +14,7 @@ meta: {
   vars: {
     RR: utils.RepoRoot
     root: RR.Out
-    fn: "\(root)/examples/tmp/data.json"
+    fn: "\(root)/examples/repro/cuetils/data.json"
   }
   secrets: {
     env: { 

@@ -1,7 +1,7 @@
 package use
 
 import (
-  "github.com/hofstadter-io/cuetils/examples/tmp/load"
+  "github.com/hofstadter-io/cuetils/examples/repro/cuetils/load"
 )
 
 vars: {

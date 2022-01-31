@@ -6,13 +6,13 @@ import (
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/db"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/msg"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/os"
-	"github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
+	// "github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
 	"github.com/hofstadter-io/cuetils/pipeline/tasks/st"
 )
 
 func init() {
   tasks.TaskRegistry = tasks.TaskMap {
-    "pipeline": pipe.NewPipeline,
+    // "pipeline": pipe.NewPipeline,
 
     "st.Diff": st.NewDiff,
     "st.Patch": st.NewPatch,
