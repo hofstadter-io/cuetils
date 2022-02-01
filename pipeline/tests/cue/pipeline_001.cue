@@ -20,15 +20,15 @@ tasks: [string]: {
 
 apicall: {
   @pipeline()
-	r1: { #Req: req, Resp: _ } @task(api.Call) @print("#Req",Resp)
-	p1: { #X: r1.Resp, #P: pick } @task(st.Pick) @print(Out)
+	r1: { "req": req, resp: _ } @task(api.Call) @print(req,resp)
+	p1: { "val": r1.resp, "pick": pick } @task(st.Pick) @print(out)
 }
 
 readfile: {
   @pipeline()
-	r: { f: "../tree.json", contents: string } @task(os.ReadFile)
+	r: { filename: "cue/req.json", contents: string } @task(os.ReadFile)
   j: json.Unmarshal(r.contents)
-  p: { #X: j, #P: { tree: cow: _ } } @task(st.Pick)
+  p: { val: j, pick: { query: _ } } @task(st.Pick)
 
-  final: { text: p.Out.tree } @task(os.Stdout)
+  final: { text: p.out } @task(os.Stdout)
 }

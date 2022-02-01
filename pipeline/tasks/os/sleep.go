@@ -1,51 +1,45 @@
 package os
 
 import (
-	"fmt"
 	"time"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 
-	"github.com/hofstadter-io/cuetils/utils"
+  "github.com/hofstadter-io/cuetils/pipeline/context"
 )
+
+func init() {
+  context.Register("os.Sleep", NewSleep)
+}
 
 type Sleep struct {}
 
-func NewSleep(val cue.Value) (flow.Runner, error) {
+func NewSleep(val cue.Value) (context.Runner, error) {
   return &Sleep{}, nil
 }
 
-func (T* Sleep) Run(t *flow.Task, err error) error {
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
+func (T *Sleep) Run(ctx *context.Context) (interface{}, error) {
 
-	v := t.Value()
+	v := ctx.Value
 
+  var D time.Duration
   d := v.LookupPath(cue.ParsePath("duration")) 
   if d.Err() != nil {
-    return err
+    return nil, d.Err()
   } else if d.Exists() {
     ds, err := d.String()
     if err != nil {
-      return err
+      return nil, err
     }
-    D, err := time.ParseDuration(ds)
+    D, err = time.ParseDuration(ds)
     if err != nil {
-      return err
+      return nil, err
     }
-
-    time.Sleep(D)
   }
 
+  time.Sleep(D)
   res := v.FillPath(cue.ParsePath("done"), true)
-	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, v)
 
-	// Use fill to "return" a result to the workflow engine
-	t.Fill(res)
-
-	return err
+	return res, nil
 }
 

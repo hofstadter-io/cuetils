@@ -18,7 +18,6 @@ links: {
 }
 
 respHandlers: {
-  "!today":    "working on a twitch bot in CUEtils pipelines"
   "!music":    "streaming https://www.youtube.com/watch?v=udGvUx70Q3U"
   "!github":   links.github 
   "!hof":      links.hof 
@@ -110,6 +109,16 @@ IRCHandler: {
 }
 
 pipeHandlers: {
+  "!today": {
+    @pipeline()
+    get: {
+      @task(os.Exec)
+      cmd: ["date"]
+      stdout: string  
+    }
+
+    resp: strings.Replace(get.stdout, "\n", "", -1)
+  }
   "!docker": {
     @pipeline()
 

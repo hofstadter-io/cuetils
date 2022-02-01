@@ -7,58 +7,52 @@ import (
 	"sync"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
-	"github.com/hofstadter-io/cuetils/utils"
 	"gopkg.in/irc.v3"
 
-  "github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
+  "github.com/hofstadter-io/cuetils/pipeline/context"
+  "github.com/hofstadter-io/cuetils/pipeline/pipe"
+	"github.com/hofstadter-io/cuetils/utils"
 )
 
-type IrcClient struct {
-  sync.Mutex
-  Orig cue.Value
+func init() {
+  context.Register("msg.IrcClient", NewIrcClient)
 }
 
-func NewIrcClient(val cue.Value) (flow.Runner, error) {
-  return &IrcClient{
-    Orig: val,
-  }, nil
+type IrcClient struct{}
+
+func NewIrcClient(val cue.Value) (context.Runner, error) {
+  return &IrcClient{}, nil
 }
 
-func (T *IrcClient) Run(t *flow.Task, err error) error {
-  fmt.Println("Running IRC Client")
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
+func (T *IrcClient) Run(ctx *context.Context) (interface{}, error) {
 
-	val := t.Value()
-  T.Orig = val
+	val := ctx.Value
 
   config, err := buildIrcConfig(val)
 	if err != nil {
     fmt.Println("irc: buildConfig err:", err)
-    return err	
+    return nil, err	
 	}
 
-  handler, err := buildIrcHandler(val)
+  handler, err := buildIrcHandler(ctx, val)
 	if err != nil {
     fmt.Println("irc: buildHandler err:", err)
-    return err	
+    return nil, err	
 	}
 
   config.Handler = handler
 
   h := val.LookupPath(cue.ParsePath("host"))
   if h.Err() != nil {
-    return h.Err()
+    return nil, h.Err()
   }
   host, err := h.String()
   if err != nil {
-    return err
+    return nil, err
   }
 	conn, err := net.Dial("tcp", host)
 	if err != nil {
-    return err	
+    return nil, err	
 	}
 
 	// Create the client
@@ -81,7 +75,7 @@ func (T *IrcClient) Run(t *flow.Task, err error) error {
 
   wg.Wait()
   fmt.Println("ending", err)
-  return err
+  return nil, err
 }
 
 func buildIrcConfig(val cue.Value) (irc.ClientConfig, error) {
@@ -110,7 +104,7 @@ func buildIrcConfig(val cue.Value) (irc.ClientConfig, error) {
   return config, nil
 }
 
-func buildIrcHandler(val cue.Value) (irc.HandlerFunc, error) {
+func buildIrcHandler(ct_ctx *context.Context, val cue.Value) (irc.HandlerFunc, error) {
   fmt.Println("Building IRC handler:")
   ctx := val.Context()
 
@@ -233,20 +227,19 @@ func buildIrcHandler(val cue.Value) (irc.HandlerFunc, error) {
       v := ctx.CompileString("{...}")
       v = v.Unify(pipeV) 
 
-      p, err := pipe.NewPipeline(v)
+      p, err := pipe.NewPipeline(ct_ctx, v)
       if err != nil {
         fmt.Println("Error(pipe/new):", err)
         return
       }
 
-      np, _ := p.(*pipe.Pipeline)
-      err = np.Start()
+      err = p.Start()
       if err != nil {
         fmt.Println("Error(pipe/run):", err)
         return
       }
 
-      rV := np.Final.LookupPath(cue.ParsePath("resp"))
+      rV := p.Final.LookupPath(cue.ParsePath("resp"))
       if !rV.Exists() {
         fmt.Println("Error(pipe/resp): does not exist")
         return 

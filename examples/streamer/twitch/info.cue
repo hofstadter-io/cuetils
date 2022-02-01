@@ -2,13 +2,13 @@
 package twitch
 
 import (
+  "encoding/json"
   "github.com/hofstadter-io/cuetils/examples/streamer/auth"
 )
 
 vars: {
   title: string | *"" @tag(title)
   user: string | *"dr_verm" @tag(user)
-  user_id: string @tag(user_id)
 }
 
 meta: {
@@ -18,16 +18,6 @@ meta: {
       TWITCH_CLIENT_ID: _ @task(os.Getenv)
     } 
     cid: env.TWITCH_CLIENT_ID
-
-    // r: utils.RepoRoot
-    // root: r.Out
-    // token_fn: "\(root)/examples/streamer/secrets/twitch.json"
-
-    // files: { 
-    //   token_txt: { filename: token_fn } @task(os.ReadFile)
-    //   token_json: json.Unmarshal(token_txt.contents)
-    // } 
-    // token: files.token_json.access_token
 
     tLoad: auth.load
     token: tLoad.token
@@ -46,23 +36,64 @@ meta: {
 
 user: {
   @pipeline(user)
-  ucfg: meta
+  cfg: meta
   get: {
+    username: _ | *vars.user
     @task(api.Call)
-    req: ucfg.twitch_req & {
+    req: cfg.twitch_req & {
       path: "/helix/users"
       query: {
-        login: vars.user
+        login: username
       }
     }
+    resp: _
+    user: resp.data[0]
   } 
-  print: { text: get.resp.data[0].id + "\n" } @task(os.Stdout)
+  out: get.user
+  str: json.Indent(json.Marshal(out), "", "  ")
+  quiet: bool | *false
+  if !quiet {
+    print: { text: str + "\n" } @task(os.Stdout)
+  }
+}
+
+channel: {
+  @pipeline(channel)
+
+  cfg: meta
+  u: user & { 
+    "cfg": cfg
+    quiet: true
+  }
+  ug: u.out
+  get: {
+    @task(api.Call)
+    req: cfg.twitch_req & {
+      path: "/helix/channels"
+      query: {
+        broadcaster_id: ug.id
+      }
+    }
+    resp: _
+    channel: resp.data[0]
+  }
+  out: get.channel
+  str: json.Indent(json.Marshal(out), "", "  ")
+  quiet: bool | *false
+  if !quiet {
+    print: { text: str + "\n" } @task(os.Stdout)
+  }
 }
 
 title: {
   @pipeline(title)
 
   cfg: meta
+  u: user & { 
+    "cfg": cfg
+    quiet: true
+  }
+  ug: u.out
 
   // update stream title
   if vars.title != "" {
@@ -73,22 +104,8 @@ title: {
         method: "PATCH"
         path: "/helix/channels"
         query: {
-          broadcaster_id: vars.user_id
+          broadcaster_id: ug.id
           title: vars.title
-        }
-      }
-    }
-    print: { text: get.resp } @task(os.Stdout)
-  }
-
-  // get and print current title
-  if vars.title == "" {
-    get: {
-      @task(api.Call)
-      req: cfg.twitch_req & {
-        path: "/helix/channels"
-        query: {
-          broadcaster_id: vars.user_id
         }
       }
     }

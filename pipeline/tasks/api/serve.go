@@ -9,53 +9,51 @@ import (
   "sync"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
   "github.com/labstack/echo-contrib/prometheus"
 
-  "github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
+  "github.com/hofstadter-io/cuetils/pipeline/context"
+  "github.com/hofstadter-io/cuetils/pipeline/pipe"
 )
+
+func init() {
+  context.Register("api.Serve", NewServe)
+}
 
 type Serve struct {
   sync.Mutex
-  Orig cue.Value
 }
 
-func NewServe(val cue.Value) (flow.Runner, error) {
-  return &Serve{
-    Orig: val,
-  }, nil
+func NewServe(val cue.Value) (context.Runner, error) {
+  return &Serve{}, nil
 }
 
-func (T *Serve) Run(t *flow.Task, err error) error {
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
+func (T *Serve) Run(ctx *context.Context) (interface{}, error) {
+  var err error
 
-	val := t.Value()
-  T.Orig = val
+  val := ctx.Value
 
   logging := false
   l := val.LookupPath(cue.ParsePath("logging"))
   if l.Exists() {
     if l.Err() != nil {
-      return l.Err()
+      return nil, l.Err()
     }
     logging, err = l.Bool()
     if err != nil {
-      return err
+      return nil, err
     }
   }
 
   // get the port
   p := val.LookupPath(cue.ParsePath("port"))
   if p.Err() != nil {
-    return p.Err()
+    return nil, p.Err()
   }
   port, err := p.String()
   if err != nil {
-    return err
+    return nil, err
   }
 
   // create server
@@ -80,7 +78,7 @@ func (T *Serve) Run(t *flow.Task, err error) error {
   routes := val.LookupPath(cue.ParsePath("routes"))
   iter, err := routes.Fields()
   if err != nil {
-    return err
+    return nil, err
   }
 
   for iter.Next() {
@@ -89,9 +87,9 @@ func (T *Serve) Run(t *flow.Task, err error) error {
 
     // fmt.Println("route:", label)
 
-    err := T.routeFromValue(label, route, e)
+    err := T.routeFromValue(label, route, e, ctx)
     if err != nil {
-      return err
+      return nil, err
     }
   }
 
@@ -108,7 +106,6 @@ func (T *Serve) Run(t *flow.Task, err error) error {
   // run the server
 	e.Logger.Fatal(e.Start(":" + port))
 
-
   fmt.Println("SERVER EXITED")
 
   // - pull apart server value
@@ -122,10 +119,10 @@ func (T *Serve) Run(t *flow.Task, err error) error {
 
 
   */
-	return err
+	return nil, err
 }
 
-func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo) (error) {
+func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo, ctx *context.Context) (error) {
   path = strings.Replace(path, "\"", "", -1)
   // fmt.Println(path + ":", route)
 
@@ -161,18 +158,17 @@ func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo) (erro
     }
 
     if isPipe {
-      p, err := pipe.NewPipeline(tmp)
+      p, err := pipe.NewPipeline(ctx, tmp)
       if err != nil {
         return err
       }
 
-      np, _ := p.(*pipe.Pipeline)
-      err = np.Start()
+      err = p.Start()
       if err != nil {
         return err
       }
 
-      tmp = np.Final
+      tmp = p.Final
     }
 
     resp := tmp.LookupPath(cue.ParsePath("resp"))
@@ -180,7 +176,12 @@ func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo) (erro
       return resp.Err()
     }
 
-    return T.fillRespFromValue(resp, c)
+    err = T.fillRespFromValue(resp, c)
+    if err != nil {
+      return err
+    }
+
+    return nil
   }
 
   // figure out route method(s): GET, POST, et al

@@ -1,7 +1,7 @@
 import "strings"
 
 tasks: {
-  @pipeline(stdin)
-  input: { #Msg: "enter text: " } @task(os/stdin)
-  final: { #O: strings.ToUpper(input.Contents) } @task(os/stdout)
+  @pipeline()
+  input: { msg: "enter text: " } @task(os.Stdin)
+  final: { text: strings.ToUpper(input.contents) } @task(os.Stdout)
 }

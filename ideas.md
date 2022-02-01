@@ -2,6 +2,14 @@
 
 Docs...
 
+rename pipeline -> run,dag
+
+---
+
+Build other things cuetils/run
+
+- bookmarks and hn upvotes
+
 ---
 
 - auth / oauth
@@ -11,11 +19,12 @@ Docs...
     - [x] twitch (other)
     - [ ] update go live message
     - [ ] which of my streamers are live
-- [ ] chat
-    - [ ] twitch-irc 
+- [x] chat
+    - [x] twitch-irc 
 
 - [ ] memory store / load
 - [ ] prevent exit when error in handler pipelines
+- [ ] api.GraphQL but probably better as a wrapper around api.Call
 ---
 
 Get server working:

@@ -4,30 +4,28 @@ import (
 	g_os "os"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 
-	"github.com/hofstadter-io/cuetils/utils"
+  "github.com/hofstadter-io/cuetils/pipeline/context"
 )
 
-type Getenv struct {
-  Obj cue.Value
+func init() {
+  context.Register("os.Getenv", NewGetenv)
 }
 
-func NewGetenv(val cue.Value) (flow.Runner, error) {
+type Getenv struct {}
+
+func NewGetenv(val cue.Value) (context.Runner, error) {
   return &Getenv{}, nil
 }
 
-func (T* Getenv) Run(t *flow.Task, err error) error {
-	// v := T.Orig
-  v := t.Value()
-
-  // fmt.Println("getenv(deps):", t.Dependencies())
+func (T *Getenv) Run(ctx *context.Context) (interface{}, error) {
+  v := ctx.Value
 
   // If a struct, try to fill all fields with matching ENV VAR
   if v.IncompleteKind() == cue.StructKind {
     flds, err := v.Fields()
     if err != nil {
-      return err
+      return nil, err
     }
 
     for flds.Next() {
@@ -46,12 +44,5 @@ func (T* Getenv) Run(t *flow.Task, err error) error {
     v = v.FillPath(cue.ParsePath(""), val)
   }
 
-
-	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, v)
-
-	// Use fill to "return" a result to the workflow engine
-	t.Fill(v)
-
-	return err
+	return v, nil
 }

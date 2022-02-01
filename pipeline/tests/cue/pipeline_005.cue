@@ -1,6 +1,6 @@
 p1: {
   @pipeline(p1)
-  t: { #O: "p1" } @task(os.Stdout)
+  t: { text: "p1" } @task(os.Stdout)
 }
 
 c1: {

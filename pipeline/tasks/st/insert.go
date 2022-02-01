@@ -1,46 +1,34 @@
 package st
 
 import (
-	"fmt"
-
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 
+	"github.com/hofstadter-io/cuetils/pipeline/context"
 	"github.com/hofstadter-io/cuetils/structural"
-	"github.com/hofstadter-io/cuetils/utils"
 )
+
+func init() {
+  context.Register("st.Insert", NewInsert)
+}
 
 type Insert struct {}
 
-func NewInsert(val cue.Value) (flow.Runner, error) {
+func NewInsert(val cue.Value) (context.Runner, error) {
   return &Insert{}, nil
 }
 
 // Tasks must implement a Run func, this is where we execute our task
-func (M *Insert) Run(t *flow.Task, err error) error {
+func (T *Insert) Run(ctx *context.Context) (interface{}, error) {
 
-	if err != nil {
-		fmt.Println("Dep error", err)
-		// should we return?
-	}
-
-	v := t.Value()
+	v := ctx.Value
 
 	x := v.LookupPath(cue.ParsePath("val"))
-	ins := v.LookupPath(cue.ParsePath("ins"))
+	ins := v.LookupPath(cue.ParsePath("insert"))
 
 	r, err := structural.InsertValue(ins, x, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	res := v.FillPath(cue.ParsePath("out"), r)
-
-	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, res)
-
-	// Use fill to "return" a result to the workflow engine
-	t.Fill(res)
-
-	return err
+	return v.FillPath(cue.ParsePath("out"), r), nil
 }

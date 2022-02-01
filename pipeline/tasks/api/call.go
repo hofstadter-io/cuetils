@@ -7,47 +7,45 @@ import (
 	"time"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
-
-	"github.com/hofstadter-io/cuetils/utils"
 	"github.com/parnurzeal/gorequest"
+
+	"github.com/hofstadter-io/cuetils/pipeline/context"
 )
 
 /*  TODO
     - catch / retry on failed connection
 */
 
+func init() {
+  context.Register("api.Call", NewCall)
+}
+
 type Call struct {}
 
-func NewCall(val cue.Value) (flow.Runner, error) {
+func NewCall(val cue.Value) (context.Runner, error) {
   return &Call{}, nil
 }
 
-func (T *Call) Run(t *flow.Task, err error) error {
-  // fmt.Println("beg: API call")
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
-
-	val := t.Value()
+func (T *Call) Run(ctx *context.Context) (interface{}, error) {
+  val := ctx.Value
 
 	req := val.LookupPath(cue.ParsePath("req"))
 
 	R, err := buildRequest(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	actual, err := makeRequest(R)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
   // TODO, build resp cue.Value from http.Response
 
 	body, err := io.ReadAll(actual.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
   var isString bool
@@ -69,13 +67,8 @@ func (T *Call) Run(t *flow.Task, err error) error {
 	// Use fill to "return" a result to the workflow engine
 	res := val.FillPath(cue.ParsePath("resp"), resp)
 
-	attr := val.Attribute("print")
-	err = utils.PrintAttr(attr, res)
-
-	t.Fill(res)
-
   // fmt.Println("end: API call")
-	return err
+	return res, nil
 }
 
 /********* old *********/

@@ -8,14 +8,12 @@ print("hallo chat!")
 py: {
   @pipeline()
   f: {
+    @task(os.WriteFile)
     filename: "in.py"
     contents: code
   }
   r: {
     @task(os.Exec)
-    cmds: [
-      "base",
-      "-c"
-    ]
+    cmds: ["bash", "-c", "in.py"]
   }
 }

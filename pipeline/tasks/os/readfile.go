@@ -5,40 +5,34 @@ import (
   g_os "os"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 
-  "github.com/hofstadter-io/cuetils/utils"
+  "github.com/hofstadter-io/cuetils/pipeline/context"
 )
 
-type ReadFile struct {
-  // might need F to be an object the helps us to
-  // understand how to load the contents back in
-  // such as a string, bytes, or a cue struct
-  F cue.Value // the filename as a cue value 
-  C cue.Value // the file contents
+func init() {
+  context.Register("os.ReadFile", NewReadFile)
 }
 
-func NewReadFile(val cue.Value) (flow.Runner, error) {
+type ReadFile struct {}
+
+func NewReadFile(val cue.Value) (context.Runner, error) {
   return &ReadFile{}, nil
 }
 
-func (T* ReadFile) Run(t *flow.Task, err error) error {
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
+func (T *ReadFile) Run(ctx *context.Context) (interface{}, error) {
 
-	v := t.Value()
+	v := ctx.Value
 
 	f := v.LookupPath(cue.ParsePath("filename"))
 
   fn, err := f.String()
   if err != nil {
-    return err
+    return nil, err
   }
 
   bs, err := g_os.ReadFile(fn)
   if err != nil {
-    return err
+    return nil, err
   }
 
   // switch on c's type to fill appropriately
@@ -55,7 +49,7 @@ func (T* ReadFile) Run(t *flow.Task, err error) error {
     ctx := v.Context()
     c := ctx.CompileBytes(bs)
     if c.Err() != nil {
-      return c.Err() 
+      return nil, c.Err() 
     }
     res = v.FillPath(cue.ParsePath("contents"), c)
 
@@ -63,15 +57,8 @@ func (T* ReadFile) Run(t *flow.Task, err error) error {
     res = v.FillPath(cue.ParsePath("contents"), string(bs))
 
   default:
-    return fmt.Errorf("Unsupported Content type in ReadFile task: %q", k)
+    return nil, fmt.Errorf("Unsupported Content type in ReadFile task: %q", k)
   }
 
-
-
-	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, res)
-
-	// Use fill to "return" a result to the workflow engine
-	t.Fill(res)
-	return err
+	return res, nil
 }

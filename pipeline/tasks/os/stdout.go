@@ -3,34 +3,31 @@ package os
 import (
   "bufio"
   "fmt"
-  "os"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 
-  "github.com/hofstadter-io/cuetils/utils"
+  "github.com/hofstadter-io/cuetils/pipeline/context"
 )
 
-type Stdout struct {
-  Orig cue.Value
+func init() {
+  context.Register("os.Stdout", NewStdout)
 }
 
-func NewStdout(val cue.Value) (flow.Runner, error) {
-  return &Stdout{ Orig: val }, nil
+type Stdout struct {}
+
+func NewStdout(val cue.Value) (context.Runner, error) {
+  return &Stdout{}, nil
 }
 
-func (T* Stdout) Run(t *flow.Task, err error) error {
-  bufStdout := bufio.NewWriter(os.Stdout)
+func (T *Stdout) Run(ctx *context.Context) (interface{}, error) {
+  bufStdout := bufio.NewWriter(ctx.Stdout)
   defer bufStdout.Flush()
 
-  // fmt.Println(t.Dependencies())
-
-	v := t.Value()
- //  v := T.Orig
+  v := ctx.Value
 
   msg := v.LookupPath(cue.ParsePath("text")) 
   if msg.Err() != nil {
-    return msg.Err() 
+    return nil, msg.Err() 
   } else if msg.Exists() {
     // print strings directly to remove quotes
     if m, err := msg.String(); err == nil {
@@ -41,11 +38,8 @@ func (T* Stdout) Run(t *flow.Task, err error) error {
 
   } else {
     err := fmt.Errorf("unknown msg:", msg)
-    return err
+    return nil, err
   }
 
-	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, v)
-
-	return err
+	return nil, nil
 }

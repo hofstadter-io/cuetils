@@ -1,7 +1,7 @@
 package use
 
 import (
-  "github.com/hofstadter-io/cuetils/examples/repro/cuetils/load"
+  "github.com/hofstadter-io/cuetils/pipeline/tests/repro/cuetils/load"
 )
 
 vars: {

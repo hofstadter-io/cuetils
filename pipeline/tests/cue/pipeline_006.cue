@@ -1,10 +1,10 @@
 p1: {
   @pipeline(p1)
-  t: { #O: "p1" } @task(os/stdout)
+  t: { text: "p1" } @task(os.Stdout)
 }
 
 p2: {
   @pipeline(p2)
-  t: { #O: "p2" } @task(os/stdout)
+  t: { text: "p2" } @task(os.Stdout)
   p: p1
 }

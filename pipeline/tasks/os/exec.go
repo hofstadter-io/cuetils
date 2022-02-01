@@ -9,49 +9,48 @@ import (
   "strings"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 
-	"github.com/hofstadter-io/cuetils/utils"
+  "github.com/hofstadter-io/cuetils/pipeline/context"
 )
+
+func init() {
+  context.Register("os.Exec", NewExec)
+}
 
 type Exec struct {}
 
-func NewExec(val cue.Value) (flow.Runner, error) {
+func NewExec(val cue.Value) (context.Runner, error) {
   return &Exec{}, nil
 }
 
-func (T* Exec) Run(t *flow.Task, err error) error {
+func (T *Exec) Run(ctx *context.Context) (interface{}, error) {
 
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
-
-	v := t.Value()
+	v := ctx.Value
 
   // get and create command
   cmds, err := extractCmd(v)
   if err != nil {
-    return err
+    return nil, err
   }
   cmd := exec.Command(cmds[0], cmds[1:]...)
 
   // get dir / env for command
   dir, err := extractDir(v)
   if err != nil {
-    return err
+    return nil, err
   }
   cmd.Dir = dir
 
   env, err := extractEnv(v)
   if err != nil {
-    return err
+    return nil, err
   }
   cmd.Env = env
 
   // setup i/o for command
   stdin, stdout, stderr, err := extractIO(v)
   if err != nil {
-    return err
+    return nil, err
   }
 
   if stdin != nil {
@@ -77,19 +76,16 @@ func (T* Exec) Run(t *flow.Task, err error) error {
   //
   v, err = fillIO(v, stdout, stderr)
   if err != nil {
-    return err
+    return nil, err
   }
 
   // fill exit code / successful
   v = v.FillPath(cue.ParsePath("exitcode"), cmd.ProcessState.ExitCode())
   v = v.FillPath(cue.ParsePath("success"), cmd.ProcessState.Success())
 
-	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, v)
+  // (TODO): check for user's abort mode preference
 
-	t.Fill(v)
-
-	return err
+	return v, nil
 }
 
 func extractCmd(ex cue.Value) ([]string, error) {

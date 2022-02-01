@@ -1,8 +1,9 @@
 package pipeline
 
 import (
-	// "context"
+	go_ctx "context"
 	"fmt"
+	"os"
 	"strings"
 
 	// "time"
@@ -11,15 +12,24 @@ import (
 	"cuelang.org/go/cue/cuecontext"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
-	"github.com/hofstadter-io/cuetils/pipeline/tasks/pipe"
+	"github.com/hofstadter-io/cuetils/pipeline/context"
+	_ "github.com/hofstadter-io/cuetils/pipeline/tasks" // ensure tasks register
+	"github.com/hofstadter-io/cuetils/pipeline/pipe"
 	"github.com/hofstadter-io/cuetils/structural"
 	"github.com/hofstadter-io/cuetils/utils"
 )
+
+/*
+Input is to rigid
+- reads from disk (can we workaround upstream?)
+-
+*/
 
 func Run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]structural.GlobResult, error) {
 	return run(globs, opts, popts)
 }
 
+// refactor out single/multi
 func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]structural.GlobResult, error) {
 	ctx := cuecontext.New()
 
@@ -29,13 +39,25 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
 		return nil, fmt.Errorf("Error: %s", s)
 	}
 	if len(ins) == 0 {
-		return nil, fmt.Errorf("no inputs found")
+		return nil, fmt.Errorf("no inputs found", '\n')
 	}
+    
+  // sharedCtx := buildSharedContext
 
-	// find  pipelines
+	// (refactor/pipe/many) find  pipelines
   pipes := []*pipe.Pipeline{}
 	for _, in := range ins {
+
+    // (refactor/pipe/solo)
     val := in.Value
+
+    // taskCtx, err := buildTaskContext(sharedContex, val, opts, popts)
+
+    // (temp), give each own context (created in here), but like ^^^
+    taskCtx, err := buildTaskContext(val, opts, popts)
+    if err != nil {
+      return nil, err
+    }
 
     // this might be buggy?
     val, err = injectTags(val, popts.Tags)
@@ -53,7 +75,7 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
       continue
     }
 
-    ps, err = findPipelines(val, opts, popts)
+    ps, err = findPipelines(taskCtx, val, opts, popts)
     if err != nil {
       return nil, err
     }
@@ -85,7 +107,7 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
 // maybe this becomes recursive so we can find
 // nested pipelines, but not recurse when we find one
 // only recurse when we have something which is not a pipeline or task
-func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]*pipe.Pipeline, error) {
+func findPipelines(ctx *context.Context, val cue.Value, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]*pipe.Pipeline, error) {
   pipes := []*pipe.Pipeline{}
 
   // TODO, look for lists?
@@ -102,12 +124,11 @@ func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pipeli
   _, found, keep := hasPipelineAttr(val, args)
   if keep  {
     // invoke TaskFactory
-    p, err := pipe.NewPipeline(val)
+    p, err := pipe.NewPipeline(ctx, val)
     if err != nil {
       return pipes, err
     }
-    P, _ := p.(*pipe.Pipeline)
-    pipes = append(pipes, P)
+    pipes = append(pipes, p)
   }
 
   if found {
@@ -125,12 +146,11 @@ func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pipeli
 
     _, found, keep := hasPipelineAttr(v, args)
     if keep  {
-      p, err := pipe.NewPipeline(v)
+      p, err := pipe.NewPipeline(ctx, v)
       if err != nil {
         return pipes, err
       }
-      P, _ := p.(*pipe.Pipeline)
-      pipes = append(pipes, P)
+      pipes = append(pipes, p)
     }
 
     // break recursion if pipeline found
@@ -139,7 +159,7 @@ func findPipelines(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pipeli
     }
 
     // recurse to search for more pipelines
-    ps, err := findPipelines(v, opts, popts)
+    ps, err := findPipelines(ctx, v, opts, popts)
     if err != nil {
       return pipes, nil 
     }
@@ -294,4 +314,16 @@ func listPipelines(val cue.Value,  opts *flags.RootPflagpole, popts *flags.Pipel
   structural.Walk(val, printer, nil, walkOptions...)
 
   return nil
+}
+
+func buildTaskContext(val cue.Value, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) (*context.Context, error) {
+  // lookup the secret label in val
+  // and build a filter write for stdout / stderr
+  c := &context.Context{
+    Stdin: os.Stdin,
+    Stdout: os.Stdout,
+    Stderr: os.Stderr,
+    Context: go_ctx.Background(),
+  }
+  return c, nil
 }

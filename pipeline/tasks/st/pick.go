@@ -1,46 +1,34 @@
 package st
 
 import (
-	"fmt"
-
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 
+	"github.com/hofstadter-io/cuetils/pipeline/context"
 	"github.com/hofstadter-io/cuetils/structural"
-	"github.com/hofstadter-io/cuetils/utils"
 )
+
+func init() {
+  context.Register("st.Pick", NewPick)
+}
 
 type Pick struct {}
 
-func NewPick(val cue.Value) (flow.Runner, error) {
+func NewPick(val cue.Value) (context.Runner, error) {
   return &Pick{}, nil
 }
 
 // Tasks must implement a Run func, this is where we execute our task
-func (P *Pick) Run(t *flow.Task, err error) error {
+func (T *Pick) Run(ctx *context.Context) (interface{}, error) {
 
-	if err != nil {
-		fmt.Println("Dep error", err)
-		// should we return?
-	}
-
-	v := t.Value()
+	v := ctx.Value
 
 	x := v.LookupPath(cue.ParsePath("val"))
 	p := v.LookupPath(cue.ParsePath("pick"))
 
 	r, err := structural.PickValue(p, x, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	res := v.FillPath(cue.ParsePath("out"), r)
-
-	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, res)
-
-	// Use fill to "return" a result to the workflow engine
-	t.Fill(res)
-
-	return err
+	return v.FillPath(cue.ParsePath("out"), r), nil
 }

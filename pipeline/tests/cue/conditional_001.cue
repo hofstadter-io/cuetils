@@ -10,7 +10,7 @@ apicall: {
 }
 
 main: {
-  @pipeline(main)
+  @pipeline()
 
   start: { text: "apicalling" } @task(os.Stdout)
 

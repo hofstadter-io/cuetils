@@ -4,37 +4,30 @@ import (
 	"fmt"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/tools/flow"
 
-	"github.com/hofstadter-io/cuetils/utils"
+  "github.com/hofstadter-io/cuetils/pipeline/context"
 )
 
-type Query struct{}
-
-func NewQuery(val cue.Value) (flow.Runner, error) {
-	return &Query{}, nil
+func init() {
+  context.Register("db.Call", NewCall)
 }
 
-func (T *Query) Run(t *flow.Task, err error) error {
-	if err != nil {
-		fmt.Println("Dep error", err)
-	}
+type Call struct {}
 
-	v := t.Value()
+func NewCall(val cue.Value) (context.Runner, error) {
+  return &Call{}, nil
+}
+
+func (T *Call) Run(ctx *context.Context) (interface{}, error) {
+
+	v := ctx.Value
 
   out, err := handleQuery(v)
   if err != nil {
-    return err
+    return nil, err
   }
 
-	v = v.FillPath(cue.ParsePath("results"), out)
-
-	attr := v.Attribute("print")
-	err = utils.PrintAttr(attr, v)
-
-	t.Fill(v)
-
-	return err
+	return v.FillPath(cue.ParsePath("results"), out), nil
 }
 
 func handleQuery(val cue.Value) (interface{}, error) {
