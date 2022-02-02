@@ -1,4 +1,4 @@
-@pipeline()
+@flow()
 
 config: {
   port: "2323"

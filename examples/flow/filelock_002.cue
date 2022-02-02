@@ -1,4 +1,4 @@
-@pipeline()
+@flow()
 
 beg: {
   @task(os.FileLock)

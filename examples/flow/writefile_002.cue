@@ -1,9 +1,9 @@
 import (
-  "github.com/hofstadter-io/cuetils/pipeline/tasks/os"
+  "github.com/hofstadter-io/cuetils/flow/tasks/os"
 )
 
 tasks: {
-  @pipeline(test)
+  @flow(test)
   words: """
   hello world
   hallo chat!

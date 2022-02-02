@@ -1,4 +1,4 @@
-@pipeline()
+@flow()
 
 run: {
   @task(os.Exec)

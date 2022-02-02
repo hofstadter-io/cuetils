@@ -17,7 +17,7 @@ tasks: [string]: {
 }
 
 tasks: {
-  @pipeline()
+  @flow()
   In: { 
     "req": req
     "p": pick

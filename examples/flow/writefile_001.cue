@@ -1,5 +1,5 @@
 tasks: {
-  @pipeline(test)
+  @flow(test)
   words: """
   hello world
   hallo chat!

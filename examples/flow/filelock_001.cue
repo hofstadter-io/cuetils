@@ -1,4 +1,4 @@
-@pipeline()
+@flow()
 
 lock: {
   @task(os.FileLock)

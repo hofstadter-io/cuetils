@@ -1,4 +1,4 @@
-@pipeline()
+@flow()
 
 tQ: #"""
 CREATE TABLE `userinfo` (

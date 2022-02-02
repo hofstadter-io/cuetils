@@ -1,6 +1,6 @@
 import "encoding/json"
 
-@pipeline()
+@flow()
 
 config: {
   port: "2323"
@@ -25,7 +25,7 @@ run: {
       resp: json: req.query.cow
     }
     "/pipe": {
-      @pipeline()
+      @flow()
       req: _
       r: { filename: req.query.filename[0], contents: string } @task(os.ReadFile)
       j: json.Unmarshal(r.contents)

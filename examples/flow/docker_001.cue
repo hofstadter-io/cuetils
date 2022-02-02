@@ -6,7 +6,7 @@ print("hallo chat!")
 """#
 
 py: {
-  @pipeline()
+  @flow()
   f: {
     @task(os.WriteFile)
     filename: "in.py"

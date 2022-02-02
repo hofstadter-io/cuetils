@@ -1,7 +1,7 @@
 import "encoding/json"
 
 apicall: {
-  @pipeline(apicall)
+  @flow(apicall)
   In: string
 	r: { filename: In, contents: string } @task(os.ReadFile)
   j: json.Unmarshal(r.contents)
@@ -10,7 +10,7 @@ apicall: {
 }
 
 main: {
-  @pipeline(main)
+  @flow(main)
 
   start: { text: "apicalling\n" } @task(os.Stdout)
 

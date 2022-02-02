@@ -9,7 +9,7 @@ secrets: {
 }
 
 apicall: {
-  @pipeline(apicall)
+  @flow(apicall)
   In: string
 	r: { filename: In, contents: string } @task(os.ReadFile)
   j: json.Unmarshal(r.contents)
@@ -18,7 +18,7 @@ apicall: {
 }
 
 main: {
-  @pipeline()
+  @flow()
 
   start: { text: "apicalling" } @task(os.Stdout)
 

@@ -1,4 +1,4 @@
-@pipeline()
+@flow()
 append: {
   @task(os.WriteFile)
   filename: "append.txt"

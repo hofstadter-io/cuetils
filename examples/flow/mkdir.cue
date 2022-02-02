@@ -1,4 +1,4 @@
-@pipeline()
+@flow()
 
 mkdir: {
   @task(os.Mkdir)

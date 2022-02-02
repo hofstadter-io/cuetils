@@ -1,4 +1,4 @@
-@pipeline()
+@flow()
 
 set: {
   @task(kv.Mem)

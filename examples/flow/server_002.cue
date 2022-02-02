@@ -1,11 +1,11 @@
-@pipeline()
+@flow()
 
 config: {
   port: "2323"
 }
 
 server: {
-  @pipeline(server)
+  @flow(server)
 
   wait: { duration: "60s", done: _ } @task(os.Sleep)
 
