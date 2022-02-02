@@ -19,6 +19,8 @@ func NewUpsert(val cue.Value) (context.Runner, error) {
 
 // Tasks must implement a Run func, this is where we execute our task
 func (T *Upsert) Run(ctx *context.Context) (interface{}, error) {
+  ctx.CUELock.Lock()
+  defer ctx.CUELock.Unlock()
 	v := ctx.Value
 
 	x := v.LookupPath(cue.ParsePath("val"))

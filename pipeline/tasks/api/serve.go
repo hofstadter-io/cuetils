@@ -32,93 +32,101 @@ func NewServe(val cue.Value) (context.Runner, error) {
 func (T *Serve) Run(ctx *context.Context) (interface{}, error) {
   var err error
 
+  // todo, check failure modes, fill, not return error?
+  // (in all tasks)
+  // do failed http handlings fail the client connection and server pipeline?
+
   val := ctx.Value
 
-  logging := false
-  l := val.LookupPath(cue.ParsePath("logging"))
-  if l.Exists() {
-    if l.Err() != nil {
-      return nil, l.Err()
-    }
-    logging, err = l.Bool()
-    if err != nil {
-      return nil, err
-    }
-  }
+  var e *echo.Echo
+  port := "2323"
 
-  // get the port
-  p := val.LookupPath(cue.ParsePath("port"))
-  if p.Err() != nil {
-    return nil, p.Err()
-  }
-  port, err := p.String()
+  err = func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+
+    logging := false
+    l := val.LookupPath(cue.ParsePath("logging"))
+    if l.Exists() {
+      if l.Err() != nil {
+        return l.Err()
+      }
+      logging, err = l.Bool()
+      if err != nil {
+        return err
+      }
+    }
+
+    // get the port
+    p := val.LookupPath(cue.ParsePath("port"))
+    if p.Err() != nil {
+      return p.Err()
+    }
+    port, err = p.String()
+    if err != nil {
+      return err
+    }
+
+    // create server
+    e = echo.New()
+    e.HideBanner = true
+    e.Use(middleware.Recover())
+    if logging {
+      e.Use(middleware.Logger())
+    }
+
+    // liveliness and metrics
+    e.GET("/alive", func(c echo.Context) error {
+      return c.NoContent(http.StatusNoContent)
+    })
+
+    prom := prometheus.NewPrometheus("echo", nil)
+    prom.Use(e)
+
+    //
+    // Setup routes
+    //
+    routes := val.LookupPath(cue.ParsePath("routes"))
+    iter, err := routes.Fields()
+    if err != nil {
+      return err
+    }
+
+    for iter.Next() {
+      label := iter.Selector().String()
+      route := iter.Value()
+
+      // fmt.Println("route:", label)
+
+      err := T.routeFromValue(label, route, e, ctx)
+      if err != nil {
+        return err
+      }
+    }
+
+    // put behind value field
+    /*
+    // print routes
+    data, err := json.MarshalIndent(e.Routes(), "", "  ")
+    if err != nil {
+      return err
+    }
+
+    fmt.Println(string(data))
+    */
+    return nil
+  }()
+
+  // check return of our adhoc func scope
   if err != nil {
     return nil, err
   }
-
-  // create server
-  e := echo.New()
-  e.HideBanner = true
-  e.Use(middleware.Recover())
-  if logging {
-    e.Use(middleware.Logger())
-  }
-
-  // liveliness and metrics
-	e.GET("/alive", func(c echo.Context) error {
-		return c.NoContent(http.StatusNoContent)
-	})
-
-  prom := prometheus.NewPrometheus("echo", nil)
-  prom.Use(e)
-
-  //
-  // Setup routes
-  //
-  routes := val.LookupPath(cue.ParsePath("routes"))
-  iter, err := routes.Fields()
-  if err != nil {
-    return nil, err
-  }
-
-  for iter.Next() {
-    label := iter.Selector().String()
-    route := iter.Value()
-
-    // fmt.Println("route:", label)
-
-    err := T.routeFromValue(label, route, e, ctx)
-    if err != nil {
-      return nil, err
-    }
-  }
-
-  /*
-  // print routes
-  data, err := json.MarshalIndent(e.Routes(), "", "  ")
-  if err != nil {
-    return err
-  }
-
-  fmt.Println(string(data))
-  */
 
   // run the server
 	e.Logger.Fatal(e.Start(":" + port))
 
-  fmt.Println("SERVER EXITED")
-
-  // - pull apart server value
-
-  /*
-  - loop over routes...
-    - should be a pipeline, we need to load this
-    - construct the routes, with pipeline & echo framework
-  - go run the server
-  - wait for exit signal
-
-
-  */
 	return nil, err
 }
 

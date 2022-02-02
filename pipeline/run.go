@@ -4,6 +4,7 @@ import (
 	go_ctx "context"
 	"fmt"
 	"os"
+	"sync"
 
 	// "time"
 
@@ -50,10 +51,10 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
     // (refactor/pipe/solo)
     val := in.Value
 
-    // taskCtx, err := buildTaskContext(sharedContex, val, opts, popts)
 
-    // (temp), give each own context (created in here), but like ^^^
-    taskCtx, err := buildTaskContext(val, opts, popts)
+    // (temp), give each own context (created in here), or maybe by flag? Need at least the shared mutex
+    taskCtx, err := buildRootContext(val, opts, popts)
+    // taskCtx, err := buildRootContext(sharedContex, val, opts, popts)
     if err != nil {
       return nil, err
     }
@@ -66,7 +67,7 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
 
     // lets just print
     if popts.List {
-      tags, errs := getTags(val)
+      tags, secrets, errs := getTagsAndSecrets(val)
       if len(errs) > 0 {
         return nil, fmt.Errorf("in getTags: %v", errs)
       }
@@ -78,7 +79,14 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
         }
         fmt.Println()
       }
-
+      if len(secrets) > 0 {
+        fmt.Println("secrets:\n==============")
+        for _, v := range secrets {
+          path := v.Path()
+          fmt.Printf("%s: %# v %v\n", path, v, v.Attribute("secret"))
+        }
+        fmt.Println()
+      }
 
       fmt.Println("flows:\n==============")
       err = listPipelines(val, opts, popts)
@@ -128,7 +136,7 @@ var walkOptions = []cue.Option{
   cue.Docs(true),
 }
 
-func buildTaskContext(val cue.Value, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) (*context.Context, error) {
+func buildRootContext(val cue.Value, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) (*context.Context, error) {
   // lookup the secret label in val
   // and build a filter write for stdout / stderr
   c := &context.Context{
@@ -136,6 +144,7 @@ func buildTaskContext(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pip
     Stdout: os.Stdout,
     Stderr: os.Stderr,
     Context: go_ctx.Background(),
+    CUELock: new(sync.Mutex),
   }
   return c, nil
 }

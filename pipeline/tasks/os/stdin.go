@@ -22,23 +22,40 @@ func NewStdin(val cue.Value) (context.Runner, error) {
 func (T *Stdin) Run(ctx *context.Context) (interface{}, error) {
 
 	v := ctx.Value
+  var m string
 
-  msg := v.LookupPath(cue.ParsePath("msg")) 
-  if msg.Err() != nil {
-    return nil, msg.Err()
+  ferr := func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+    var err error
 
-  } else if msg.Exists() {
-    m, err := msg.String()
-    if err != nil {
-      return nil, err
+    msg := v.LookupPath(cue.ParsePath("msg")) 
+    if msg.Err() != nil {
+      return msg.Err()
+
+    } else if msg.Exists() {
+      m, err = msg.String()
+      if err != nil {
+        return err
+      }
+      // print message to user
     }
-    // print message to user
-    fmt.Fprint(ctx.Stdout, m)
+    return nil
+  }()
+  if ferr != nil {
+    return nil, ferr
   }
 
+  if len(m) > 0 {
+    fmt.Fprint(ctx.Stdout, m)
+  }
   reader := bufio.NewReader(ctx.Stdin)
   text, _ := reader.ReadString('\n')
 
+  ctx.CUELock.Lock()
+  defer ctx.CUELock.Unlock()
   res := v.FillPath(cue.ParsePath("contents"), text)
 
 	return res, nil 

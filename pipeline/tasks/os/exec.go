@@ -26,66 +26,99 @@ func NewExec(val cue.Value) (context.Runner, error) {
 func (T *Exec) Run(ctx *context.Context) (interface{}, error) {
 
 	v := ctx.Value
+  var cmd *exec.Cmd
 
-  // get and create command
-  cmds, err := extractCmd(v)
-  if err != nil {
-    return nil, err
-  }
-  cmd := exec.Command(cmds[0], cmds[1:]...)
+  // TODO, rework how i/o works for exec
 
-  // get dir / env for command
-  dir, err := extractDir(v)
-  if err != nil {
-    return nil, err
-  }
-  cmd.Dir = dir
+  // todo, check failure modes, fill, not return error?
+  // (in all tasks, really)
 
-  env, err := extractEnv(v)
-  if err != nil {
-    return nil, err
-  }
-  cmd.Env = env
 
-  // setup i/o for command
-  stdin, stdout, stderr, err := extractIO(v)
-  if err != nil {
-    return nil, err
-  }
+  var stdout, stderr io.Writer
 
-  if stdin != nil {
-    cmd.Stdin = stdin
-  }
-  if stdout != nil {
-    cmd.Stdout = stdout
-  }
-  if stderr != nil {
-    cmd.Stderr = stderr
+  ferr := func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+    // get and create command
+    cmds, err := extractCmd(v)
+    if err != nil {
+      return err
+    }
+    cmd = exec.Command(cmds[0], cmds[1:]...)
+
+    // get dir / env for command
+    dir, err := extractDir(v)
+    if err != nil {
+      return err
+    }
+    cmd.Dir = dir
+
+    env, err := extractEnv(v)
+    if err != nil {
+      return err
+    }
+    cmd.Env = env
+
+    // setup i/o for command
+    var stdin io.Reader
+    stdin, stdout, stderr, err = extractIO(v)
+    if err != nil {
+      return err
+    }
+
+    if stdin != nil {
+      cmd.Stdin = stdin
+    }
+    if stdout != nil {
+      cmd.Stdout = stdout
+    }
+    if stderr != nil {
+      cmd.Stderr = stderr
+    }
+
+    return nil
+  }()
+  if ferr != nil {
+    return nil, ferr
   }
 
   //
   // run command
   //
-  err = cmd.Run()
-  if err != nil {
-    v = v.FillPath(cue.ParsePath("error"), err.Error())
-  }
+  err := cmd.Run()
 
-  //
-  // possibly fill stdout/stderr
-  //
-  v, err = fillIO(v, stdout, stderr)
-  if err != nil {
-    return nil, err
-  }
+  // TODO, how to run in the background and wait for signal?
 
-  // fill exit code / successful
-  v = v.FillPath(cue.ParsePath("exitcode"), cmd.ProcessState.ExitCode())
-  v = v.FillPath(cue.ParsePath("success"), cmd.ProcessState.Success())
+  // process results
+  ferr = func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+    if err != nil {
+      v = v.FillPath(cue.ParsePath("error"), err.Error())
+    }
 
-  // (TODO): check for user's abort mode preference
+    //
+    // possibly fill stdout/stderr
+    //
+    v, err = fillIO(v, stdout, stderr)
+    if err != nil {
+      return err
+    }
 
-	return v, nil
+    // fill exit code / successful
+    v = v.FillPath(cue.ParsePath("exitcode"), cmd.ProcessState.ExitCode())
+    v = v.FillPath(cue.ParsePath("success"), cmd.ProcessState.Success())
+
+    // (TODO): check for user's abort mode preference
+
+    return nil
+  }()
+
+	return v, ferr
 }
 
 func extractCmd(ex cue.Value) ([]string, error) {
@@ -172,6 +205,7 @@ func extractIO(ex cue.Value) (Stdin io.Reader, Stdout, Stderr io.Writer, err err
         return nil, nil, nil, err
       }
       if s == "-" {
+        // (BUG): works around centralized printing
         Stdin = os.Stdin
       }
       Stdin = strings.NewReader(s) 

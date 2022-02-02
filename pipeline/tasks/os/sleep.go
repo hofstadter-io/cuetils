@@ -23,22 +23,43 @@ func (T *Sleep) Run(ctx *context.Context) (interface{}, error) {
 	v := ctx.Value
 
   var D time.Duration
-  d := v.LookupPath(cue.ParsePath("duration")) 
-  if d.Err() != nil {
-    return nil, d.Err()
-  } else if d.Exists() {
-    ds, err := d.String()
-    if err != nil {
-      return nil, err
+
+  
+  ferr := func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+
+    d := v.LookupPath(cue.ParsePath("duration")) 
+    if d.Err() != nil {
+      return d.Err()
+    } else if d.Exists() {
+      ds, err := d.String()
+      if err != nil {
+        return err
+      }
+      D, err = time.ParseDuration(ds)
+      if err != nil {
+        return  err
+      }
     }
-    D, err = time.ParseDuration(ds)
-    if err != nil {
-      return nil, err
-    }
+    return nil
+  }()
+  if ferr != nil {
+    return nil, ferr
   }
 
   time.Sleep(D)
-  res := v.FillPath(cue.ParsePath("done"), true)
+
+  var res interface{}
+  func () {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+    res = v.FillPath(cue.ParsePath("done"), true)
+  }()
 
 	return res, nil
 }

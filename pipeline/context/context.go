@@ -19,6 +19,15 @@ type Context struct {
 	Value   cue.Value
 	Error   error
 
+  // Global lock around CUE evaluator 
+  CUELock *sync.Mutex
+
+  // map of cue.Values
+  Memory  sync.Map
+
+  // map of chan?
+  Mailbox sync.Map
+
   // channels for
   // - stats & progress
 }

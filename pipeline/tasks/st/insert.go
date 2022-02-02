@@ -19,6 +19,8 @@ func NewInsert(val cue.Value) (context.Runner, error) {
 
 // Tasks must implement a Run func, this is where we execute our task
 func (T *Insert) Run(ctx *context.Context) (interface{}, error) {
+  ctx.CUELock.Lock()
+  defer ctx.CUELock.Unlock()
 
 	v := ctx.Value
 

@@ -1,29 +1,41 @@
 # Todo
 
-- [ ] merge and release
-
 Enhance & expand
 
-- [ ] list tags / secrets
-- [ ] obfescate secrets, centralized printing (ensure that is the case in every task / run)
-- [ ] locks for tasks
+- [x] list Tags
+- [x] list secrets
+- [x] locks for tasks
 - [ ] more task types
     - [ ] file append
     - [ ] mkdir
-    - [ ] chan / mailbox
     - [ ] memory store / load
-    - [ ] prevent exit when error in handler pipelines
+    - [ ] prevent exit when error in handler pipelines?
+- [ ] rename pipeline -> run
+- [ ] merge and release
+- [ ] hof/flow cmd
+
+### Docs...
+
+probably hof/docs
 
 
-Rename:
-- rename pipeline -> run
-- hof/flow cmd
+### Other task types:
 
-Docs...
+- async
+  - [ ] chan / mailbox
 
----
+- msg
+  - rabbitmq
+  - kafka
+  - nats
+- k/v
+  - redis
+  - mongo
+  - s3/gcs
+  - vault
+- command line prompt
 
-Build other things cuetils/run
+### Build other things cuetils/run
 
 - save all IRC messages to DB
 - bookmarks and hn upvotes
@@ -31,16 +43,18 @@ Build other things cuetils/run
 - replace helm (need native topo sort)
 - OAuth workflow
 
----
+### More todo, always...
 
-Bookkeeping:
-- debug flag to print tasks which run
-- stats for tasks & pipelines, chan to central
+i/o centralization
+
+- [ ] debug/verbose flag to print tasks which run
+- [ ] stats for tasks & pipelines, chan to central
+- [ ] obfescate secrets, centralized printing (ensure that is the case in every task / run)
 
 Exec & Serve
 
-- some way to run in background, and then kill / exit later?
-- write to file for stdio
+- [ ] some way to run in background, and then kill / exit later?
+- [ ] write directly to file for stdio, is it a concrete string?
 
 ---
 
@@ -82,7 +96,7 @@ Go funcs:
 CLI:
 
 - Support expression on globs, to select out a field on each file
-
+- move implementation?
 
 ### Memory issues
 

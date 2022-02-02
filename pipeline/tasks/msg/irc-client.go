@@ -26,30 +26,51 @@ func NewIrcClient(val cue.Value) (context.Runner, error) {
 
 func (T *IrcClient) Run(ctx *context.Context) (interface{}, error) {
 
+  // todo, check failure modes, fill, not return error?
+  // (in all tasks)
+  // do failed message handlings fail the client connection and IRC pipeline?
+
 	val := ctx.Value
+  var config irc.ClientConfig
+  var host string
 
-  config, err := buildIrcConfig(val)
-	if err != nil {
-    fmt.Println("irc: buildConfig err:", err)
-    return nil, err	
-	}
+  ferr := func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
 
-  handler, err := buildIrcHandler(ctx, val)
-	if err != nil {
-    fmt.Println("irc: buildHandler err:", err)
-    return nil, err	
-	}
+    var err error
 
-  config.Handler = handler
+    config, err = buildIrcConfig(val)
+    if err != nil {
+      fmt.Println("irc: buildConfig err:", err)
+      return err	
+    }
 
-  h := val.LookupPath(cue.ParsePath("host"))
-  if h.Err() != nil {
-    return nil, h.Err()
+    handler, err := buildIrcHandler(ctx, val)
+    if err != nil {
+      fmt.Println("irc: buildHandler err:", err)
+      return err	
+    }
+
+    config.Handler = handler
+
+    h := val.LookupPath(cue.ParsePath("host"))
+    if h.Err() != nil {
+      return h.Err()
+    }
+    host, err = h.String()
+    if err != nil {
+      return err
+    }
+    return nil
+  }()
+  if ferr != nil {
+    return nil, ferr
   }
-  host, err := h.String()
-  if err != nil {
-    return nil, err
-  }
+
+
 	conn, err := net.Dial("tcp", host)
 	if err != nil {
     return nil, err	
@@ -64,17 +85,13 @@ func (T *IrcClient) Run(ctx *context.Context) (interface{}, error) {
   go func() {
     defer wg.Done()
 
-    fmt.Println("For realz this time")
     err = client.Run()
     if err != nil {
-      fmt.Println("IRC err:", err)
       return	
     }
-    fmt.Println("irc done")
   }()
 
   wg.Wait()
-  fmt.Println("ending", err)
   return nil, err
 }
 

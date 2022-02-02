@@ -22,12 +22,21 @@ func NewReadFile(val cue.Value) (context.Runner, error) {
 func (T *ReadFile) Run(ctx *context.Context) (interface{}, error) {
 
 	v := ctx.Value
+  var fn string
+  var err error
 
-	f := v.LookupPath(cue.ParsePath("filename"))
+  ferr := func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+    f := v.LookupPath(cue.ParsePath("filename"))
 
-  fn, err := f.String()
-  if err != nil {
-    return nil, err
+    fn, err = f.String()
+    return err
+  }()
+  if ferr != nil {
+    return nil, ferr
   }
 
   bs, err := g_os.ReadFile(fn)
@@ -35,29 +44,40 @@ func (T *ReadFile) Run(ctx *context.Context) (interface{}, error) {
     return nil, err
   }
 
-  // switch on c's type to fill appropriately
-	c := v.LookupPath(cue.ParsePath("contents"))
-
   var res cue.Value
-  switch k := c.IncompleteKind(); k {
-  case cue.StringKind:
-    res = v.FillPath(cue.ParsePath("contents"), string(bs))
-  case cue.BytesKind:
-    res = v.FillPath(cue.ParsePath("contents"), bs)
+  ferr = func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
 
-  case cue.StructKind:
-    ctx := v.Context()
-    c := ctx.CompileBytes(bs)
-    if c.Err() != nil {
-      return nil, c.Err() 
+    c := v.LookupPath(cue.ParsePath("contents"))
+
+    // switch on c's type to fill appropriately
+    switch k := c.IncompleteKind(); k {
+    case cue.StringKind:
+      res = v.FillPath(cue.ParsePath("contents"), string(bs))
+    case cue.BytesKind:
+      res = v.FillPath(cue.ParsePath("contents"), bs)
+
+    case cue.StructKind:
+      ctx := v.Context()
+      c := ctx.CompileBytes(bs)
+      if c.Err() != nil {
+        return c.Err() 
+      }
+      res = v.FillPath(cue.ParsePath("contents"), c)
+
+    case cue.BottomKind:
+      res = v.FillPath(cue.ParsePath("contents"), string(bs))
+
+    default:
+      return fmt.Errorf("Unsupported Content type in ReadFile task: %q", k)
     }
-    res = v.FillPath(cue.ParsePath("contents"), c)
-
-  case cue.BottomKind:
-    res = v.FillPath(cue.ParsePath("contents"), string(bs))
-
-  default:
-    return nil, fmt.Errorf("Unsupported Content type in ReadFile task: %q", k)
+    return nil
+  }()
+  if ferr != nil {
+    return nil, ferr
   }
 
 	return res, nil

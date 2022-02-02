@@ -24,22 +24,33 @@ func (T *Stdout) Run(ctx *context.Context) (interface{}, error) {
   defer bufStdout.Flush()
 
   v := ctx.Value
+  var m string
+  var err error
 
-  msg := v.LookupPath(cue.ParsePath("text")) 
-  if msg.Err() != nil {
-    return nil, msg.Err() 
-  } else if msg.Exists() {
-    // print strings directly to remove quotes
-    if m, err := msg.String(); err == nil {
-      fmt.Fprint(bufStdout, m)
+  ferr := func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+
+    msg := v.LookupPath(cue.ParsePath("text")) 
+    if msg.Err() != nil {
+      return msg.Err() 
+    } else if msg.Exists() {
+      m, err = msg.String()
+      if err != nil {
+        return err
+      }
     } else {
-      fmt.Fprint(bufStdout, msg)
+      err := fmt.Errorf("unknown msg:", msg)
+      return err
     }
-
-  } else {
-    err := fmt.Errorf("unknown msg:", msg)
-    return nil, err
+    return nil
+  }()
+  if ferr != nil {
+    return nil, ferr
   }
 
+  fmt.Fprint(bufStdout, m)
 	return nil, nil
 }

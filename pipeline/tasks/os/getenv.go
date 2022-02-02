@@ -19,6 +19,9 @@ func NewGetenv(val cue.Value) (context.Runner, error) {
 }
 
 func (T *Getenv) Run(ctx *context.Context) (interface{}, error) {
+  ctx.CUELock.Lock()
+  defer ctx.CUELock.Unlock()
+
   v := ctx.Value
 
   // If a struct, try to fill all fields with matching ENV VAR

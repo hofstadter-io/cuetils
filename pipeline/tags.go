@@ -9,7 +9,7 @@ import (
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
-func getTags(val cue.Value) (tags []cue.Value, errs []error) {
+func getTagsAndSecrets(val cue.Value) (tags []cue.Value, secrets []cue.Value, errs []error) {
 
   // fuction used during tree walk to collect values with tags
   collector := func (v cue.Value) bool {
@@ -21,11 +21,12 @@ func getTags(val cue.Value) (tags []cue.Value, errs []error) {
         if attr.NumArgs() == 0 {
           err = fmt.Errorf("@tag() has no inner args at %s", v.Path())
           errs = append(errs, err)
-          return false
         }
         tags = append(tags, v)
-        return false
       }
+      if attr.Name() == "secret" {
+        secrets = append(secrets, v)
+      }  
     }
 
     return true
@@ -33,8 +34,7 @@ func getTags(val cue.Value) (tags []cue.Value, errs []error) {
 
   structural.Walk(val, collector, nil, walkOptions...)
 
-
-  return tags, errs
+  return tags, secrets, errs
 }
 
 func injectTags(val cue.Value, tags []string) (cue.Value, error) {

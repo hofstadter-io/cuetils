@@ -19,6 +19,9 @@ func NewDiff(val cue.Value) (context.Runner, error) {
 
 // Tasks must implement a Run func, this is where we execute our task
 func (T *Diff) Run(ctx *context.Context) (interface{}, error) {
+  ctx.CUELock.Lock()
+  defer ctx.CUELock.Unlock()
+
 	v := ctx.Value
 
 	o := v.LookupPath(cue.ParsePath("orig"))

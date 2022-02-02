@@ -29,43 +29,66 @@ func NewCall(val cue.Value) (context.Runner, error) {
 func (T *Call) Run(ctx *context.Context) (interface{}, error) {
   val := ctx.Value
 
-	req := val.LookupPath(cue.ParsePath("req"))
+  var R *gorequest.SuperAgent
+  var err error
+  var res interface{}
 
-	R, err := buildRequest(req)
+  func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+
+    req := val.LookupPath(cue.ParsePath("req"))
+
+    R, err = buildRequest(req)
+    if err != nil {
+      return err
+    }
+    return nil
+  }()
 	if err != nil {
 		return nil, err
 	}
+
 
 	actual, err := makeRequest(R)
 	if err != nil {
 		return nil, err
 	}
 
-  // TODO, build resp cue.Value from http.Response
-
 	body, err := io.ReadAll(actual.Body)
 	if err != nil {
 		return nil, err
 	}
 
-  var isString bool
-  r := val.LookupPath(cue.ParsePath("resp"))
-  if r.Exists() && r.IncompleteKind() == cue.StringKind {
-    isString = true
-  }
+  func () {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
 
-  // TODO, make response object more interesting
-  // such as status, headers, body vs json
-  var resp interface{}
-  if isString {
-    resp = string(body)
-  } else {
-    resp = val.Context().CompileBytes(body, cue.Filename("resp"))
-  }
+    // TODO, build resp cue.Value from http.Response
+
+    var isString bool
+    r := val.LookupPath(cue.ParsePath("resp"))
+    if r.Exists() && r.IncompleteKind() == cue.StringKind {
+      isString = true
+    }
+
+    // TODO, make response object more interesting
+    // such as status, headers, body vs json
+    var resp interface{}
+    if isString {
+      resp = string(body)
+    } else {
+      resp = val.Context().CompileBytes(body, cue.Filename("resp"))
+    }
 
 
-	// Use fill to "return" a result to the workflow engine
-	res := val.FillPath(cue.ParsePath("resp"), resp)
+    // Use fill to "return" a result to the workflow engine
+    res = val.FillPath(cue.ParsePath("resp"), resp)
+  }()
 
   // fmt.Println("end: API call")
 	return res, nil
