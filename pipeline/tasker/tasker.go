@@ -81,6 +81,7 @@ func maybeTask(ctx *context.Context, val cue.Value, attr cue.Attribute) (flow.Ru
     // run the cuetils task 
     value, err := task.Run(c)
     if err != nil {
+      err = fmt.Errorf("in %q, %v", val.Path(), err)
       c.Error = err
       return err
     }

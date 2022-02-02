@@ -6,8 +6,8 @@ Enhance & expand
 - [x] list secrets
 - [x] locks for tasks
 - [ ] more task types
-    - [ ] file append
-    - [ ] mkdir
+    - [x] file append
+    - [x] mkdir
     - [ ] memory store / load
     - [ ] prevent exit when error in handler pipelines?
 - [ ] rename pipeline -> run

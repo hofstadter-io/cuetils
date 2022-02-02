@@ -2,7 +2,7 @@ package os
 
 import (
   "fmt"
-  g_os "os"
+  "os"
 
 	"cuelang.org/go/cue"
 
@@ -35,6 +35,9 @@ func (T *WriteFile) Run(ctx *context.Context) (interface{}, error) {
     var err error
 
     f := v.LookupPath(cue.ParsePath("filename"))
+    if !f.Exists() {
+      return fmt.Errorf("missing required field 'filename'")
+    }
 
     fn, err = f.String()
     if err != nil {
@@ -43,6 +46,9 @@ func (T *WriteFile) Run(ctx *context.Context) (interface{}, error) {
 
     // switch on c's type to fill appropriately
     c := v.LookupPath(cue.ParsePath("contents"))
+    if !c.Exists() {
+      return fmt.Errorf("missing required field 'contents'")
+    }
 
     switch k := c.IncompleteKind(); k {
     case cue.StringKind:
@@ -63,17 +69,20 @@ func (T *WriteFile) Run(ctx *context.Context) (interface{}, error) {
     }
 
     mode := v.LookupPath(cue.ParsePath("mode"))
+    if !mode.Exists() {
+      return fmt.Errorf("missing required field 'mode'")
+    }
     m, err = mode.Int64()
     if err != nil {
       return err
     }
-    return nil
 
     av := v.LookupPath(cue.ParsePath("append"))
     a, err = av.Bool()
     if err != nil {
       return err
     }
+
     return nil
   }()
   if ferr != nil {
@@ -83,6 +92,21 @@ func (T *WriteFile) Run(ctx *context.Context) (interface{}, error) {
   // todo, check failure modes, fill, not return error?
   // (in all tasks)
 
-  err := g_os.WriteFile(fn, bs, g_os.FileMode(m))
+  om := os.O_CREATE|os.O_WRONLY
+  if a {
+    om = om | os.O_APPEND
+  } else {
+    om = om | os.O_TRUNC
+  }
+
+  f, err := os.OpenFile(fn, om, os.FileMode(m))
+  if err != nil {
+    return nil, err 
+  }
+
+  defer f.Close()
+  if _, err := f.Write(bs); err != nil {
+    return nil, err
+  }
 	return nil, err
 }
