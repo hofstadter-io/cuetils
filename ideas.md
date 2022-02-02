@@ -8,7 +8,7 @@ Enhance & expand
 - [ ] more task types
     - [x] file append
     - [x] mkdir
-    - [ ] memory store / load
+    - [x] memory store / load
 - [ ] rename pipeline -> run
 - [ ] merge and release
 - [ ] hof/flow cmd
@@ -20,6 +20,14 @@ probably hof/docs
 
 ### Other task types:
 
+- gen
+  - uuid
+  - rand int
+  - rand str
+
+- time
+  - now
+
 - async
   - [ ] chan / mailbox
 
@@ -27,6 +35,7 @@ probably hof/docs
   - rabbitmq
   - kafka
   - nats
+
 - k/v
   - redis
   - mongo
@@ -87,14 +96,17 @@ CLI:
 - Support expression on globs, to select out a field on each file
 - move implementation?
 
-### upstream & references
+## upstream & references
 
-##### Memory issues
+Memory issues
 
 https://github.com/lipence/cue/commit/6ed69100ebd62509577826657536172ab46cf257
 
-##### cue/flow
-
-(we now have a hof-patch for this)
+### cue/flow
 
 return final value: https://github.com/cue-lang/cue/pull/1390
+
+
+### streamer
+
+- other social networks / interaction systems

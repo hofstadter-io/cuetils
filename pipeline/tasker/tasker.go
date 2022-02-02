@@ -70,12 +70,14 @@ func maybeTask(ctx *context.Context, val cue.Value, attr cue.Attribute) (flow.Ru
   // wrap our RunnerFunc with cue/flow RunnerFunc
   return flow.RunnerFunc(func(t *flow.Task) error {
     c := &context.Context{
-      CUELock: ctx.CUELock,
       Context: t.Context(),
       Value:   t.Value(),
       Stdin:   ctx.Stdin,
       Stdout:  ctx.Stdout,
       Stderr:  ctx.Stderr,
+      CUELock: ctx.CUELock,
+      Mailbox: ctx.Mailbox,
+      ValStore: ctx.ValStore,
     }
 
     // run the cuetils task 

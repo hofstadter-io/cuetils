@@ -20,13 +20,13 @@ type Context struct {
 	Error   error
 
   // Global lock around CUE evaluator 
-  CUELock *sync.Mutex
+  CUELock  *sync.Mutex
 
   // map of cue.Values
-  Memory  sync.Map
+  ValStore *sync.Map
 
   // map of chan?
-  Mailbox sync.Map
+  Mailbox  *sync.Map
 
   // channels for
   // - stats & progress

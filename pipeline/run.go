@@ -145,6 +145,8 @@ func buildRootContext(val cue.Value, opts *flags.RootPflagpole, popts *flags.Pip
     Stderr: os.Stderr,
     Context: go_ctx.Background(),
     CUELock: new(sync.Mutex),
+    ValStore: new(sync.Map),
+    Mailbox: new(sync.Map),
   }
   return c, nil
 }
