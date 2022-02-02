@@ -107,7 +107,7 @@ func RootInit() {
 	RootCmd.AddCommand(UpsertCmd)
 	RootCmd.AddCommand(TransformCmd)
 	RootCmd.AddCommand(ValidateCmd)
-	RootCmd.AddCommand(PipelineCmd)
+	RootCmd.AddCommand(FlowCmd)
 
 }
 

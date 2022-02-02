@@ -30,7 +30,6 @@ probably hof/docs
 
 - async / client listener
   - waitgroup / mutex?
-  - file locks (https://github.com/gofrs/flock)
   - [ ] chan / mailbox
   - websockets
 

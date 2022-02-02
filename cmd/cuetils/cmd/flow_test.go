@@ -9,10 +9,10 @@ import (
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/cmd"
 )
 
-func TestScriptPipelineCliTests(t *testing.T) {
+func TestScriptFlowCliTests(t *testing.T) {
 	// setup some directories
 
-	dir := "pipeline"
+	dir := "flow"
 
 	workdir := ".workdir/cli/" + dir
 	yagu.Mkdir(workdir)
@@ -26,7 +26,7 @@ func TestScriptPipelineCliTests(t *testing.T) {
 		Funcs: map[string]func(ts *runtime.Script, args []string) error{
 			"__cuetils": cmd.CallTS,
 		},
-		Dir:         "hls/cli/pipeline",
+		Dir:         "hls/cli/flow",
 		WorkdirRoot: workdir,
 	})
 }

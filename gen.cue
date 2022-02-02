@@ -33,7 +33,7 @@ Cli: gen.#HofGenerator & {
 		#UpsertCommand,
 		#TransformCommand,
 		#ValidateCommand,
-		#PipelineCommand,
+		#FlowCommand,
 	]
 
 	Pflags: [{
@@ -373,11 +373,11 @@ Cli: gen.#HofGenerator & {
 	}]
 }
 
-#PipelineCommand: schema.#Command & {
-	Name:  "pipeline"
-	Aliases: ["pipe", "dag"]
-	Usage: "pipeline <code> [files...]"
-	Short: "run file(s) through a pipeline of operations"
+#FlowCommand: schema.#Command & {
+	Name:  "flow"
+	Aliases: ["f"]
+	Usage: "flow [cue files...]"
+	Short: "run file(s) through the hof/flow DAG engine"
 	Long:  Short
 
 	Args: [{
@@ -402,12 +402,12 @@ Cli: gen.#HofGenerator & {
     Default: "false"
 		Help:    "print pipeline docs"
 	},{
-		Name:    "pipeline"
-		Long:    "pipeline"
-		Short:   "p"
+		Name:    "flow"
+		Long:    "flow"
+		Short:   "f"
 		Type:    "[]string"
     Default: "nil"
-		Help:    "pipeline labels to match and run"
+		Help:    "flow labels to match and run"
 	},{
 		Name:    "tags"
 		Long:    "tags"
@@ -429,4 +429,4 @@ Cli: gen.#HofGenerator & {
 #ExtendHelp: ""
 #TransformHelp: ""
 #ValidateHelp: ""
-#PipelineHelp: ""
+#FlowHelp: ""

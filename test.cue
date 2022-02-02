@@ -20,7 +20,7 @@ import "strings"
 
 #GoBashTest: #GoBaseTest & {
 	dir: string
-	script: string | *""
+	script: string | *"""
 	rm -rf .workdir
 	go test -cover ./
 	"""
@@ -30,7 +30,7 @@ import "strings"
 #GoBashCover: #GoBaseTest & {
 	dir: string
 	back: strings.Repeat("../", strings.Count(dir, "/") + 1)
-	script: string | *""
+	script: string | *"""
 	rm -rf .workdir
 	go test -cover ./ -coverprofile cover.out -json > tests.json
 	"""
