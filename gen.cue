@@ -5,8 +5,8 @@ import (
 	"github.com/hofstadter-io/hofmod-cli/schema"
 )
 
-Cli: _ @gen(cli,st)
 Cli: gen.#HofGenerator & {
+	@gen(cli,st)
   Outdir: "./"
 	Cli: #CLI
 }
@@ -33,7 +33,7 @@ Cli: gen.#HofGenerator & {
 		#UpsertCommand,
 		#TransformCommand,
 		#ValidateCommand,
-		#PipelineCommand,
+		#FlowCommand,
 	]
 
 	Pflags: [{
@@ -132,6 +132,13 @@ Cli: gen.#HofGenerator & {
 		Type:    "bool"
 		Default: "false"
 		Help:    "error when leafs have type mismatches"
+	},{
+		Name:    "verbose"
+		Long:    "verbose"
+		Short:   "v"
+		Type:    "bool"
+		Default: "false"
+		Help:    "verbose printing for some commands"
 	}]
 
 	//
@@ -153,6 +160,7 @@ Cli: gen.#HofGenerator & {
 			Repo:       "hofstadter"
 		}
 	}
+
 	Updates:  true
 	EnablePProf: true
 }
@@ -365,23 +373,48 @@ Cli: gen.#HofGenerator & {
 	}]
 }
 
-#PipelineCommand: schema.#Command & {
-	Name:  "pipeline"
-	Aliases: ["pipe", "dag"]
-	Usage: "pipeline <code> [files...]"
-	Short: "run file(s) through a pipeline of operations"
+#FlowCommand: schema.#Command & {
+	Name:  "flow"
+	Aliases: ["f"]
+	Usage: "flow [cue files...]"
+	Short: "run file(s) through the hof/flow DAG engine"
 	Long:  Short
 
 	Args: [{
-		Name:     "code"
-		Type:     "string"
-		Required: true
-		Help:     "code for the operation"
-	}, {
 		Name:     "globs"
 		Type:     "[]string"
 		Help:     "file globs to the operation"
 		Rest:			true
+	}]
+
+	Flags: [{
+		Name:    "list"
+		Long:    "list"
+		Short:   "l"
+		Type:    "bool"
+    Default: "false"
+		Help:    "list available pipelines"
+	},{
+		Name:    "docs"
+		Long:    "docs"
+		Short:   "d"
+		Type:    "bool"
+    Default: "false"
+		Help:    "print pipeline docs"
+	},{
+		Name:    "flow"
+		Long:    "flow"
+		Short:   "f"
+		Type:    "[]string"
+    Default: "nil"
+		Help:    "flow labels to match and run"
+	},{
+		Name:    "tags"
+		Long:    "tags"
+		Short:   "t"
+		Type:    "[]string"
+    Default: "nil"
+		Help:    "data tags to inject before run"
 	}]
 }
 
@@ -396,4 +429,4 @@ Cli: gen.#HofGenerator & {
 #ExtendHelp: ""
 #TransformHelp: ""
 #ValidateHelp: ""
-#PipelineHelp: ""
+#FlowHelp: ""

@@ -16,6 +16,11 @@ common.#Workflow & {
 			run: """
 			go test -cover ./test/cli
 			"""
+		},{
+			name: "Pipeline tests"
+			run: """
+			go test -cover ./test/pipeline
+			"""
 		}]
 	}
 }

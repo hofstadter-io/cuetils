@@ -16,6 +16,12 @@ func InsertValue(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, erro
 }
 
 func insertValue(ins, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	// TODO, implement proper default helper func
+	// for flags in hofmod-cli
+	if opts == nil {
+		opts = &flags.RootPflagpole{}
+	}
+
 	switch val.IncompleteKind() {
 	case cue.StructKind:
 		return insertStruct(ins, val, opts)

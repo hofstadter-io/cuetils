@@ -24,6 +24,12 @@ func PickValue(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, erro
 // this is the recursive version that also returns
 // whether the value was picked
 func pickValue(pick, from cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	// TODO, implement proper default helper func
+	// for flags in hofmod-cli
+	if opts == nil {
+		opts = &flags.RootPflagpole{}
+	}
+
 	switch pick.IncompleteKind() {
 	// pick everything
 	case cue.TopKind:

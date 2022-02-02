@@ -1,0 +1,7 @@
+### Test "flow --help" prints help
+call __cuetils flow --help
+
+### Test "flow -h" prints help
+call __cuetils flow -h
+
+

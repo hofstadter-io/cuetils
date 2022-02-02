@@ -31,6 +31,12 @@ func upsertValue(up, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool)
 }
 
 func upsertStruct(up, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	// TODO, implement proper default helper func
+	// for flags in hofmod-cli
+	if opts == nil {
+		opts = &flags.RootPflagpole{}
+	}
+
 	ctx := val.Context()
 	result := newStruct(ctx)
 

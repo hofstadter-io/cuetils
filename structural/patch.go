@@ -16,6 +16,10 @@ func PatchValue(patch, val cue.Value, opts *flags.RootPflagpole) (cue.Value, err
 }
 
 func patchValue(patch, val cue.Value, opts *flags.RootPflagpole) (cue.Value, bool) {
+	if opts == nil {
+		opts = &flags.RootPflagpole{}
+	}
+
 	switch val.IncompleteKind() {
 	case cue.StructKind:
 		// fmt.Println("struct", orig, next)

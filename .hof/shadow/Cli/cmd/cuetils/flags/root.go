@@ -60,6 +60,7 @@ type RootPflagpole struct {
 	AllTypeErrors  bool
 	NodeTypeErrors bool
 	LeafTypeErrors bool
+	Verbose        bool
 }
 
 var RootPflags RootPflagpole

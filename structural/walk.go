@@ -10,6 +10,7 @@ var defaultWalkOptions = []cue.Option{
 	cue.Definitions(true),
 	cue.Hidden(true),
 	cue.Optional(true),
+  cue.Docs(true),
 }
 
 // Walk is an alternative to cue.Value.Walk which handles more field types
