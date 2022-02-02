@@ -1,5 +1,9 @@
 import "encoding/json"
 
+vars: {
+  which: string @tag(which)
+}
+
 apicall: {
   @pipeline(apicall)
   In: string

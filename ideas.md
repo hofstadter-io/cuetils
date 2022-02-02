@@ -1,66 +1,37 @@
-# TODO
+# Todo
+
+- [ ] merge and release
+
+Enhance & expand
+
+- [ ] list tags / secrets
+- [ ] obfescate secrets, centralized printing (ensure that is the case in every task / run)
+- [ ] locks for tasks
+- [ ] more task types
+    - [ ] file append
+    - [ ] mkdir
+    - [ ] chan / mailbox
+    - [ ] memory store / load
+    - [ ] prevent exit when error in handler pipelines
+
+
+Rename:
+- rename pipeline -> run
+- hof/flow cmd
 
 Docs...
-
-rename pipeline -> run,dag
 
 ---
 
 Build other things cuetils/run
 
+- save all IRC messages to DB
 - bookmarks and hn upvotes
+- change my lights
+- replace helm (need native topo sort)
+- OAuth workflow
 
 ---
-
-- auth / oauth
-    - [x] twitch  (oauth code)
-- [ ] api calls
-    - [x] update stream title 
-    - [x] twitch (other)
-    - [ ] update go live message
-    - [ ] which of my streamers are live
-- [x] chat
-    - [x] twitch-irc 
-
-- [ ] memory store / load
-- [ ] prevent exit when error in handler pipelines
-- [ ] api.GraphQL but probably better as a wrapper around api.Call
----
-
-Get server working:
-- [x] wired up routes
-- [x] route pipelines
-
-CLI work:
-- [x] list pipelines that can be run
-- [x] enable docs for pipelines to be read/written
-- [x] know what inputs / outputs of a pipeline are
-- revisit tags and get them working
-    - also print
-    - find and return path, unify at top?
-
---- 
-
-Additional examples:
-- auth / oauth
-    - [ ] twitter
-    - [x] youtube (apikey)
-- [ ] api calls
-    - [ ] twitter
-    - [ ] youtube
-- [ ] chat
-    - [ ] slack
-    - [ ] discord
-
-Additional Tasks:
-- [ ] os.Getwd
-
-Centralized Printing:
-- chan for tasks to write strings to
-
-Secrets:
-- `secret: [string]: string` as secrets to be elided from output
-- add as a filter to centralized printing
 
 Bookkeeping:
 - debug flag to print tasks which run
@@ -75,8 +46,6 @@ Exec & Serve
 
 Then...
 
-- OAuth workflow
-- Twitchbot
 
 More...
 
@@ -94,13 +63,14 @@ Example Pipeline:
 
 Helpers:
 
-- extend (add if not present)
 - canonicalize (sort fields recursively)
+- toposort
 
 List processing:
 
 - jsonl
 - yaml with `---`
+- CUE got streaming json/yaml support
 - if extracted value is a list?
 
 Go funcs:
