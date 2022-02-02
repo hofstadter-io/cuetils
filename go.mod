@@ -3,10 +3,11 @@ module github.com/hofstadter-io/cuetils
 go 1.17
 
 // replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.1-hofpatches
-replace cuelang.org/go => ../hof-cue 
+replace cuelang.org/go => ../hof-cue
 
 require (
 	cuelang.org/go v0.4.1
+	github.com/gofrs/flock v0.8.1
 	github.com/hofstadter-io/hof v0.5.17
 	github.com/labstack/echo-contrib v0.11.0
 	github.com/labstack/echo/v4 v4.6.3

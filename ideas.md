@@ -28,8 +28,11 @@ probably hof/docs
 - time
   - now
 
-- async
+- async / client listener
+  - waitgroup / mutex?
+  - file locks (https://github.com/gofrs/flock)
   - [ ] chan / mailbox
+  - websockets
 
 - msg
   - rabbitmq
