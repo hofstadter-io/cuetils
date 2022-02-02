@@ -9,7 +9,6 @@ Enhance & expand
     - [x] file append
     - [x] mkdir
     - [ ] memory store / load
-    - [ ] prevent exit when error in handler pipelines?
 - [ ] rename pipeline -> run
 - [ ] merge and release
 - [ ] hof/flow cmd
@@ -51,29 +50,17 @@ i/o centralization
 - [ ] stats for tasks & pipelines, chan to central
 - [ ] obfescate secrets, centralized printing (ensure that is the case in every task / run)
 
-Exec & Serve
+Exec & Serve & async
 
 - [ ] some way to run in background, and then kill / exit later?
 - [ ] write directly to file for stdio, is it a concrete string?
+- [ ] something like a goroutine, similar to api.Serve/pipeline
+- [ ] message passing, via chans, websockets, kafka/rabbit
 
----
+Bugs?
 
-Then...
-
-
-More...
-
-- something like a goroutine, similar to api.Serve/pipeline
-- message passing, via chans, websockets, kafka/rabbit
-
-# Ideas
-
-Example Pipeline:
-- Exponential retry as an api.Call wrapper with os.Sleep
-- replace sleep in example with wait for server ready
-- could be tricky, because we need to generate extra tasks after the last one finished, or some conditional to ignore after success
-- api req timeout
-- retry status codes / message
+- [ ] prevent exit when error in handler pipelines?
+- [ ] rare & racey structural cycle
 
 Helpers:
 
@@ -87,6 +74,8 @@ List processing:
 - CUE got streaming json/yaml support
 - if extracted value is a list?
 
+### Other
+
 Go funcs:
 
 - rename currenct to `*Globs`
@@ -98,15 +87,14 @@ CLI:
 - Support expression on globs, to select out a field on each file
 - move implementation?
 
-### Memory issues
+### upstream & references
+
+##### Memory issues
 
 https://github.com/lipence/cue/commit/6ed69100ebd62509577826657536172ab46cf257
 
-### cue/flow
+##### cue/flow
+
+(we now have a hof-patch for this)
 
 return final value: https://github.com/cue-lang/cue/pull/1390
-
-
-### streamer
-
-- other social networks / interaction systems
