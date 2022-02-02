@@ -1,4 +1,4 @@
-exec cuetils pipeline in.cue
+exec cuetils flow in.cue
 # cmp stdout golden.stdout
 
 -- dag.txt --

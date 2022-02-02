@@ -9,7 +9,7 @@ import (
 	"cuelang.org/go/cue"
 	"github.com/parnurzeal/gorequest"
 
-	"github.com/hofstadter-io/cuetils/pipeline/context"
+	"github.com/hofstadter-io/cuetils/flow/context"
 )
 
 /*  TODO

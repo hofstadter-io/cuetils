@@ -1,4 +1,4 @@
-// This pipeline gets an api code with OAuth workflow
+// This flow gets an api code with OAuth workflow
 package load
 
 import (

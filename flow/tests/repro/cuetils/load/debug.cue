@@ -1,4 +1,4 @@
-// This pipeline gets an api code with OAuth workflow
+// This flow gets an api code with OAuth workflow
 package load
 
 import (
@@ -9,12 +9,12 @@ import (
 
 // twitch/auth/meta
 meta: {
-  @pipeline(meta,load) 
+  @flow(meta,load) 
 
   vars: {
     RR: utils.RepoRoot
     root: RR.Out
-    fn: "\(root)/pipeline/tests/repro/cuetils/data.json"
+    fn: "\(root)/flow/tests/repro/cuetils/data.json"
   }
   secrets: {
     env: { 
@@ -26,7 +26,7 @@ meta: {
 
 // twitch/auth/load
 thing: {
-  @pipeline(thing,load)
+  @flow(thing,load)
 
   cfg: meta
 

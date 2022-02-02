@@ -6,12 +6,12 @@ import (
 	"cuelang.org/go/cue"
 	"cuelang.org/go/tools/flow"
 
-  "github.com/hofstadter-io/cuetils/pipeline/context"
-  "github.com/hofstadter-io/cuetils/pipeline/tasker"
+  "github.com/hofstadter-io/cuetils/flow/context"
+  "github.com/hofstadter-io/cuetils/flow/tasker"
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
-type Pipeline struct {
+type Flow struct {
   Orig cue.Value
   Final cue.Value
 
@@ -19,20 +19,20 @@ type Pipeline struct {
   Ctrl *flow.Controller
 }
 
-func NewPipeline(ctx *context.Context, val cue.Value) (*Pipeline, error) {
-  p := &Pipeline{
+func NewFlow(ctx *context.Context, val cue.Value) (*Flow, error) {
+  p := &Flow{
     Orig: val,
     Context: ctx,
   }
   return p, nil
 }
 
-// This is for the top-level pipelines
-func (P *Pipeline) Start() error {
+// This is for the top-level flows
+func (P *Flow) Start() error {
   return P.run(P.Orig)
 }
 
-func (P *Pipeline) run(val cue.Value) error {
+func (P *Flow) run(val cue.Value) error {
 	// Setup the flow Config
 	cfg := &flow.Config{
 		//InferTasks:     false,

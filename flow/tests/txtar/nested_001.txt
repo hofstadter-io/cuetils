@@ -1,10 +1,10 @@
-exec cuetils pipeline in.cue -t main
+exec cuetils flow in.cue -t main
 
 -- in.cue --
 import "encoding/json"
 
 apicall: {
-  @pipeline(apicall)
+  @flow(apicall)
   In: string
 	r: { #F: In, Contents: string } @task(os/readfile)
   j: json.Unmarshal(r.Contents)
@@ -14,7 +14,7 @@ apicall: {
 
 
 main: {
-  @pipeline(main)
+  @flow(main)
 
   input: { #O: "apicalling" } @task(os/stdout)
 

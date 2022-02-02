@@ -6,7 +6,7 @@ import (
 	"cuelang.org/go/cue"
 	"cuelang.org/go/tools/flow"
 
-  "github.com/hofstadter-io/cuetils/pipeline/context"
+  "github.com/hofstadter-io/cuetils/flow/context"
   "github.com/hofstadter-io/cuetils/utils"
 )
 
@@ -60,7 +60,7 @@ func maybeTask(ctx *context.Context, val cue.Value, attr cue.Attribute) (flow.Ru
   // some way to validate task against it's schema
 
   // create cuetils task from val
-  // these live under /pipeline/tasks
+  // these live under /flow/tasks
   // and are of type context.RunnerFunc
   task, err := runnerFunc(val)
   if err != nil {

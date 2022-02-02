@@ -1,4 +1,4 @@
-package pipeline_test
+package flow_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	"github.com/hofstadter-io/hof/script/runtime"
 )
 
-func TestPipeline(t *testing.T) {
+func TestFlow(t *testing.T) {
 	yagu.Mkdir(".workdir/tests")
 	runtime.Run(t, runtime.Params{
 		Dir:         "testdata",

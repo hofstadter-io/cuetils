@@ -5,7 +5,7 @@ import (
 
 	"cuelang.org/go/cue"
 
-  "github.com/hofstadter-io/cuetils/pipeline/context"
+  "github.com/hofstadter-io/cuetils/flow/context"
 )
 
 func init() {

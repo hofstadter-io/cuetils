@@ -1,4 +1,4 @@
-package pipeline
+package flow
 
 import (
 	go_ctx "context"
@@ -12,9 +12,9 @@ import (
 	"cuelang.org/go/cue/cuecontext"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
-	"github.com/hofstadter-io/cuetils/pipeline/context"
-	"github.com/hofstadter-io/cuetils/pipeline/pipe"
-	_ "github.com/hofstadter-io/cuetils/pipeline/tasks" // ensure tasks register
+	"github.com/hofstadter-io/cuetils/flow/context"
+	"github.com/hofstadter-io/cuetils/flow/pipe"
+	_ "github.com/hofstadter-io/cuetils/flow/tasks" // ensure tasks register
 	"github.com/hofstadter-io/cuetils/structural"
 	// "github.com/hofstadter-io/cuetils/utils"
 )
@@ -25,12 +25,12 @@ Input is to rigid
 -
 */
 
-func Run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]structural.GlobResult, error) {
+func Run(globs []string, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) ([]structural.GlobResult, error) {
 	return run(globs, opts, popts)
 }
 
 // refactor out single/multi
-func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) ([]structural.GlobResult, error) {
+func run(globs []string, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) ([]structural.GlobResult, error) {
 	ctx := cuecontext.New()
 
 	ins, err := structural.ReadGlobs(globs, ctx, nil)
@@ -44,8 +44,8 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
     
   // sharedCtx := buildSharedContext
 
-	// (refactor/pipe/many) find  pipelines
-  pipes := []*pipe.Pipeline{}
+	// (refactor/pipe/many) find  flows
+  pipes := []*pipe.Flow{}
 	for _, in := range ins {
 
     // (refactor/pipe/solo)
@@ -89,7 +89,7 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
       }
 
       fmt.Println("flows:\n==============")
-      err = listPipelines(val, opts, popts)
+      err = listFlows(val, opts, popts)
       if err != nil {
         return nil, err
       } 
@@ -97,7 +97,7 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
       continue
     }
 
-    ps, err := findPipelines(taskCtx, val, opts, popts)
+    ps, err := findFlows(taskCtx, val, opts, popts)
     if err != nil {
       return nil, err
     }
@@ -109,10 +109,10 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.PipelineFlagpol
   }
 
   if len(pipes) == 0 {
-    return nil, fmt.Errorf("no pipelines found")
+    return nil, fmt.Errorf("no flows found")
   }
 
-  // start all of the pipelines
+  // start all of the flows
   // TODO, use wait group, accume errors, flag for failure modes
   for _, pipe := range pipes {
     err := pipe.Start()
@@ -136,7 +136,7 @@ var walkOptions = []cue.Option{
   cue.Docs(true),
 }
 
-func buildRootContext(val cue.Value, opts *flags.RootPflagpole, popts *flags.PipelineFlagpole) (*context.Context, error) {
+func buildRootContext(val cue.Value, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) (*context.Context, error) {
   // lookup the secret label in val
   // and build a filter write for stdout / stderr
   c := &context.Context{

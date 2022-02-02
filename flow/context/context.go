@@ -1,5 +1,5 @@
 // This package provides a context for Tasks
-// and a registry for their usage in pipelines.
+// and a registry for their usage in flows.
 package context
 
 import (

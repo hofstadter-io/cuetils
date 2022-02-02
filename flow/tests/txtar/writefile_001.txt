@@ -1,9 +1,9 @@
-exec cuetils pipeline in.cue
+exec cuetils flow in.cue
 cmp test.stdout golden.stdout
 
 -- in.cue --
 tasks: {
-  @pipeline(test)
+  @flow(test)
   words: """
   hello world
   hallo chat!

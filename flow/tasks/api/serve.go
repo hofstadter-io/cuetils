@@ -13,8 +13,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
   "github.com/labstack/echo-contrib/prometheus"
 
-  "github.com/hofstadter-io/cuetils/pipeline/context"
-  "github.com/hofstadter-io/cuetils/pipeline/pipe"
+  "github.com/hofstadter-io/cuetils/flow/context"
+  "github.com/hofstadter-io/cuetils/flow/pipe"
 )
 
 func init() {
@@ -34,7 +34,7 @@ func (T *Serve) Run(ctx *context.Context) (interface{}, error) {
 
   // todo, check failure modes, fill, not return error?
   // (in all tasks)
-  // do failed http handlings fail the client connection and server pipeline?
+  // do failed http handlings fail the client connection and server flow?
 
   val := ctx.Value
 
@@ -134,11 +134,11 @@ func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo, ctx *
   path = strings.Replace(path, "\"", "", -1)
   // fmt.Println(path + ":", route)
 
-  // is this a pipeline handler?
+  // is this a flow handler?
   attrs := route.Attributes(cue.ValueAttr)
   isPipe := false
   for _, a := range attrs {
-    if a.Name() == "pipeline" {
+    if a.Name() == "flow" {
       isPipe = true
     } 
   }
@@ -147,7 +147,7 @@ func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo, ctx *
 
   // fmt.Println("setting up route:", path, isPipe)
 
-  // (1) can we read the pipelinen once and reuse it
+  // (1) can we read the flown once and reuse it
   // (2) or do we need to construct a new one on each call
 
   // setup handler, this will be invoked on all requests
@@ -166,7 +166,7 @@ func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo, ctx *
     }
 
     if isPipe {
-      p, err := pipe.NewPipeline(ctx, tmp)
+      p, err := pipe.NewFlow(ctx, tmp)
       if err != nil {
         return err
       }

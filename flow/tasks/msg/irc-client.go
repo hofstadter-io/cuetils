@@ -9,8 +9,8 @@ import (
 	"cuelang.org/go/cue"
 	"gopkg.in/irc.v3"
 
-  "github.com/hofstadter-io/cuetils/pipeline/context"
-  "github.com/hofstadter-io/cuetils/pipeline/pipe"
+  "github.com/hofstadter-io/cuetils/flow/context"
+  "github.com/hofstadter-io/cuetils/flow/pipe"
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
@@ -28,7 +28,7 @@ func (T *IrcClient) Run(ctx *context.Context) (interface{}, error) {
 
   // todo, check failure modes, fill, not return error?
   // (in all tasks)
-  // do failed message handlings fail the client connection and IRC pipeline?
+  // do failed message handlings fail the client connection and IRC flow?
 
 	val := ctx.Value
   var config irc.ClientConfig
@@ -210,7 +210,7 @@ func buildIrcHandler(ct_ctx *context.Context, val cue.Value) (irc.HandlerFunc, e
     v = v.Unify(cHandler) 
     v = v.FillPath(cue.ParsePath("msg"), mv)
 
-    // is this a pipeline
+    // is this a flow
     errV := v.LookupPath(cue.ParsePath("error"))
     respV := v.LookupPath(cue.ParsePath("resp"))
     pipeV := v.LookupPath(cue.ParsePath("pipe"))
@@ -238,13 +238,13 @@ func buildIrcHandler(ct_ctx *context.Context, val cue.Value) (irc.HandlerFunc, e
       return
     }
 
-    // handle pipelines
+    // handle flows
     if pipeV.Exists() {
       // build new value
       v := ctx.CompileString("{...}")
       v = v.Unify(pipeV) 
 
-      p, err := pipe.NewPipeline(ct_ctx, v)
+      p, err := pipe.NewFlow(ct_ctx, v)
       if err != nil {
         fmt.Println("Error(pipe/new):", err)
         return

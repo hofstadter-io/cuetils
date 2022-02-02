@@ -1,7 +1,7 @@
 package use
 
 import (
-  "github.com/hofstadter-io/cuetils/pipeline/tests/repro/cuetils/load"
+  "github.com/hofstadter-io/cuetils/flow/tests/repro/cuetils/load"
 )
 
 vars: {
@@ -10,7 +10,7 @@ vars: {
 
 // twitch/info/meta
 meta: {
-  @pipeline(meta,use)
+  @flow(meta,use)
   secrets: {
     env: { 
       COW: _ @task(os.Getenv)
@@ -34,7 +34,7 @@ meta: {
 
 // twitch/info/user
 call: {
-  @pipeline(call,use)
+  @flow(call,use)
 
   cfg: meta
 
