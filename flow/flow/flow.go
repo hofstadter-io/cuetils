@@ -1,4 +1,4 @@
-package pipe
+package flow
 
 import (
 	"fmt"
@@ -49,7 +49,7 @@ func (P *Flow) run(val cue.Value) error {
 
   final, err := P.Ctrl.Run(P.Context.Context)
 
-  // fmt.Println("pipe(end):", P.path, P.rpath)
+  // fmt.Println("flow(end):", P.path, P.rpath)
   P.Final = final
   if err != nil {
     s := structural.FormatCueError(err)

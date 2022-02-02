@@ -7,7 +7,7 @@ import (
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 	"github.com/hofstadter-io/cuetils/flow/context"
-	"github.com/hofstadter-io/cuetils/flow/pipe"
+	"github.com/hofstadter-io/cuetils/flow/flow"
 	"github.com/hofstadter-io/cuetils/structural"
 	"github.com/hofstadter-io/cuetils/utils"
 )
@@ -107,8 +107,8 @@ func listFlows(val cue.Value,  opts *flags.RootPflagpole, popts *flags.FlowFlagp
 // maybe this becomes recursive so we can find
 // nested flows, but not recurse when we find one
 // only recurse when we have something which is not a flow or task
-func findFlows(ctx *context.Context, val cue.Value, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) ([]*pipe.Flow, error) {
-  pipes := []*pipe.Flow{}
+func findFlows(ctx *context.Context, val cue.Value, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) ([]*flow.Flow, error) {
+  flows := []*flow.Flow{}
 
   // TODO, look for lists?
   s, err := val.Struct()
@@ -124,15 +124,15 @@ func findFlows(ctx *context.Context, val cue.Value, opts *flags.RootPflagpole, p
   _, found, keep := hasFlowAttr(val, args)
   if keep  {
     // invoke TaskFactory
-    p, err := pipe.NewFlow(ctx, val)
+    p, err := flow.NewFlow(ctx, val)
     if err != nil {
-      return pipes, err
+      return flows, err
     }
-    pipes = append(pipes, p)
+    flows = append(flows, p)
   }
 
   if found {
-    return pipes, nil
+    return flows, nil
   }
 
   iter := s.Fields(
@@ -146,11 +146,11 @@ func findFlows(ctx *context.Context, val cue.Value, opts *flags.RootPflagpole, p
 
     _, found, keep := hasFlowAttr(v, args)
     if keep  {
-      p, err := pipe.NewFlow(ctx, v)
+      p, err := flow.NewFlow(ctx, v)
       if err != nil {
-        return pipes, err
+        return flows, err
       }
-      pipes = append(pipes, p)
+      flows = append(flows, p)
     }
 
     // break recursion if flow found
@@ -161,11 +161,11 @@ func findFlows(ctx *context.Context, val cue.Value, opts *flags.RootPflagpole, p
     // recurse to search for more flows
     ps, err := findFlows(ctx, v, opts, popts)
     if err != nil {
-      return pipes, nil 
+      return flows, nil 
     }
-    pipes = append(pipes, ps...)
+    flows = append(flows, ps...)
   }
 
-  return pipes, nil
+  return flows, nil
 }
 

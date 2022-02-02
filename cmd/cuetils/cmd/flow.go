@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
-	"github.com/hofstadter-io/cuetils/pipeline"
+	"github.com/hofstadter-io/cuetils/flow"
 	"github.com/hofstadter-io/cuetils/structural"
 )
 
@@ -23,7 +23,7 @@ func init() {
 
 func FlowRun(globs []string) (err error) {
 
-	results, err := pipeline.Run(globs, &flags.RootPflags, &flags.FlowFlags)
+	results, err := flow.Run(globs, &flags.RootPflags, &flags.FlowFlags)
 	if err != nil {
 		return err
 	}

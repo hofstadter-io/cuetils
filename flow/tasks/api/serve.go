@@ -14,7 +14,7 @@ import (
   "github.com/labstack/echo-contrib/prometheus"
 
   "github.com/hofstadter-io/cuetils/flow/context"
-  "github.com/hofstadter-io/cuetils/flow/pipe"
+  "github.com/hofstadter-io/cuetils/flow/flow"
 )
 
 func init() {
@@ -166,7 +166,7 @@ func (T *Serve) routeFromValue(path string, route cue.Value, e *echo.Echo, ctx *
     }
 
     if isPipe {
-      p, err := pipe.NewFlow(ctx, tmp)
+      p, err := flow.NewFlow(ctx, tmp)
       if err != nil {
         return err
       }

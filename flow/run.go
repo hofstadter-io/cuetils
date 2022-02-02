@@ -13,7 +13,7 @@ import (
 
 	"github.com/hofstadter-io/cuetils/cmd/cuetils/flags"
 	"github.com/hofstadter-io/cuetils/flow/context"
-	"github.com/hofstadter-io/cuetils/flow/pipe"
+	"github.com/hofstadter-io/cuetils/flow/flow"
 	_ "github.com/hofstadter-io/cuetils/flow/tasks" // ensure tasks register
 	"github.com/hofstadter-io/cuetils/structural"
 	// "github.com/hofstadter-io/cuetils/utils"
@@ -44,11 +44,11 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) (
     
   // sharedCtx := buildSharedContext
 
-	// (refactor/pipe/many) find  flows
-  pipes := []*pipe.Flow{}
+	// (refactor/flow/many) find  flows
+  flows := []*flow.Flow{}
 	for _, in := range ins {
 
-    // (refactor/pipe/solo)
+    // (refactor/flow/solo)
     val := in.Value
 
 
@@ -101,21 +101,21 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) (
     if err != nil {
       return nil, err
     }
-    pipes = append(pipes, ps...)
+    flows = append(flows, ps...)
 	}
 
   if popts.List {
     return nil, nil
   }
 
-  if len(pipes) == 0 {
+  if len(flows) == 0 {
     return nil, fmt.Errorf("no flows found")
   }
 
   // start all of the flows
   // TODO, use wait group, accume errors, flag for failure modes
-  for _, pipe := range pipes {
-    err := pipe.Start()
+  for _, flow := range flows {
+    err := flow.Start()
     if err != nil {
       return nil, err
     }

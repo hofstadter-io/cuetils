@@ -9,8 +9,11 @@ Enhance & expand
     - [x] file append
     - [x] mkdir
     - [x] memory store / load
-- [ ] rename pipeline -> run
+- [x] rename pipeline -> run
 - [ ] merge and release
+
+---
+
 - [ ] hof/flow cmd
 
 ### Docs...

@@ -10,7 +10,7 @@ import (
 	"gopkg.in/irc.v3"
 
   "github.com/hofstadter-io/cuetils/flow/context"
-  "github.com/hofstadter-io/cuetils/flow/pipe"
+  "github.com/hofstadter-io/cuetils/flow/flow"
 	"github.com/hofstadter-io/cuetils/utils"
 )
 
@@ -213,11 +213,11 @@ func buildIrcHandler(ct_ctx *context.Context, val cue.Value) (irc.HandlerFunc, e
     // is this a flow
     errV := v.LookupPath(cue.ParsePath("error"))
     respV := v.LookupPath(cue.ParsePath("resp"))
-    pipeV := v.LookupPath(cue.ParsePath("pipe"))
+    flowV := v.LookupPath(cue.ParsePath("flow"))
 
     fmt.Println("errV:", errV)
     fmt.Println("respV:", respV)
-    fmt.Println("pipeV:", pipeV)
+    fmt.Println("flowV:", flowV)
 
     // log any errors
     if errV.Exists() {
@@ -239,37 +239,37 @@ func buildIrcHandler(ct_ctx *context.Context, val cue.Value) (irc.HandlerFunc, e
     }
 
     // handle flows
-    if pipeV.Exists() {
+    if flowV.Exists() {
       // build new value
       v := ctx.CompileString("{...}")
-      v = v.Unify(pipeV) 
+      v = v.Unify(flowV) 
 
-      p, err := pipe.NewFlow(ct_ctx, v)
+      p, err := flow.NewFlow(ct_ctx, v)
       if err != nil {
-        fmt.Println("Error(pipe/new):", err)
+        fmt.Println("Error(flow/new):", err)
         return
       }
 
       err = p.Start()
       if err != nil {
-        fmt.Println("Error(pipe/run):", err)
+        fmt.Println("Error(flow/run):", err)
         return
       }
 
       rV := p.Final.LookupPath(cue.ParsePath("resp"))
       if !rV.Exists() {
-        fmt.Println("Error(pipe/resp): does not exist")
+        fmt.Println("Error(flow/resp): does not exist")
         return 
       }
       s, err := rV.String()
       if err != nil {
-        fmt.Println("Error(pipe/rVstr):", err)
+        fmt.Println("Error(flow/rVstr):", err)
         return
       }
 
       // fill in go-irc.Message and then turn that into a string
 
-      fmt.Println("sending(pipe/msg):", s)
+      fmt.Println("sending(flow/msg):", s)
       c.Writef("PRIVMSG %s :%s", channel, s)
 
       return

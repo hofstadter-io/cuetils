@@ -1,7 +1,7 @@
-! exec cuetils flow pipe.cue
+! exec cuetils flow flow.cue
 cmp stdout golden.stdout
 
--- pipe.cue --
+-- flow.cue --
 tasks: {
   @flow(readfile)
 	r: { f: "in.txt", contents: string } @task(os.ReadFile)
