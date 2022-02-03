@@ -1,18 +1,46 @@
-# Todo
+# Today
 
-Enhance & expand
+First:
 
-- [x] list Tags
-- [x] list secrets
-- [x] locks for tasks
-- [ ] more task types
-    - [x] file append
-    - [x] mkdir
-    - [x] memory store / load
-- [x] rename pipeline -> run
-- [ ] merge and release
+- [ ] other
+  - [ ] pipe stdin/out/err to files
+  - [ ] some way to run in background, and then kill / exit later?
+
+- [ ] async / client listener
+  - [ ] kill chan, also need to catch signals in main(?) and pass down / do right thing
+    - [ ] how to tell (server / bg exec'd process) to stop (oauth localhost as example)
+  - [ ] chan / mailbox
+  - [ ] waitgroup / mutex?
+  - [ ] websockets
+
+--- 
+
+Then: 
+
+- [ ] sql
+  - [x] sqlite
+  - [ ] postgres
+  - [ ] mysql
+
+- [ ] msg
+  - [ ] rabbitmq
+  - [ ] kafka
+  - [ ] nats
+
+- [ ] k/v
+  - [ ] redis
+  - [ ] memcache
+  - [ ] gcs
+  - [ ] s3
+
+- [ ] obj
+  - [ ] elasticsearch
+  - [ ] mongo
+
 
 ---
+
+at some point:
 
 - [ ] hof/flow cmd
 
@@ -23,29 +51,7 @@ probably hof/docs
 
 ### Other task types:
 
-- gen
-  - uuid
-  - rand int
-  - rand str
-
-- time
-  - now
-
-- async / client listener
-  - waitgroup / mutex?
-  - [ ] chan / mailbox
-  - websockets
-
-- msg
-  - rabbitmq
-  - kafka
-  - nats
-
-- k/v
-  - redis
-  - mongo
-  - s3/gcs
-  - vault
+- temp files / dirs
 - command line prompt
 
 ### Build other things cuetils/run
@@ -66,7 +72,6 @@ i/o centralization
 
 Exec & Serve & async
 
-- [ ] some way to run in background, and then kill / exit later?
 - [ ] write directly to file for stdio, is it a concrete string?
 - [ ] something like a goroutine, similar to api.Serve/pipeline
 - [ ] message passing, via chans, websockets, kafka/rabbit

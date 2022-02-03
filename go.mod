@@ -8,9 +8,11 @@ replace cuelang.org/go => ../hof-cue
 require (
 	cuelang.org/go v0.4.1
 	github.com/gofrs/flock v0.8.1
+	github.com/google/uuid v1.2.0
 	github.com/hofstadter-io/hof v0.5.17
 	github.com/labstack/echo-contrib v0.11.0
 	github.com/labstack/echo/v4 v4.6.3
+	github.com/lucsky/cuid v1.2.1
 	github.com/mattn/go-sqlite3 v1.14.10
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/spf13/cobra v1.0.0
@@ -34,7 +36,6 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
-	github.com/google/uuid v1.2.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hofstadter-io/dotpath v0.0.0-20191027071558-52e2819b7d2d // indirect
 	github.com/imdario/mergo v0.3.9 // indirect

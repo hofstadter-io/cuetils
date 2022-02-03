@@ -1,21 +1,77 @@
 package gen
 
 import (
-    "fmt"
-    "time"
-    "math/rand"
+  "math/rand"
+
+	"cuelang.org/go/cue"
+
+  "github.com/hofstadter-io/cuetils/flow/context"
 )
 
+// default runes if none provided
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 func init() {
-  rand.Seed(time.Now().UnixNano())
+  context.Register("gen.Str", NewStr)
 }
 
-func randSeq(n int) string {
-    b := make([]rune, n)
-    for i := range b {
-        b[i] = letters[rand.Intn(len(letters))]
+type Str struct {}
+
+func NewStr(val cue.Value) (context.Runner, error) {
+  return &Str{}, nil
+}
+
+func (T *Str) Run(ctx *context.Context) (interface{}, error) {
+
+  val := ctx.Value
+
+  n := 12
+  runes := letters
+
+  ferr := func () error {
+    ctx.CUELock.Lock()
+    defer func() {
+      ctx.CUELock.Unlock()
+    }()
+
+    // lookup key
+    nv := val.LookupPath(cue.ParsePath("n")) 
+    if nv.Exists() {
+      if nv.Err() != nil {
+        return nv.Err() 
+      }
+      ni, err := nv.Int64()
+      if err != nil {
+        return err
+      }
+      n = int(ni)
     }
-    return string(b)
+
+    // lookup key
+    rv := val.LookupPath(cue.ParsePath("runes")) 
+    if rv.Exists() {
+      if rv.Err() != nil {
+        return rv.Err() 
+      }
+      s, err := rv.String()
+      if err != nil {
+        return err
+      }
+      runes = []rune(s)
+    }
+
+    return nil
+  }()
+  if ferr != nil {
+    return nil, ferr
+  }
+
+  b := make([]rune, n)
+  for i := range b {
+      b[i] = runes[rand.Intn(len(runes))]
+  }
+
+  r := string(b)
+
+	return r, nil
 }
