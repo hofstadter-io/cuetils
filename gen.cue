@@ -415,6 +415,13 @@ Cli: gen.#HofGenerator & {
 		Type:    "[]string"
     Default: "nil"
 		Help:    "data tags to inject before run"
+	},{
+		Name:    "DebugTasks"
+		Long:    "debug-tasks"
+		Short:   ""
+		Type:    "bool"
+    Default: "false"
+		Help:    "print debugging info about tasks"
 	}]
 }
 

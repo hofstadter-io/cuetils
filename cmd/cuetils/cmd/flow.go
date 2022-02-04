@@ -19,6 +19,7 @@ func init() {
 	FlowCmd.Flags().BoolVarP(&(flags.FlowFlags.Docs), "docs", "d", false, "print pipeline docs")
 	FlowCmd.Flags().StringSliceVarP(&(flags.FlowFlags.Flow), "flow", "f", nil, "flow labels to match and run")
 	FlowCmd.Flags().StringSliceVarP(&(flags.FlowFlags.Tags), "tags", "t", nil, "data tags to inject before run")
+	FlowCmd.Flags().BoolVarP(&(flags.FlowFlags.DebugTasks), "debug-tasks", "", false, "print debugging info about tasks")
 }
 
 func FlowRun(globs []string) (err error) {
