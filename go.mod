@@ -2,8 +2,7 @@ module github.com/hofstadter-io/cuetils
 
 go 1.17
 
-// replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.1-hofpatches
-replace cuelang.org/go => ../hof-cue
+replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.2-rc.1.h1
 
 require (
 	cuelang.org/go v0.4.1
