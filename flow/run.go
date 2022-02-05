@@ -4,6 +4,7 @@ import (
 	go_ctx "context"
 	"fmt"
 	"os"
+  "strings"
 	"sync"
 
 	// "time"
@@ -74,16 +75,14 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) (
       if len(tags) > 0 {
         fmt.Println("tags:\n==============")
         for _, v := range tags {
-          path := v.Path()
-          fmt.Printf("%s: %# v %v\n", path, v, v.Attribute("tag"))
+          printHelpValue(v, "tag")
         }
         fmt.Println()
       }
       if len(secrets) > 0 {
         fmt.Println("secrets:\n==============")
         for _, v := range secrets {
-          path := v.Path()
-          fmt.Printf("%s: %# v %v\n", path, v, v.Attribute("secret"))
+          printHelpValue(v, "secret")
         }
         fmt.Println()
       }
@@ -126,6 +125,16 @@ func run(globs []string, opts *flags.RootPflagpole, popts *flags.FlowFlagpole) (
 	return nil, nil
 }
 
+func printHelpValue(v cue.Value, attr string) {
+  path := v.Path()
+  docs := v.Doc()
+  if len(docs) > 0 {
+    for _, d := range docs {
+      fmt.Println("//", strings.TrimSpace(d.Text()))
+    }
+  }
+  fmt.Printf("%s: %# v %v\n", path, v, v.Attribute(attr))
+}
 
 var walkOptions = []cue.Option{
   cue.Attributes(true),
@@ -147,6 +156,7 @@ func buildRootContext(val cue.Value, opts *flags.RootPflagpole, popts *flags.Flo
     CUELock: new(sync.Mutex),
     ValStore: new(sync.Map),
     Mailbox: new(sync.Map),
+    DebugTasks: popts.DebugTasks,
   }
   return c, nil
 }
