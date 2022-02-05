@@ -159,6 +159,24 @@ func buildRequest(val cue.Value) (R *gorequest.SuperAgent, err error) {
 		}
 	}
 
+	form := req.LookupPath(cue.ParsePath("form"))
+	if form.Exists() {
+		F, err := form.Struct()
+		if err != nil {
+			return R, err
+		}
+		fIter := F.Fields()
+		for fIter.Next() {
+			label := fIter.Label()
+			value, err := fIter.Value().String()
+			if err != nil {
+				return R, err
+			}
+			R.FormData.Add(label, value)
+		}
+
+	}
+
 	data := req.LookupPath(cue.ParsePath("data"))
 	if data.Exists() {
 		err := data.Decode(&R.Data)
