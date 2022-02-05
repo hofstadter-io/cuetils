@@ -30,6 +30,9 @@ type Context struct {
 
   // channels for
   // - stats & progress
+
+  // debug / internal
+  DebugTasks bool
 }
 
 // consider adding here... a

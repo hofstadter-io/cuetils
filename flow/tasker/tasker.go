@@ -45,6 +45,9 @@ func NewTasker(ctx *context.Context) flow.TaskFunc {
 }
 
 func maybeTask(ctx *context.Context, val cue.Value, attr cue.Attribute) (flow.Runner, error) {
+  if ctx.DebugTasks {
+    fmt.Println("task?:", attr)
+  }
 
   taskId, err := attr.String(0)
   if err != nil {
