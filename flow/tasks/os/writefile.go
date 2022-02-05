@@ -78,9 +78,11 @@ func (T *WriteFile) Run(ctx *context.Context) (interface{}, error) {
     }
 
     av := v.LookupPath(cue.ParsePath("append"))
-    a, err = av.Bool()
-    if err != nil {
-      return err
+    if av.Exists() {
+      a, err = av.Bool()
+      if err != nil {
+        return err
+      }
     }
 
     return nil
