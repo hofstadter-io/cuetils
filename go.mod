@@ -6,6 +6,7 @@ replace cuelang.org/go => github.com/hofstadter-io/cue v0.4.2-rc.1.h1
 
 require (
 	cuelang.org/go v0.4.1
+	github.com/fsnotify/fsnotify v1.4.9
 	github.com/gofrs/flock v0.8.1
 	github.com/google/uuid v1.2.0
 	github.com/hofstadter-io/hof v0.5.17
@@ -13,6 +14,7 @@ require (
 	github.com/labstack/echo/v4 v4.6.3
 	github.com/lucsky/cuid v1.2.1
 	github.com/mattn/go-sqlite3 v1.14.10
+	github.com/mattn/go-zglob v0.0.2
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/spf13/cobra v1.0.0
 	golang.org/x/text v0.3.7
@@ -27,7 +29,6 @@ require (
 	github.com/cockroachdb/apd/v2 v2.0.2 // indirect
 	github.com/emicklei/proto v1.9.0 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.0.0 // indirect
 	github.com/go-git/go-git/v5 v5.1.0 // indirect
