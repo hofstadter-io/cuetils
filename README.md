@@ -54,7 +54,7 @@ import "github.com/hofstadter-io/cuetils/structural"
 - [Diff](#diff) two objects, producing a structured diff
 - [Patch](#patch) an object, producing a new object
 - [Pick](#pick) a subojbect from another, selecting only the parts you want
-- [Maks](#mask) a subobject from another, filtering out parts you don't want
+- [Mask](#mask) a subobject from another, filtering out parts you don't want
 - [Replace](#replace) with a subobject, updating fields found
 - [Upsert](#upsert) with a subobject, updating and adding fields
 - [Transform](#transform) one or more objects into another using CUE
